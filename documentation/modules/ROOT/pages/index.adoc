@@ -1,0 +1,55 @@
+= {lab_name}
+
+Welcome to the {lab_name}!
+
+== Overview
+
+The Ansible Bootcamp Enablement provides a comprehensive, hands-on learning experience for Red Hat Ansible Automation Platform (AAP). This bootcamp covers the full spectrum of automation development, from basic concepts to advanced CI/CD pipelines and infrastructure as code.
+
+Through a series of progressive labs, you'll gain practical experience with:
+
+* **Development Environments**: Setting up and using Red Hat OpenShift Dev Spaces for Ansible development
+* **Content Development**: Creating, testing, and publishing Ansible collections
+* **Automation Hub Management**: Managing content in Private Automation Hub
+* **CI/CD Integration**: Building automated pipelines for collection development and deployment
+* **Infrastructure as Code**: Managing AAP configuration through code
+* **Cloud Deployments**: Deploying AAP on various platforms including Azure and OpenShift
+
+== Prerequisites
+
+Before starting this bootcamp, ensure you have:
+
+* Basic understanding of Linux command line operations
+* Familiarity with YAML syntax
+* Knowledge of fundamental networking concepts
+* Access to the Red Hat Demo Platform environment
+
+== Lab Structure
+
+The bootcamp is organized into sequential modules that build upon each other:
+
+. **xref:01-introduction.adoc[Introduction]**: Environment setup and Dev Spaces configuration
+. **xref:02-aap-azure.adoc[AAP on Azure]**: Managed deployment on Microsoft Azure
+. **xref:03-developer-tools.adoc[Developer Tools]**: Essential tools for automation development
+. **xref:04-managing-content-automation-hub.adoc[Managing Content in Automation Hub]**: Collection development and publishing
+. **xref:05-ansible-tdd.adoc[Test-Driven Development for Ansible]**: Testing methodologies and practices
+. **xref:06-ansible-cicd.adoc[CI/CD for Ansible Content]**: Automated pipelines and deployment
+. **xref:07-configuration-as-code.adoc[Configuration as Code]**: Infrastructure and configuration management
+. **xref:08-aap-openshift.adoc[AAP on OpenShift]**: Operator-based deployment on OpenShift
+
+== Learning Outcomes
+
+By the end of this bootcamp, you will be able to:
+
+* Set up and configure development environments for Ansible automation
+* Develop, test, and publish Ansible collections
+* Implement CI/CD pipelines for automation content
+* Deploy and manage AAP across different platforms
+* Apply infrastructure as code principles to automation platforms
+* Troubleshoot and optimize automation workflows
+
+== Getting Started
+
+Begin with xref:01-introduction.adoc[Module 1: Introduction] to set up your development environment. Each module includes detailed instructions, code examples, and verification steps.
+
+For questions or issues, refer to the xref:appendix.adoc[Appendix] or contact your instructor.

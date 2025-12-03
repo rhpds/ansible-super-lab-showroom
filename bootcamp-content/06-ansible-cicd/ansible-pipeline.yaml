@@ -1,0 +1,183 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: ansible-collection-ci
+  namespace: aap
+spec:
+  params:
+    - description: The URL of the Git repository to clone.
+      name: collection-url
+      type: string
+    - description: The URL of the Git repository to clone.
+      name: playbook-repo
+      type: string
+    - description: Collection Branch name
+      name: collection-repo-version
+      type: string
+  tasks:
+    - name: clone-playbook
+      taskSpec:
+        metadata: {}
+        spec: null
+        steps:
+          - computeResources: {}
+            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            name: playbook-install
+            script: |
+              git clone -vvv $(params.playbook-repo)
+              echo "change into playbook dir"
+              cd ansible_bootcamp_ci_cd_pipeline
+              echo "create vars file"
+              cat <<EOF > params.yml
+              ---
+              aap_hostname:  "https://`oc get route aap -n aap -o=jsonpath='{.spec.host}'`"
+              aap_username: "admin"
+              aap_password: "`oc get secret aap-admin-password -n aap -o=jsonpath='{.data.password}' |base64 -d`"
+              collection_url: "$(params.collection-url)"
+              branch: "$(params.collection-repo-version)"
+              EOF
+            workingDir: $(workspaces.source.path)
+        workspaces:
+          - name: source
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+    - name: clone-collection
+      runAfter:
+        - clone-playbook
+      taskSpec:
+        metadata: {}
+        spec: null
+        steps:
+          - computeResources: {}
+            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            name: collection-clone
+            script: |
+              cd ansible_bootcamp_ci_cd_pipeline
+              ansible-playbook collection-publish.yml --tags git-checkout
+            workingDir: $(workspaces.source.path)
+        workspaces:
+          - name: source
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+    - name: build-collection
+      runAfter:
+        - clone-collection
+      taskSpec:
+        metadata: {}
+        spec: null
+        steps:
+          - computeResources: {}
+            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            name: build-collection
+            script: |
+              cd ansible_bootcamp_ci_cd_pipeline
+              ansible-playbook collection-publish.yml --tags collection-build
+            workingDir: $(workspaces.source.path)
+        workspaces:
+          - name: source
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+    - name: lint-collection
+      runAfter:
+        - clone-collection
+      taskSpec:
+        metadata: {}
+        spec: null
+        steps:
+          - computeResources: {}
+            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            name: lint-collection
+            script: |
+              cd collection_repo
+              ansible-lint -vvv
+            workingDir: $(workspaces.source.path)
+        workspaces:
+          - name: source
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+    - name: molecule-test
+      runAfter:
+        - build-collection
+        - lint-collection
+      taskSpec:
+        metadata: {}
+        spec: null
+        steps:
+          - computeResources: {}
+            image: 'ghcr.io/ansible/ansible-devspaces:latest'
+            name: molecule-test
+            script: |
+              cd collection_repo/extensions
+              export ANSIBLE_COLLECTIONS_PATH=/workspace/source/collection_repo
+              echo $ANSIBLE_COLLECTIONS_PATH
+              ansible-galaxy collection install git+$(params.collection-url)
+              molecule test -s dad_joke
+            workingDir: $(workspaces.source.path)
+        workspaces:
+          - name: source
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+    - name: create-namespace
+      runAfter:
+        - molecule-test
+      taskSpec:
+        metadata: {}
+        spec: null
+        steps:
+          - computeResources: {}
+            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            name: create-namespace
+            script: |
+              cd ansible_bootcamp_ci_cd_pipeline
+              ansible-playbook collection-publish.yml --tags pah-namespace
+            workingDir: $(workspaces.source.path)
+        workspaces:
+          - name: source
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+    - name: publish-collection
+      runAfter:
+        - create-namespace
+      taskSpec:
+        metadata: {}
+        spec: null
+        steps:
+          - computeResources: {}
+            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            name: publish-collection
+            script: |
+              cd ansible_bootcamp_ci_cd_pipeline
+              ansible-playbook collection-publish.yml --tags collection-publish
+            workingDir: $(workspaces.source.path)
+        workspaces:
+          - name: source
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+    - name: approve-collection
+      runAfter:
+        - publish-collection
+      taskSpec:
+        metadata: {}
+        spec: null
+        steps:
+          - computeResources: {}
+            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            name: approve-collection
+            script: |
+              cd ansible_bootcamp_ci_cd_pipeline
+              ansible-playbook collection-publish.yml --tags collection-approve
+            workingDir: $(workspaces.source.path)
+        workspaces:
+          - name: source
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+  workspaces:
+    - name: shared-workspace

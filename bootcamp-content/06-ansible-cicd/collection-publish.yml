@@ -1,0 +1,92 @@
+---
+- name: Publish collections to Hub
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - params.yml
+  vars:
+    aap_configuration_working_dir: "/workspace/source"
+    aap_request_timeout: 300
+    aap_validate_certs: false
+    ah_overwrite_existing: true
+  no_log: "{{ hub_configuration_publish_secure_logging | default('false') }}"
+  tasks:
+
+    - name: Git checkout
+      ansible.builtin.git:
+        repo: "{{ collection_url }}"
+        dest: "{{ aap_configuration_working_dir }}/collection_repo"
+        version: "{{ branch }}"
+      tags:
+        - git-checkout
+
+    - name: Read in galaxy file
+      ansible.builtin.slurp:
+        src: "{{ aap_configuration_working_dir }}/collection_repo/galaxy.yml"
+      register: file_content
+      tags:
+        - collection-publish
+        - collection-approve
+        - collection-build
+        - pah-namespace
+
+    - name: Get collection Version
+      ansible.builtin.set_fact:
+        collection_version: "{{ file_content['content'] | b64decode |split('\n') |select('match', 'version') | first |split() | last }}"
+        namespace: "{{ file_content['content'] | b64decode |split('\n') |select('match', 'namespace') | first |split() | last | replace('\"', '')  }}"
+        collection_name: "{{ file_content['content'] | b64decode |split('\n') |select('match', 'name:') | first |split() | last | replace('\"', '')  }}"
+      tags:
+        - collection-publish
+        - collection-approve
+        - collection-build
+        - pah-namespace
+
+    - name: Build Collections
+      ansible.hub.ah_build:
+        path: "{{ aap_configuration_working_dir }}/collection_repo"
+        output_path: "{{ aap_configuration_working_dir }}/collection_repo"
+        force: true
+      register: ah_build_results
+      tags:
+        - collection-build
+
+    - name: Create PAH namespace
+      ansible.hub.ah_namespace:
+        name: "{{ namespace }}"
+        state: present
+        ah_host: "{{ aap_hostname | default(omit) }}"
+        ah_username: "{{ aap_username | default(omit) }}"
+        ah_password: "{{ aap_password | default(omit) }}"
+        validate_certs: "{{ aap_validate_certs | default(omit) }}"
+      tags:
+        - pah-namespace
+
+    - name: Publish Collections
+      ansible.hub.ah_collection:
+        namespace: "{{ namespace }}"
+        name: "{{ collection_name }}"
+        version: "{{ collection_version }}"
+        path: "{{ aap_configuration_working_dir }}/collection_repo/{{ namespace }}-{{ collection_name }}-{{ collection_version }}.tar.gz"
+        overwrite_existing: "{{ ah_overwrite_existing }}"
+        ah_host: "{{ aap_hostname | default(omit) }}"
+        ah_username: "{{ aap_username | default(omit) }}"
+        ah_password: "{{ aap_password | default(omit) }}"
+        ah_token: "{{ hub_token | default(omit) }}"
+        validate_certs: "{{ aap_validate_certs | default(omit) }}"
+        request_timeout: "{{ aap_request_timeout | default(omit) }}"
+      tags:
+        - collection-publish
+
+    - name: Approve Collections
+      ansible.hub.ah_approval:
+        namespace: "{{ namespace }}"
+        name: "{{ collection_name }}"
+        version: "{{ collection_version }}"
+        ah_username: "{{ aap_username | default(omit) }}"
+        ah_password: "{{ aap_password | default(omit) }}"
+        ah_token: "{{ hub_token | default(omit) }}"
+        ah_host: "{{ aap_hostname | default(omit) }}"
+        validate_certs: "{{ aap_validate_certs | default(omit) }}"
+        request_timeout: "{{ aap_request_timeout | default(omit) }}"
+      tags:
+        - collection-approve

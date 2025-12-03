@@ -1,0 +1,47 @@
+= Using Red Hat OpenShift Dev Spaces
+
+Once you have a lab environment set up, you can use Red Hat OpenShift Dev Spaces to develop additional content. To do so, you should first access your Red Hat OpenShift Dev Spaces environment by clicking the 9 square icon in the top right of the console and clicking, "Red Hat OpenShift Dev Spaces".
+
+If it is your first time using this cluster's Red Hat OpenShift Dev Spaces instance, you will need to authorize oauth. Then, in the top right drop down next to your username and icon and select, "User Preferences". In the User Preferences page, you will want to select "Personal Access Tokens" and add a GitHub Access token. See creating a Github Personal Access Token section below.
+
+Once you re-authenticate to Red Hat OpenShift Dev Spaces, you can paste in the repository for this repo under the "Import from Git" section into the "Git repo URL" box. Then, click the "Create & Open" button. This will launch your developer workspace.
+
+== Launching antora to view content
+
+. Inside your Developer Workspace (browser based VS Code), click the hamburger icon in the top left
+. Hover over "Terminal" in the menu that pops up
+. Click on "Run Task..."
+. Select 'devfile' from the menu that pops up
+. Click on 'devfile: start-antora'
+
+You will see a terminal start and launch antora using podman. A pop-up will show to notify you that it has exposed a website and will ask you if you want to view it. Open that site and it will redirect you to the documentation site.
+
+There are additional devfile tasks available to stop and restart the pandora container.
+
+== Creating a GitHub Personal Access Token
+
+. Log into your GitHub account
+. Click on your profile avatar, and select "Settings."
+. In the left sidebar, scroll down and click on "Developer settings."
+. Click on "Personal access tokens" and then choose "Tokens (classic)" or "Fine-grained tokens" depending on your needs. For most Red Hat OpenShift Dev Spaces integrations, classic tokens are sufficient.
+. Click on "Generate new token" (or "Generate new token (classic)" if you selected classic tokens).
+. Configure Token Details
+
+    Note: Provide a descriptive name for your token.
+    Expiration: Set an expiration date for the token. For security, it is recommended to set a reasonable expiration.
+    Scopes: Select the necessary permissions (scopes) for the token. For accessing private repositories, the repo scope (or more granular fine-grained permissions) is typically required.
+
+. Click "Generate token."
+. Immediately copy the generated token. It will only be displayed once and cannot be retrieved again. Store it securely.
+
+== Red Hat OpenShift Environment Requirements
+
+The Red Hat OpenShift cluster hosting Red Hat Dev Spaces must support the following cluster features:
+
+. ProcMountType
+. UserNamespacesSupport
+. UserNamespacesPodSecurityStandards
+
+See link:https://developers.redhat.com/articles/2024/12/02/enable-nested-containers-openshift-dev-spaces-user-namespaces[Enable nested containers in OpenShift Dev Spaces with user namespaces] for more information about configuring and using nested containers in OpenShift Dev Spaces.
+
+IMPORTANT: These features are Tech Preview as of Red Hat OpenShift 4.19. See link:https://access.redhat.com/support/offerings/techpreview[Technology Preview Features - Scope of Support]

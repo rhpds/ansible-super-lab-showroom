@@ -1,0 +1,78 @@
+## Based on https://github.com/cgruver/ocp-4-18-nested-container-tech-preview/blob/main/devfile.yaml
+
+schemaVersion: 2.2.0
+attributes:
+  controller.devfile.io/storage-type: per-workspace
+metadata:
+  name: ansible-bootcamp-enablement
+components:
+  - name: dev-tools
+    attributes:
+      pod-overrides:
+        metadata:
+          annotations:
+            # Ask for /dev/fuse and /dev/net/tun to be mapped into this Pod
+            io.kubernetes.cri-o.Devices: "/dev/fuse,/dev/net/tun"
+        spec:
+          # Instruct the container runtime to create a new user namespace for the containers in this Pod.
+          hostUsers: false
+      container-overrides:
+        securityContext:
+          # Ask for an unmasked /proc to be available to this container
+          procMount: Unmasked
+    container:
+      image: quay.io/jpullen0/ansible-devspaces-nested-podman:latest
+      # image: quay.io/cgruver0/che/ocp-4-17-userns-tp:latest
+      cpuLimit: 4000m
+      cpuRequest: 250m
+      memoryLimit: 4Gi
+      memoryRequest: 128Mi
+      endpoints:
+        - name: antora-public
+          targetPort: 8080
+          exposure: public
+          protocol: https
+      env:
+        - name: VSCODE_DEFAULT_WORKSPACE
+          value: /projects/ansible-bootcamp-enablement/devspaces.code-workspace
+  - name: prep-workspace
+    container:
+      args:
+        - '-c'
+        - >-
+          mkdir -p /projects/bin && cp /usr/bin/oc /projects/bin/oc && cp /usr/bin/kubectl /projects/bin/kubectl && if [[ -f ${HOME}/.kube/config ]]; then rm ${HOME}/.kube/config; fi
+      command:
+        - /bin/bash
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+      mountSources: true
+      sourceMapping: /projects
+      memoryRequest: 128Mi
+      memoryLimit: 256Mi
+      cpuRequest: 10m
+      cpuLimit: 200m
+      env:
+      - name: HOME
+        value: "/projects/home"
+commands:
+  - apply:
+      component: prep-workspace
+      label: Pre Start Prep
+    id: prep-workspace
+  - id: start-antora
+    exec:
+      component: dev-tools
+      commandLine: "podman run --rm --name antora -v /projects/ansible-bootcamp-enablement:/antora:z -p 8080:8080 -i -t ghcr.io/juliaaano/antora-viewer"
+      workingDir: "${PROJECTS_SOURCE}"
+  - id: restart-antora
+    exec:
+      component: dev-tools
+      commandLine: "podman stop antora && podman run --rm --name antora -v /projects/ansible-bootcamp-enablement:/antora:z -p 8080:8080 -i -t ghcr.io/juliaaano/antora-viewer"
+      workingDir: "${PROJECTS_SOURCE}"
+  - id: stop-antora
+    exec:
+      component: dev-tools
+      commandLine: "podman stop antora"
+      workingDir: "${PROJECTS_SOURCE}"
+events:
+  preStart:
+    - prep-workspace

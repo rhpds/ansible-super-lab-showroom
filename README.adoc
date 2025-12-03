@@ -1,0 +1,48 @@
+= Automation and AI SuperLab
+
+Site content for the Automation and AI SuperLab.
+
+== Getting Started
+
+=== Understanding the Basic Template Directory Structure
+
+[source,sh]
+----
+./bootcamp-content # Location where all code for the bootcamp is stored
+├── <lab-module>.                    # Lab Module Directory
+│   └── <content>                    # Associated content for the lab
+./documentation/modules/ROOT/
+├── assets
+│   └── images                       # Images used in your content
+│       └── <lab-module>             # Lab Module Directory
+│           └── example-image.png    # Images
+├── nav.adoc                         # Navigation for your lab
+├── pages                            # Your content goes here
+│   ├── index.adoc                   # First page of your lab, e.g. overview etc
+│   └── <lab-module>                 # Lab Module Directory
+│       └── 01-lab-1.adoc            # Lab 1 content
+└── partials                         # You can add partials here, reusable content inserted inline into your modules
+    └── example_partial.adoc
+----
+
+=== Using Containers (Recommended)
+
+In order to test and develop on your local machine, you can use a specially built container with Podman or Docker as follows.
+
+. Create a git repo from this template
+.. Suggested naming: `showroom_<lab-name>`
+. Clone your new repo and `cd` into it
+. When you make changes to the content, all you need is to kill the container and run it again.
++
+[source,sh]
+----
+podman run --rm --name antora -v $PWD:/antora -p 8080:8080 -i -t ghcr.io/juliaaano/antora-viewer
+----
+
+For SELinux environments, `:z` may need to be appended to the volume mount:
+
+----
+podman run --rm --name antora -v $PWD:/antora:z -p 8080:8080 -i -t ghcr.io/juliaaano/antora-viewer
+----
+
+Live-reload is not supported.

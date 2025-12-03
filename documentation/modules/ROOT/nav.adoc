@@ -1,0 +1,21 @@
+////
+* xref:module-01.adoc[1. RPM Native Container]
+** xref:module-01.adoc#repositories[Repositories]
+** xref:module-01.adoc#software[Software]
+
+* xref:module-02.adoc[2. GitHub Sourced Container]
+** xref:module-02.adoc#prerequisites[Install Prerequisites]
+** xref:module-02.adoc#container[Enable Container]
+////
+* xref:environment-details.adoc[Environment Details]
+* Labs
+** xref:01-introduction.adoc[1. Introduction]
+** xref:02-aap-azure.adoc[2. AAP on Azure]
+** xref:03-developer-tools.adoc[3. Developer Tools]
+** xref:04-managing-content-automation-hub.adoc[4. Managing Content in Automation Hub]
+** xref:05-ansible-tdd.adoc[5. TDD for Ansible]
+** xref:06-ansible-cicd.adoc[6. CI/CD for Ansible Content]
+** xref:07-configuration-as-code.adoc[7. Configuration as Code]
+** xref:08-aap-openshift.adoc[8. AAP on OpenShift]
+* xref:appendix.adoc[Appendix]
+** xref:appendix.adoc#refresh-showroom-content[Refresh Showroom Content]

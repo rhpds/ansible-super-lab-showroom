@@ -1,0 +1,15 @@
+= Appendix
+
+[#refresh-showroom-content]
+== Refresh Showroom Content
+
+Showroom is the visualization tool for the documentation associated with the bootcamp. As the bootcamp session progresses, enhancements/updates may be incorporated into the documentation. To enable these updates to appear in the Showroom, the Showroom container must be restarted within the OpenShift cluster. This can be accomplished by performing the following actions:
+
+1. Login to the OpenShift Web Console
+2. Showroom is deployed in a namespace starting with `showroom-` followed by a unique identifier
+    a. Navigate to the **Workloads** -> **Pods** section on the left hand navigation pane.
+    b. Select the namespace starting with `showroom-` from the dropdown at the top of the page.
+3. Locate the pod with the name starting with `showroom-` and select the kebab menu (three vertical dots) on the right hand side of the pod entry.
+4. Select **Delete Pod** from the dropdown menu.
+
+A new pod will be automatically created and started. Once the new pod is in the `Running` state, the updated content will be available in Showroom and accessible from the exposed Route.

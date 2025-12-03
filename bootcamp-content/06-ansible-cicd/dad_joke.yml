@@ -1,0 +1,18 @@
+---
+- name: Random Dad Joke Generator
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Fetch a Random Joke from the API
+      ansible.builtin.uri:
+        url: https://icanhazdadjoke.com/
+        method: GET
+        headers:
+          Accept: application/json
+      register: joke_api_response
+
+    - name: Display the Setup and Punchline
+      ansible.builtin.debug:
+        msg: "{{ joke_api_response.json.joke }}"

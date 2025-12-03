@@ -1,0 +1,9 @@
+{
+    "dictionaryDefinitions": [
+        { "name": "custom_dict", "path": "./dictionaries/custom_dictionary.txt" }
+    ],
+    "dictionaries": ["products"],
+    "languageSettings": [
+        { "languageId": "*", "dictionaries": ["custom_dict"] }
+    ]
+}

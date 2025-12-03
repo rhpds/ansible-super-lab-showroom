@@ -1,0 +1,28 @@
+{
+	"folders": [
+		{
+			"name": "ansible-bootcamp-enablement",
+			"path": "/projects/ansible-bootcamp-enablement"
+		}
+	],
+	"extensions": {
+		"recommendations": [
+			"redhat.vscode-yaml",
+			"redhat.vscode-openshift-connector",
+			"asciidoctor.asciidoctor-vscode",
+			"streetsidesoftware.code-spell-checker"
+		]
+	},
+	"settings": {
+		"editor.wordWrap": "on",
+		"files.trimTrailingWhitespace": true,
+		"files.trimFinalNewlines": true,
+		"files.insertFinalNewline": true,
+		"redhat.telemetry.enabled": true,
+		"git.autofetch": true,
+		"terminal.integrated.scrollback": 10000,
+		"openshiftToolkit.showWelcomePage": false,
+		"openshiftToolkit.searchForToolsInPath": true,
+		"openshiftToolkit.execMaxBufferLength": 10
+	}
+}

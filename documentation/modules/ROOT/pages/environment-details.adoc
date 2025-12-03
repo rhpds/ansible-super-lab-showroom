@@ -1,0 +1,50 @@
+= Environment Details
+
+The following table contains the URL's and credentials for accessing resources contained within the lab environment. It is recommended that you keep this page open as a separate browser tab for easy reference.
+
+== Environment Information
+
+=== OpenShift / OpenShift Dev Spaces
+
+[cols="1,1"]
+|===
+|OpenShift Web Console URL
+|link:{openshift_cluster_console_url}[{openshift_cluster_console_url},window=_blank]
+
+|OpenShift Dev Spaces URL
+|link:https://devspaces.{openshift_cluster_ingress_domain}[https://devspaces.{openshift_cluster_ingress_domain},window=_blank]
+
+|OpenShift Username
+|{openshift_cluster_admin_username}
+
+|OpenShift Password
+|{openshift_cluster_admin_password}
+|===
+
+=== Ansible Automation Platform
+
+[cols="1,1"]
+|===
+|Ansible Automation Platform URL
+|link:{aap_controller_web_url}[{aap_controller_web_url},window=_blank]
+
+|Ansible Automation Platform Username
+|{aap_controller_admin_user}
+
+|Ansible Automation Platform Password
+|{aap_controller_admin_password}
+|===
+
+=== Gitea Git Server
+
+[cols="1,1"]
+|===
+|Gitea URL
+|link:{gitea_console_url}[{gitea_console_url},window=_blank]
+
+|Gitea Username
+|{gitea_user}
+
+|Gitea Password
+|{gitea_password}
+|===
