@@ -8,7 +8,6 @@
 ** xref:10-platform-workspace.adoc[1a. Platform - Introduction and exploration of Dev Spaces Workspace]
 ** xref:11-platform-dev-tooling.adoc[1b. Platform - Using Ansible developer tools]
 ** xref:12-platform-aap_on_openshift.adoc[1c. Platform - AAP on OpenShift]
-** xref:13-platform-tdd-molecule.adoc[1d. Platform - Using Molecule for TDD]
 ** xref:20-content-windows.adoc[2a. Content - Creating automation for Windows]
 ** xref:21-content-dev-ee.adoc[2b. Content - Develop a custom Execution Environment]
 ** xref:22-content-dev-playbook.adoc[2c. Content - Develop a Playbook to execute it all]
