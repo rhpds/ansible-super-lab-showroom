@@ -4,7 +4,7 @@ schemaVersion: 2.2.0
 attributes:
   controller.devfile.io/storage-type: per-workspace
 metadata:
-  name: ansible-bootcamp-enablement
+  name: ansible-ai-superlab
 components:
   - name: dev-tools
     attributes:
@@ -34,7 +34,7 @@ components:
           protocol: https
       env:
         - name: VSCODE_DEFAULT_WORKSPACE
-          value: /projects/ansible-bootcamp-enablement/devspaces.code-workspace
+          value: /projects/ansible-ai-superlab/devspaces.code-workspace
   - name: prep-workspace
     container:
       args:
@@ -61,12 +61,12 @@ commands:
   - id: start-antora
     exec:
       component: dev-tools
-      commandLine: "podman run --rm --name antora -v /projects/ansible-bootcamp-enablement:/antora:z -p 8080:8080 -i -t ghcr.io/juliaaano/antora-viewer"
+      commandLine: "podman run --rm --name antora -v /projects/ansible-ai-superlab:/antora:z -p 8080:8080 -i -t ghcr.io/juliaaano/antora-viewer"
       workingDir: "${PROJECTS_SOURCE}"
   - id: restart-antora
     exec:
       component: dev-tools
-      commandLine: "podman stop antora && podman run --rm --name antora -v /projects/ansible-bootcamp-enablement:/antora:z -p 8080:8080 -i -t ghcr.io/juliaaano/antora-viewer"
+      commandLine: "podman stop antora && podman run --rm --name antora -v /projects/ansible-ai-superlab:/antora:z -p 8080:8080 -i -t ghcr.io/juliaaano/antora-viewer"
       workingDir: "${PROJECTS_SOURCE}"
   - id: stop-antora
     exec:
