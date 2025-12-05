@@ -8,7 +8,7 @@ Site content for the Automation and AI SuperLab.
 
 [source,sh]
 ----
-./bootcamp-content # Location where all code for the bootcamp is stored
+./lab-content # Location where all code for the lab is stored
 ├── <lab-module>.                    # Lab Module Directory
 │   └── <content>                    # Associated content for the lab
 ./documentation/modules/ROOT/

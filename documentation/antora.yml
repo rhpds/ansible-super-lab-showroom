@@ -1,12 +1,12 @@
 name: modules
-title: Ansible Bootcamp Enablement
+title: Ansible AI SuperLab
 version: master
 nav:
   - modules/ROOT/nav.adoc
 
 asciidoc:
   attributes:
-    lab_name: "Ansible Bootcamp Enablement"
+    lab_name: "Ansible AI SuperLab"
     release-version: master
     page-pagination: true
     my_var: "foo"

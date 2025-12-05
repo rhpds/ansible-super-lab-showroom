@@ -4,20 +4,18 @@ Welcome to the {lab_name}!
 
 == Overview
 
-The Ansible Bootcamp Enablement provides a comprehensive, hands-on learning experience for Red Hat Ansible Automation Platform (AAP). This bootcamp covers the full spectrum of automation development, from basic concepts to advanced CI/CD pipelines and infrastructure as code.
+The Automation AI Superlab provides a comprehensive, hands-on learning experience for Red Hat Ansible Automation Platform (AAP). This superlab covers the full spectrum of automation development, from basic concepts to advanced CI/CD pipelines, infrastructure as code, Event Driven Ansible and lastly an exploration of some of the Red Hat Ansible Lightspeed assistants.
 
 Through a series of progressive labs, you'll gain practical experience with:
 
-* **Development Environments**: Setting up and using Red Hat OpenShift Dev Spaces for Ansible development
-* **Content Development**: Creating, testing, and publishing Ansible collections
-* **Automation Hub Management**: Managing content in Private Automation Hub
-* **CI/CD Integration**: Building automated pipelines for collection development and deployment
-* **Infrastructure as Code**: Managing AAP configuration through code
-* **Cloud Deployments**: Deploying AAP on various platforms including Azure and OpenShift
+* **Platform** - Covers OpenShift Dev Spaces, developer tooling, and the deployment of AAP on OpenShift.
+* **Content** - Focuses on creating custom Ansible Content Collections, Execution Environments, and playbooks for Windows.
+* **Events** - Dedicated to Event Driven Ansible (EDA), including rulebooks and event sources like AMQ Streams.
+* **AI** - Explores AIOps, Ansible Intelligent and Coding Assistant, and integrating AI with automation.
 
 == Prerequisites
 
-Before starting this bootcamp, ensure you have:
+Before starting this superlab, ensure you have:
 
 * Basic understanding of Linux command line operations
 * Familiarity with YAML syntax
@@ -26,20 +24,31 @@ Before starting this bootcamp, ensure you have:
 
 == Lab Structure
 
-The bootcamp is organized into sequential modules that build upon each other:
+The superlab is organized into sequential modules that build upon each other. Overall there flow of is broken into 4 major sections, each with separate labs:
 
-. **xref:01-introduction.adoc[Introduction]**: Environment setup and Dev Spaces configuration
-. **xref:02-aap-azure.adoc[AAP on Azure]**: Managed deployment on Microsoft Azure
-. **xref:03-developer-tools.adoc[Developer Tools]**: Essential tools for automation development
-. **xref:04-managing-content-automation-hub.adoc[Managing Content in Automation Hub]**: Collection development and publishing
-. **xref:05-ansible-tdd.adoc[Test-Driven Development for Ansible]**: Testing methodologies and practices
-. **xref:06-ansible-cicd.adoc[CI/CD for Ansible Content]**: Automated pipelines and deployment
-. **xref:07-configuration-as-code.adoc[Configuration as Code]**: Infrastructure and configuration management
-. **xref:08-aap-openshift.adoc[AAP on OpenShift]**: Operator-based deployment on OpenShift
+* **Platform** - Covers OpenShift Dev Spaces, developer tooling, and the deployment of AAP on OpenShift.
+* **Content** - Focuses on creating custom Ansible Content Collections, Execution Environments, and playbooks for Windows.
+* **Events** - Dedicated to Event Driven Ansible (EDA), including rulebooks and event sources like AMQ Streams.
+* **AI** - Explores AIOps, Ansible Intelligent and Coding Assistant, and integrating AI with automation.
+
+. xref:10-platform-workspace.adoc[1a. Platform - Introduction and exploration of Dev Spaces Workspace]
+. xref:11-platform-dev-tooling.adoc[1b. Platform - Using Ansible developer tools]
+. xref:12-platform-aap_on_openshift.adoc[1c. Platform - AAP on OpenShift]
+. xref:20-content-windows.adoc[2a. Content - Creating automation for Windows]
+. xref:21-content-dev-ee.adoc[2b. Content - Develop a custom Execution Environment]
+. xref:22-content-dev-playbook.adoc[2c. Content - Develop a Playbook to execute it all]
+. xref:23-content-pipeline.adoc[2d. Content - Pipeline for collections]
+. xref:24-content-config-as-code.adoc[2d. Content - Config as Code]
+. xref:30-events-rulebooks.adoc[3a. Events - EDA Overview and Rulebook creation]
+. xref:31-events-dev-de.adoc[3b. Events - Develop and publish Decision Environment]
+. xref:32-events-scenario.adoc[3c. Events - Execute a full EDA Scenario]
+. xref:40-ai-lightspeed-code-assistant.adoc[4a. AI - Ansible Lightspeed Code Assistant]
+. xref:41-ai-lightspeed-int-assistant.adoc[4b. AI - Ansible Lightspeed Intelligent Assistant]
+. xref:42-ai-lightspeed-mcp.adoc[4c. AI - Ansible MCP Server]
 
 == Learning Outcomes
 
-By the end of this bootcamp, you will be able to:
+By the end of this superlab, you will be able to:
 
 * Set up and configure development environments for Ansible automation
 * Develop, test, and publish Ansible collections
@@ -50,6 +59,6 @@ By the end of this bootcamp, you will be able to:
 
 == Getting Started
 
-Begin with xref:01-introduction.adoc[Module 1: Introduction] to set up your development environment. Each module includes detailed instructions, code examples, and verification steps.
+Begin with xref:10-platform-workspace.adoc[Module 1a: Platform - Introduction and exploration of Dev Spaces Workspace]] to set up your development environment. Each module includes detailed instructions, code examples, and verification steps.
 
 For questions or issues, refer to the xref:appendix.adoc[Appendix] or contact your instructor.
