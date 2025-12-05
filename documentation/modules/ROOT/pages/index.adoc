@@ -8,12 +8,10 @@ The Automation AI Superlab provides a comprehensive, hands-on learning experienc
 
 Through a series of progressive labs, you'll gain practical experience with:
 
-* **Development Environments**: Setting up and using Red Hat OpenShift Dev Spaces for Ansible development
-* **Content Development**: Creating, testing, and publishing Ansible collections
-* **Automation Hub Management**: Managing content in Private Automation Hub
-* **CI/CD Integration**: Building automated pipelines for collection development and deployment
-* **Infrastructure as Code**: Managing AAP configuration through code
-* **Cloud Deployments**: Deploying AAP on various platforms including Azure and OpenShift
+* **Platform** - Covers OpenShift Dev Spaces, developer tooling, and the deployment of AAP on OpenShift.
+* **Content** - Focuses on creating custom Ansible Content Collections, Execution Environments, and playbooks for Windows.
+* **Events** - Dedicated to Event Driven Ansible (EDA), including rulebooks and event sources like AMQ Streams.
+* **AI** - Explores AIOps, Ansible Intelligent and Coding Assistant, and integrating AI with automation.
 
 == Prerequisites
 
