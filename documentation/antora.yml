@@ -1,12 +1,12 @@
 name: modules
-title: Ansible AI SuperLab
+title: Automation AI SuperLab
 version: master
 nav:
   - modules/ROOT/nav.adoc
 
 asciidoc:
   attributes:
-    lab_name: "Ansible AI SuperLab"
+    lab_name: "Automation AI SuperLab"
     release-version: master
     page-pagination: true
     my_var: "foo"

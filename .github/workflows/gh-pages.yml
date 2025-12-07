@@ -9,6 +9,7 @@ on:
       - ".gitignore"
 
 permissions:
+  contents: read
   pages: write
   id-token: write
 
@@ -31,7 +32,7 @@ jobs:
       - name: install antora
         run: npm install --global @antora/cli@3.1 @antora/site-generator@3.1
       - name: antora generate
-        run: antora generate default-site.yml --stacktrace
+        run: antora generate site.yml --stacktrace
       - name: upload pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
