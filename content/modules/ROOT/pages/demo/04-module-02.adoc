@@ -1,0 +1,239 @@
+= Demo Module 02: Demo Timing, Flow, and Customer Engagement
+:source-highlighter: rouge
+:toc: macro
+:toclevels: 1
+
+This module builds on Module 01's Know/Show structure to teach you how to structure your demo timing, create smooth flow between sections, and engage customers effectively. We'll use practical OpenShift and Ansible examples to demonstrate these concepts.
+
+== Part 1 — Demo Timing Structure
+
+=== Know
+_Effective demos follow a specific timing structure that keeps customers engaged while delivering maximum value. Building on Module 01's Know/Show structure, we'll see how timing enhances the business story._
+
+**Recommended Demo Structure:**
+
+* **Opening (5 minutes):** Set business context and establish urgency
+* **Technical Demo (10-15 minutes):** Core demonstration with Know/Show sections
+* **Closing (5-10 minutes):** Reinforce value and handle questions
+
+**Why This Timing Works:**
+* Keeps total demo under 30 minutes (customer attention span)
+* Balances business context with technical demonstration
+* Leaves time for meaningful interaction and questions
+* Follows the "tell them what you'll show, show them, tell them what you showed" principle
+
+=== Show
+* Study the timing structure in your demo:
+  * Notice the specific time allocations
+  * See how business context is prioritized in opening
+  * Observe how technical content is time-boxed
+
+* Practice timing with OpenShift examples:
+  * Allocate 3 minutes for `oc new-app` demonstration
+  * Reserve 2 minutes for scaling discussion with `oc autoscale`
+  * Leave 5 minutes for customer questions and business value discussion
+
+* Adding timing diagrams to your demo:
++
+[source,asciidoc]
+----
+image::demo-timing-chart.png[align="center",width=600,title="Demo Timing Structure"]
+----
+
+* Example timing breakdown with images:
++
+[source,asciidoc]
+----
+image::demo-opening.png[align="left",width=300,title="Opening - Business Context"]
+image::demo-technical.png[align="center",width=300,title="Technical Demo - Core Features"]
+image::demo-closing.png[align="right",width=300,title="Closing - Value Recap"]
+----
+
+* Practice timing your demo:
+  * Set a timer for each section
+  * Practice transitions between Know and Show sections
+  * Identify where you typically run over or under time
+
+== Part 2 — Creating Smooth Demo Flow
+
+=== Know
+_Good demos flow naturally from one concept to the next, building understanding progressively. Using Module 01's Know/Show structure, we'll create seamless transitions between business context and technical demonstration._
+
+**Flow Principles:**
+
+* **Start with the problem** (customer's slow deployment cycles)
+* **Show the solution** (OpenShift/Ansible automation)
+* **Demonstrate the process** (step-by-step technical walkthrough)
+* **Reinforce the value** (quantified business outcomes)
+
+**Flow Techniques using Module 01's structure:**
+* Each Know section builds business context
+* Each Show section demonstrates technical solution
+* Business context is maintained throughout technical steps
+* Transitions reference the business challenge
+
+=== Show
+* Analyze the demo flow using Module 01's structure:
+  * Start with Know section - establishes the business problem
+  * Move to Show section - demonstrates the technical solution
+  * Continue with progressive examples - shows development to production
+  * End with business value reinforcement - provides clear outcomes
+
+* Practice flow with OpenShift progression:
+  * Know: "Your team spends 3-5 days setting up environments"
+  * Show: Demonstrate `oc new-project` and `oc new-app`
+  * Know: "Manual scaling takes hours and causes downtime"
+  * Show: Demonstrate `oc autoscale` and `oc scale`
+
+* Adding flow tips to your demo:
++
+[source,asciidoc]
+----
+[TIP]
+====
+**Flow Tip:** Use transition phrases to connect Know and Show sections.
+Examples: "Now let me show you how this solves that problem..." 
+or "Let's see this in action..."
+====
+
+[NOTE]
+====
+**Pro Tip:** Each Know section should set up the next Show section. 
+The business problem you describe should be directly solved by the technical demonstration.
+====
+----
+
+* Practice creating flow in your demo:
+  * Map out your key points in order
+  * Identify natural transitions between sections
+  * Ensure each section builds on the previous one
+  * Test the flow with a colleague
+
+== Part 3 — Customer Engagement Strategies
+
+=== Know
+_Engaging customers means making your demo interactive, relevant, and memorable. Using Module 01's Know/Show structure, we'll create engagement that connects technical capabilities to business outcomes._
+
+**Engagement Techniques:**
+
+* **Ask rhetorical questions** that make customers think
+* **Use specific examples** they can relate to
+* **Reference their industry** and challenges
+* **Provide quantifiable benefits** they can take to stakeholders
+* **Handle objections proactively** with prepared responses
+
+**Engagement Examples using OpenShift/Ansible:**
+* "How does OpenShift work with our existing Jenkins pipelines?" - addresses integration concerns
+* "What about compliance and security with Ansible automation?" - addresses governance worries
+* "How complex is the OpenShift implementation?" - addresses change management fears
+
+=== Show
+* Study customer questions in your demo:
+  * Notice how common objections are anticipated
+  * See how responses reference specific technical capabilities
+  * Observe how benefits are quantified
+
+* Practice engagement with Ansible examples:
+  * Ask: "What if your team needs to update 100 servers?"
+  * Show: Demonstrate `ansible-playbook` with `--limit` for targeted updates
+  * Connect: "This reduces your maintenance window from hours to minutes"
+
+* Adding engagement tips to your demo:
++
+[source,asciidoc]
+----
+[IMPORTANT]
+====
+**Engagement Tip:** Always ask questions that make customers think about their current pain points.
+Don't just tell them the solution—help them discover why they need it.
+====
+
+[NOTE]
+====
+**Pro Tip:** Use customer-specific examples. If they're in healthcare, 
+talk about HIPAA compliance. If they're in finance, discuss audit trails.
+====
+----
+
+* Practice customer engagement:
+  * Role-play common customer scenarios
+  * Prepare responses to typical questions
+  * Practice transitioning from technical details back to business value
+  * Develop your own customer questions based on your solution
+
+== Part 4 — Handling Demo Interruptions
+
+=== Know
+_Demo interruptions are opportunities, not problems. They show customer engagement and provide chances to address specific concerns._
+
+**Types of Interruptions:**
+
+* **Technical questions** - show your expertise
+* **Business questions** - demonstrate value understanding
+* **Objections** - address concerns proactively
+* **Side conversations** - bring focus back to your demo
+
+**Handling Strategies:**
+* **Acknowledge the question** and its importance
+* **Answer briefly** or defer to appropriate section
+* **Return to your flow** naturally
+* **Use interruptions** to reinforce key points
+
+=== Show
+* Practice handling interruptions:
+  * Have a colleague interrupt your demo practice
+  * Practice acknowledging and redirecting
+  * Develop smooth transitions back to your main flow
+  * Prepare for common interruption scenarios
+
+* Study how showroom-rhads anticipates questions:
+  * Look at the "Common Customer Questions" section
+  * Notice how responses are prepared in advance
+  * See how technical details support business answers
+
+== Part 5 — Demo Conclusion and Follow-up
+
+=== Know
+_Strong demo conclusions reinforce value and set up next steps. They should summarize benefits and provide clear action items._
+
+**Conclusion Elements:**
+
+* **Recap the problem** and how you solved it
+* **Summarize key benefits** with specific metrics
+* **Address any remaining concerns** from the demo
+* **Provide next steps** and timeline
+* **Set expectations** for follow-up
+
+**Conclusion Example using OpenShift/Ansible:**
+The demo shows how your customer can go from 3-5 day environment setup to 5-minute deployment, with specific metrics and clear implementation path using OpenShift and Ansible automation.
+
+=== Show
+* Practice your demo conclusion:
+  * Time yourself - aim for 3-5 minutes
+  * Include problem recap, solution summary, and next steps
+  * Practice handling final questions
+  * Develop a strong closing statement
+
+* Review follow-up resources in your demo:
+  * Notice how additional resources are provided
+  * See how contact information is included
+  * Observe how next steps are clearly defined
+
+* Prepare for Module 03:
+  * This module covers advanced techniques and customization
+  * You'll learn how to adapt these OpenShift/Ansible examples for different audiences
+  * Practice the timing and flow techniques from this module
+
+== Key Takeaways
+
+* **Structure your timing** to maintain engagement
+* **Create natural flow** between concepts and sections
+* **Engage customers** with questions and relevant examples
+* **Handle interruptions** as opportunities, not problems
+* **End strongly** with clear value recap and next steps
+
+* **Reference Module 01** for the foundational Know/Show structure
+* **Practice with OpenShift/Ansible examples** to build your technical confidence
+* **Prepare for Module 03** to learn advanced customization techniques
+
+Remember: A good demo is not just about showing features - it's about telling a compelling business story that resonates with your customer's challenges and goals.

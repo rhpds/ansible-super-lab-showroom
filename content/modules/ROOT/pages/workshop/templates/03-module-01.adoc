@@ -1,0 +1,166 @@
+= Module 1: {{ Module title }}
+:source-highlighter: rouge
+:toc: macro
+:toclevels: 1
+
+{{ Brief engaging intro that connects to business scenario and creates personal stakes }}
+
+{{ Company name }} needs {{ urgent business requirement }}, and you've been tasked with {{ specific responsibility }}. {{ Technology }} can help solve this challenge, but you need to {{ specific skill or capability }}.
+
+In this module, you'll experience firsthand how {{ technology }} {{ primary benefit or capability }}.
+
+== Learning objectives
+By the end of this module, you'll be able to:
+
+* {{ Learning objective 1 with specific outcome }}
+* {{ Learning objective 2 with measurable skill }}
+* {{ Learning objective 3 with business impact }}
+* {{ Learning objective 4 with real-world application }}
+
+== Exercise 1: {{ Exercise title }}
+
+{{ Personal context: "You need to {{ specific business outcome }} for {{ Company name }}. Let's start with {{ first step description }} to prove {{ technology }} can {{ solve specific problem }}." }}
+
+You prepare to {{ first action }} to meet {{ Company name }}'s business requirements.
+
+. First, verify your environment is ready:
++
+[source,bash]
+----
+{{ verification command }}
+----
+
+. {{ Step description }}:
++
+[source,bash]
+----
+{{ main command }}
+----
+
+. Check what's available:
++
+[source,bash]
+----
+{{ inspection command }}
+----
+
+. {{ Action description }}:
++
+[source,bash]
+----
+{{ execution command }}
+----
+
+. Verify the results:
++
+[source,bash]
+----
+{{ verification command }}
+----
+
+. {{ Final test description }}
++
+{{ Expected outcome description }}.
+
+// Screenshot showing expected output
+image::{{ exercise1-result }}.png[align="center",width=500,title="Expected Exercise 1 Output"]
+
+== Exercise 2: {{ Exercise title }}
+
+{{ Brief description of what participants will accomplish in this more advanced exercise }}.
+
+=== Prerequisites
+* {{ Prerequisite from previous exercise }}
+* {{ Additional requirement }}
+
+=== Steps
+
+. {{ Step 1 description }}:
++
+[source,bash]
+----
+{{ command or code }}
+----
+
+. {{ Step 2 with file creation }}:
++
+[source,bash]
+----
+cat > {{ filename }} << 'EOF'
+{{ file content }}
+EOF
+----
+
+. {{ Step 3 description }}:
++
+[source,bash]
+----
+{{ build or process command }}
+----
+
+. {{ Verification and testing }}:
++
+[source,bash]
+----
+{{ test commands }}
+----
+
+=== Troubleshooting
+**Issue**: {{ Common problem }}
+**Solution**: {{ How to resolve }}
+
+**Issue**: {{ Another common problem }}
+**Solution**: {{ Resolution steps }}
+
+== Exercise 3: {{ Advanced exercise title }}
+
+{{ Description of advanced exercise that builds on previous work }}.
+
+=== Steps
+
+. {{ Advanced step 1 }}:
++
+[source,bash]
+----
+{{ advanced command }}
+----
+
+. {{ Advanced step 2 }}:
++
+[source,bash]
+----
+{{ configuration command }}
+----
+
+. {{ Verification and testing }}:
++
+[source,bash]
+----
+{{ comprehensive test }}
+----
+
+. {{ Cleanup if needed }}:
++
+[source,bash]
+----
+{{ cleanup commands }}
+----
+
+== Module summary
+
+You've successfully completed the {{ technology }} fundamentals module.
+
+**What you accomplished:**
+* {{ Specific skill or capability gained }}
+* {{ Technical competency demonstrated }}
+* {{ Knowledge area covered }}
+* {{ Practical experience gained }}
+
+**Key takeaways:**
+* {{ Important concept or practice }}
+* {{ Best practice learned }}
+* {{ Foundation for next module }}
+* {{ Business benefit demonstrated }}
+
+**Next steps:**
+Module 2 will {{ brief preview of next module content }}.

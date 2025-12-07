@@ -1,0 +1,210 @@
+= Module 1: Container fundamentals
+:source-highlighter: rouge
+:toc: macro
+:toclevels: 1
+
+Your manager at ACME Corporation just assigned you to modernize the company's legacy web application deployment process. "We need faster, more reliable deployments," she says. "Our current process takes hours and often fails in production."
+
+ACME needs to deploy applications quickly and consistently across development, staging, and production environments. You've heard that containerization can help solve this challenge, but you need to experience it firsthand to understand the benefits.
+
+In this module, you'll experience how containers provide consistent, rapid application deployment.
+
+== Learning objectives
+By the end of this module, you'll be able to:
+
+* Deploy a web application using containers in minutes instead of hours
+* Ensure consistent behavior across different environments
+* Manage container lifecycle for reliable application operations
+* Use container registries for secure application distribution
+
+== Exercise 1: Your first container deployment
+
+You need to prove that containers can solve ACME's deployment challenges. Let's start with a simple web server deployment to demonstrate the speed and consistency containers provide.
+
+You prepare to deploy your first containerized application to test container capabilities.
+
+. Verify that Podman is installed and working:
++
+[source,bash]
+----
+podman version
+----
+
+. Download a pre-built web server image:
++
+[source,bash]
+----
+podman pull registry.redhat.io/rhel8/httpd-24
+----
+
+. List the images available on your system:
++
+[source,bash]
+----
+podman images
+----
+
+. Run your first container:
++
+[source,bash]
+----
+podman run -d --name my-web-server -p 8080:8080 registry.redhat.io/rhel8/httpd-24
+----
+
+. Check that the container is running:
++
+[source,bash]
+----
+podman ps
+----
+
+. Test the web server by opening http://localhost:8080 in your browser
++
+You should see a test page, confirming that your container is running and serving web traffic.
+
+The web server is now running successfully. Container deployment completed in seconds compared to traditional server configuration processes.
+
+// Screenshot showing successful container startup
+image::first-container-running.png[align="center",width=500,title="First Container Successfully Running"]
+
+== Exercise 2: Container lifecycle management
+
+Now you need to understand how to manage these containers in production scenarios. Understanding container lifecycle management is essential for production deployments.
+
+=== Prerequisites
+* Container from Exercise 1 should be running
+* Web browser access to test functionality
+
+=== Steps
+
+. Check the status of all containers (running and stopped):
++
+[source,bash]
+----
+podman ps -a
+----
+
+. View container logs to see what the web server is doing:
++
+[source,bash]
+----
+podman logs my-web-server
+----
+
+. Execute a command inside the running container:
++
+[source,bash]
+----
+podman exec -it my-web-server /bin/bash
+----
+
+. Inside the container, explore the filesystem and then exit:
++
+[source,bash]
+----
+ls -la /opt/app-root/src/
+ps aux
+exit
+----
+
+. Stop the container:
++
+[source,bash]
+----
+podman stop my-web-server
+----
+
+. Verify the container is stopped:
++
+[source,bash]
+----
+podman ps -a
+----
+
+. Restart the container and verify it works:
++
+[source,bash]
+----
+podman start my-web-server
+curl http://localhost:8080
+----
++
+The container restarted successfully with all configuration preserved.
+
+=== Troubleshooting
+**Issue**: Container fails to start
+**Solution**: Check if port 8080 is already in use: `netstat -tulpn | grep 8080`
+
+**Issue**: Can't access web server
+**Solution**: Verify container is running and port mapping: `podman port my-web-server`
+
+== Exercise 3: Working with container registries
+
+In this exercise, you will explore container registries and practice image management operations.
+
+=== Steps
+
+. Search for available Red Hat images:
++
+[source,bash]
+----
+podman search registry.redhat.io/rhel8 --limit 5
+----
+
+. Examine detailed information about your image:
++
+[source,bash]
+----
+podman inspect registry.redhat.io/rhel8/httpd-24
+----
+
+. View the layers that make up the image:
++
+[source,bash]
+----
+podman history registry.redhat.io/rhel8/httpd-24
+----
+
+. Create a custom tag for your image:
++
+[source,bash]
+----
+podman tag registry.redhat.io/rhel8/httpd-24 acme/web-server:v1.0
+----
+
+. List all images including your new tag:
++
+[source,bash]
+----
+podman images
+----
+
+. Clean up by stopping and removing the container:
++
+[source,bash]
+----
+podman stop my-web-server
+podman rm my-web-server
+----
+
+== Module summary
+
+You've successfully demonstrated the power of containerization and can now confidently present this solution to your manager.
+
+**What you accomplished for ACME:**
+* Deployed a web server in seconds instead of hours using containers
+* Proved containers provide consistent behavior across environments
+* Demonstrated simple yet powerful container management capabilities
+* Showed how container technology eliminates configuration drift
+
+**Business impact realized:**
+* **Deployment time**: Reduced from hours to seconds
+* **Reliability**: Eliminated environment-specific deployment failures
+* **Operational efficiency**: Simplified management through standardized commands
+* **Risk reduction**: Consistent, repeatable deployment process
+
+**Your journey progress:**
+You now have practical experience with container fundamentals and can evaluate their potential for improving deployment processes.
+
+**Next steps:**
+Module 2 will show you how to create custom container images for ACME's specific applications, moving from proof-of-concept to production-ready solutions.

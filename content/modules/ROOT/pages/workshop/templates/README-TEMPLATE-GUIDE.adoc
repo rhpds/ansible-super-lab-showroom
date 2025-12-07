@@ -1,0 +1,390 @@
+= Workshop Template Usage Guide
+:source-highlighter: rouge
+:toc: macro
+:toclevels: 2
+
+toc::[]
+
+This guide explains how to create engaging workshop experiences using proven patterns from successful Red Hat workshops. Learn the organizational structure, content patterns, and narrative techniques that transform technical training into compelling, hands-on learning journeys.
+
+== Storytelling Framework
+
+The workshop templates use a **personal protagonist approach** that transforms learners into the hero of their own professional journey. This creates emotional investment and makes complex technical concepts more accessible and memorable.
+
+=== Core Narrative Elements
+
+**Personal Stakes**: Position the learner as someone facing a real business crisis with personal and professional consequences.
+
+**Emotional Journey Arc**: Guide learners through:
+* Initial frustration with current processes
+* Discovery moments when technology works as promised
+* Progressive empowerment as skills develop
+* Achievement satisfaction with successful implementations
+
+**Internal Dialogue**: Include thought processes and emotional reactions throughout exercises to make the technical journey feel human and relatable.
+
+**Second-Person Narrative**: Use "You" consistently rather than "participants" to create direct personal engagement.
+
+== Workshop Organization Patterns
+
+Based on successful Red Hat workshop implementations, use this modular structure:
+
+=== Core Workshop Structure
+* `00-index.adoc` - Workshop facilitator guide and navigation overview
+* `01-overview.adoc` - Learning objectives, business context, and audience setup
+* `02-details.adoc` - Technical requirements, environment setup, and logistics
+
+=== Learning Modules (Progressive Skill Building)
+* `03-module-01.adoc` - Foundation concepts with immediate hands-on success
+* `04-module-02.adoc` - Intermediate skills building on previous module
+* `05-module-03.adoc` - Advanced implementation and production scenarios
+
+=== Supporting Organization
+* `assets/images/` - Screenshots, diagrams, and visual aids
+* `examples/` - Downloadable files, sample code, configuration templates
+* `partials/` - Reusable content blocks for consistency across modules
+
+=== Multiple Learning Paths
+Consider offering choice-based paths like:
+* Technology preferences (e.g., "OpenShift Pipelines vs Jenkins")
+* Experience levels (e.g., "Beginner vs Advanced track")
+* Implementation approaches (e.g., "Cloud-native vs Traditional")
+
+== Variable Substitution Patterns
+
+=== Showroom Variables
+Use double curly braces for showroom variable substitution:
+
+[source,asciidoc]
+----
+= {{ Workshop Title }}
+{{ Product | Solution }} does X to solve Y.
+{{ Company }} needs to {{ business requirement }}.
+----
+
+=== Storytelling Template Placeholders
+Use double curly braces for narrative placeholders that create engaging, personal experiences:
+
+[source,asciidoc]
+----
+# Crisis and Stakes Variables
+{{ urgent business challenge }}     # Time-sensitive business problem
+{{ stakes/consequences }}           # What happens if they fail
+{{ deadline pressure }}             # Specific timeline creating urgency
+
+# Persona and Role Variables
+{{ persona/role }}                  # Learner's professional identity
+{{ Company name }}                  # Scenario company (use consistently)
+{{ authority figure }}              # Manager/VP creating pressure
+
+# Emotional Journey Variables
+{{ current frustration state }}     # Starting point frustration
+{{ empowered future state }}        # Confident ending state
+{{ breakthrough moment }}           # Key realization or success
+{{ internal dialogue }}             # Thoughts and reactions
+
+# Technology and Solution Variables
+{{ technology }}                    # Main technical focus
+{{ old process duration }}          # Current slow timeframe
+{{ new timeframe }}                 # Improved speed with solution
+{{ avoided complexity }}            # Manual work eliminated
+
+# Business Impact Variables
+{{ transformation description }}    # How work changes
+{{ visual of success }}             # Imagined positive outcome
+{{ team impact }}                   # Effect on colleagues
+----
+
+== Image Formatting Patterns
+
+=== Basic Image Insertion
+[source,asciidoc]
+----
+image::screenshot.png[align="center",width=500]
+----
+
+=== Image with Title
+[source,asciidoc]
+----
+image::production-architecture.png[align="center",width=700,title="Production Architecture Overview"]
+----
+
+=== Multiple Images Side-by-Side
+[source,asciidoc]
+----
+image::step1.png[align="left",width=250,title="Step 1"]
+image::step2.png[align="center",width=250,title="Step 2"]
+image::step3.png[align="right",width=250,title="Step 3"]
+----
+
+=== Images for Different Audiences
+[source,asciidoc]
+----
+// For executive audience
+image::executive-dashboard.png[align="center",width=700,title="Executive Dashboard - Business Metrics"]
+
+// For technical audience
+image::technical-details.png[align="center",width=600,title="Technical Details - Implementation Steps"]
+
+// For security audience
+image::security-compliance.png[align="center",width=600,title="Security & Compliance - Policy Enforcement"]
+----
+
+=== Before/After Comparison Images
+[source,asciidoc]
+----
+image::before-scaling.png[align="left",width=300,title="Single Instance"]
+image::after-scaling.png[align="right",width=300,title="Multiple Instances"]
+----
+
+== Code Block Formatting
+
+=== Basic Bash Commands
+[source,asciidoc]
+----
+[source,bash]
+----
+podman version
+oc login --server=<your-cluster-url>
+----
+\----
+
+=== Multi-line Code with Comments
+[source,asciidoc]
+----
+[source,bash]
+----
+# Tag for OpenShift registry
+podman tag acme/web-app:v2.0 registry.example.com/project/web-app:v2.0
+
+# Push to registry
+podman push registry.example.com/project/web-app:v2.0
+----
+\----
+
+=== File Content Creation
+[source,asciidoc]
+----
+[source,bash]
+----
+cat > Dockerfile << 'EOF'
+FROM registry.redhat.io/ubi8/python-39
+WORKDIR /opt/app-root/src
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY app.py .
+EXPOSE 8080
+USER 1001
+CMD ["python", "app.py"]
+EOF
+----
+\----
+
+=== Code with Different Languages
+[source,asciidoc]
+----
+[source,python]
+----
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    return '<h1>Hello World!</h1>'
+----
+\----
+
+[source,yaml]
+----
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+spec:
+  replicas: 3
+----
+\----
+
+== Step-by-Step Instructions Format
+
+=== Basic Step Format
+[source,asciidoc]
+----
+* Step description:
++
+[source,bash]
+----
+command-to-execute
+----
+
+* Next step description:
++
+[source,bash]
+----
+another-command
+----
+----
+
+=== Steps with Verification
+[source,asciidoc]
+----
+* Create a deployment:
++
+[source,bash]
+----
+oc create deployment my-app --image=registry.example.com/my-app:latest
+----
+
+* Verify the deployment:
++
+[source,bash]
+----
+oc get deployments
+oc get pods
+----
+
+* Check the application URL and test it in your browser
+----
+
+=== Steps with Multiple Commands
+[source,asciidoc]
+----
+* Configure resource limits:
++
+[source,bash]
+----
+oc patch deployment my-app -p '{
+  "spec": {
+    "template": {
+      "spec": {
+        "containers": [{
+          "name": "my-app",
+          "resources": {
+            "requests": {"memory": "128Mi", "cpu": "100m"},
+            "limits": {"memory": "256Mi", "cpu": "200m"}
+          }
+        }]
+      }
+    }
+  }
+}'
+----
+----
+
+
+== Workshop-Specific Conventions
+
+=== Module Summary Format
+[source,asciidoc]
+----
+== Module X summary
+
+**What you learned:**
+* Key learning outcome 1
+* Key learning outcome 2
+* Key learning outcome 3
+
+**Key takeaways for {{ Company }}:**
+* Business benefit 1
+* Technical advantage 2
+* Strategic value 3
+
+**Business impact achieved:**
+* Quantified improvement 1
+* Measured benefit 2
+* Operational enhancement 3
+
+**Next steps:**
+Module X+1 will demonstrate [preview of next content].
+----
+
+=== Troubleshooting Section Format
+[source,asciidoc]
+----
+=== Common setup issues
+
+**Problem**: "Specific error message"
+→ **Solution**: Step-by-step resolution
+
+**Problem**: "Another error condition"
+→ **Solution**: Alternative approach with commands
+
+**Problem**: "Network connectivity issue"
+→ **Solution**: Verification steps and workarounds
+----
+
+== Image Asset Organization
+
+Images should be placed in the `assets/images/` directory with descriptive names:
+
+* `production-architecture.png` - Architecture diagrams
+* `step1-deployment.png` - Sequential step screenshots
+* `before-after-comparison.png` - Comparison images
+* `monitoring-dashboard.png` - Interface screenshots
+* `executive-dashboard.png` - Audience-specific views
+
+Use consistent naming patterns that match your content structure.
+
+== Development Workflow
+
+=== Container-Based Development
+Set up consistent development environment:
+
+[source,bash]
+----
+# Using Podman/Docker for development
+podman run --rm -it -p 35729:35729 -p 8080:8080 \
+  -v $(pwd):/antora:Z \
+  docker.io/antora/antora:latest \
+  antora-playbook.yml --serve --clean
+----
+
+=== Live Preview Setup
+* Enable real-time content updates during development
+* Use Antora's development mode for immediate feedback
+* Configure hot-reload for efficient content iteration
+
+=== Asset Management
+* Place images in `assets/images/` with descriptive names
+* Use `examples/` for downloadable files and code samples
+* Create `partials/` for reusable content blocks
+
+== Content Design Patterns
+
+=== Progressive Skill Building
+1. **Foundation First**: Start with immediate success to build confidence
+2. **Incremental Complexity**: Each module builds on previous learning
+3. **Real-World Application**: End with production-ready scenarios
+4. **Choice Points**: Offer technology/approach alternatives when relevant
+
+=== User Story Narrative Framework
+
+Create compelling workshop experiences using user story elements:
+
+**Hero's Journey Structure**:
+1. **Call to Adventure**: Learner receives critical business mission
+2. **Stakes and Urgency**: Clear consequences for success/failure
+3. **Skills Acquisition**: Progressive learning tied to mission requirements
+4. **Trials and Triumphs**: Breakthrough moments and confidence building
+5. **Return with Elixir**: Mastery that transforms both learner and organization
+
+**Key User Story Components**:
+* **Role Definition**: "You're a [specific role] at [Company] facing [specific challenge]"
+* **Mission Assignment**: "Your manager has asked you to [specific task] because [urgency/stakes]"
+* **Personal Stakes**: "Success means [career advancement/recognition], failure means [consequences]"
+* **Internal Dialogue**: "'[thoughts reflecting uncertainty, determination, or pressure]' you think"
+* **Victory Vision**: "Imagine presenting to [stakeholder] and saying '[quote showing success]'"
+
+=== Engagement Techniques
+* **Crisis Setup**: Frame learning in urgent, realistic business scenarios with deadlines
+* **Personal Investment**: Connect technical skills to career advancement and professional reputation
+* **Emotional Journey**: Include frustration → discovery → confidence → mastery progression
+* **Business Impact**: Quantify outcomes with specific metrics and competitive advantages
+
+=== Technical Best Practices
+1. **Variable Consistency**: Use the same company name and scenario throughout
+2. **Image Sizing**: Use width=600-700 for main diagrams, 250-300 for side-by-side
+3. **Code Formatting**: Always specify language for syntax highlighting
+4. **Verification Steps**: Include verification for each major step
+5. **Modular Design**: Create reusable components for common patterns
+6. **Multiple Paths**: Support different experience levels and technology preferences

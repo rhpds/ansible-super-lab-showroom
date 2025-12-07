@@ -1,0 +1,110 @@
+= Workshop details
+:toc:
+:toc-placement: preamble
+:icons: font
+
+== Timing and schedule
+
+=== Full workshop (4 hours)
+* **Module 1**: Container fundamentals (45 minutes)
+* **Module 2**: Application containerization (90 minutes)
+* **Module 3**: Advanced deployment patterns (90 minutes)
+* **Break time**: 15 minutes between modules
+
+=== Abbreviated workshop (2 hours)
+* **Module 1**: Container fundamentals (30 minutes)
+* **Module 2**: Application containerization (60 minutes)
+* **Module 3**: Basic deployment only (30 minutes)
+
+== Technical requirements
+
+=== Software versions
+* Red Hat OpenShift 4.12 or later
+* Podman 4.0 or later (or Docker 20.10+)
+* Git 2.30 or later
+* Web browser (Chrome, Firefox, Safari, Edge)
+
+=== Environment access
+Participants need access to:
+
+* Red Hat OpenShift cluster (provided during workshop)
+* Container registry access (Quay.io or Red Hat Registry)
+* Terminal/command line environment
+* Code editor (VS Code recommended)
+
+=== Network requirements
+* Internet connectivity for downloading container images
+* Access to GitHub for sample applications
+* OpenShift cluster network access (specific URLs provided)
+
+== Environment setup
+
+=== Pre-workshop checklist
+□ **OpenShift cluster access confirmed** - Test login credentials
+□ **Container runtime installed** - Verify Podman/Docker installation
+□ **Git configured** - Set up user name and email
+□ **Sample code downloaded** - Clone workshop repository
+□ **Network connectivity verified** - Test access to required URLs
+
+=== Setup validation
+Participants should run these commands to verify setup:
+
+```bash
+# Verify container runtime
+podman version
+
+# Verify Git configuration
+git config --list
+
+# Verify OpenShift CLI
+oc version
+
+# Test cluster connectivity
+oc whoami
+```
+
+== Troubleshooting guide
+
+=== Common setup issues
+
+**Problem**: "oc command not found"
+→ **Solution**: Download OpenShift CLI from Red Hat Developer portal and add to PATH
+
+**Problem**: "Permission denied" when running container commands
+→ **Solution**: Add user to appropriate group (docker/podman) or use rootless containers
+
+**Problem**: "Unable to connect to OpenShift cluster"
+→ **Solution**: Verify network connectivity and login credentials
+
+**Problem**: "Container image pull fails"
+→ **Solution**: Check network connectivity and registry authentication
+
+=== During workshop support
+* Encourage participants to help each other
+* Provide alternative approaches for different operating systems
+* Have backup environments ready for technical difficulties
+* Use screen sharing for complex troubleshooting
+
+== Follow-up resources
+
+=== Next steps for participants
+* Red Hat Developer Sandbox: Free OpenShift environment
+* Red Hat Learning Subscription: Comprehensive container training
+* OpenShift documentation: Official technical documentation
+* Container development best practices guide
+
+=== Additional learning paths
+* **Intermediate**: Kubernetes administration and advanced networking
+* **Advanced**: Service mesh, operators, and enterprise patterns
+* **Certification**: Red Hat Certified Specialist in Containers and Kubernetes
+
+== Authors and contributors
+
+**Primary Author**: Red Hat Technical Training Team
+**Last Updated**: September 2024
+**Workshop Version**: 2.1
+
+**Contact Information**:
+* Workshop feedback: training-feedback@redhat.com
+* Technical questions: developer-support@redhat.com
+* Content updates: Submit issues via workshop repository

@@ -1,0 +1,363 @@
+= Claude Agent System Guide
+:source-highlighter: rouge
+:toc: macro
+:toclevels: 2
+
+toc::[]
+
+This repository includes a specialized Claude agent system for content creation, review, and quality assurance. The agents are located in `content/modules/ROOT/pages/.claude/agents/` and provide expert assistance for workshop and demo development.
+
+== Available Agents
+
+=== Content Creation Agents
+
+==== Technical Writer
+**File**: `.claude/agents/technical-writer.md`
+**Purpose**: Create structured workshop content following Red Hat corporate style standards and pedagogical best practices
+**Specializes in**:
+- Workshop content with clear learning objectives and progressive skill building
+- Hands-on exercises with proper validation and step-by-step instructions
+- Know/Show structure for demos with business context and presentation flow
+- Red Hat corporate style guidelines and enterprise business scenarios
+
+==== Researcher
+**File**: `.claude/agents/researcher.md`
+**Purpose**: Gather, validate, and synthesize information for Red Hat workshop and demo content development
+**Specializes in**:
+- Technical accuracy validation and current version verification
+- Best practices research and competitive analysis
+- Enterprise use case discovery and industry trend analysis
+- Content validation, fact checking, and citation research
+
+=== Quality Assurance Agents
+
+==== Workshop Reviewer
+**File**: `.claude/agents/workshop-reviewer.md`
+**Purpose**: Expert Red Hat workshop facilitator and quality assurance specialist for comprehensive content review
+**Specializes in**:
+- Learning objective verification and exercise structure validation
+- Technical accuracy of hands-on activities and progressive skill building assessment
+- Business scenario relevance and storytelling consistency evaluation
+- Know/Show structure validation for demos and presentation flow optimization
+
+==== Style Enforcer
+**File**: `.claude/agents/style-enforcer.md`
+**Purpose**: Red Hat corporate style compliance specialist ensuring all content meets official Red Hat style guide standards
+**Specializes in**:
+- Sentence case headline formatting and Red Hat product naming standards
+- Inclusive language requirements and prohibited term replacement
+- Oxford comma usage, hyphenation rules, and number formatting
+- Citation validation for superlative claims and professional tone maintenance
+
+==== Technical Editor
+**File**: `.claude/agents/technical-editor.md`
+**Purpose**: Expert technical editor specializing in polishing and refining Red Hat workshop and demo content for clarity, accuracy, and professional presentation
+**Specializes in**:
+- Content clarity improvement and technical accuracy verification
+- AsciiDoc syntax optimization and formatting consistency
+- Code block verification, link validation, and cross-reference checking
+- Terminology standardization and flow optimization
+
+==== Accessibility Checker
+**File**: `.claude/agents/accessibility-checker.md`
+**Purpose**: Accessibility and inclusive design specialist ensuring Red Hat workshop and demo content meets accessibility standards
+**Specializes in**:
+- WCAG 2.1 AA compliance checking and screen reader compatibility
+- Visual accessibility assessment including color contrast and font hierarchy
+- Inclusive language validation and cognitive accessibility support
+- Content structure optimization for assistive technologies
+
+== How to Use Claude Agents
+
+=== Basic Usage Pattern
+
+In Claude Code chat, use this format:
+```
+Act as the [agent-name] agent and [specific task]
+```
+
+=== Example Agent Requests
+
+==== Content Creation Examples
+
+**Technical Writer - Create Workshop Module:**
+```
+Act as the technical-writer agent and create Module 2 for a container security workshop targeting DevOps engineers following progressive skill building and Red Hat corporate style standards
+```
+
+**Technical Writer - Review Structure:**
+```
+Use the technical-writer agent to review workshop/example/ and ensure it follows progressive skill building with clear learning objectives and proper pedagogical flow
+```
+
+**Researcher - Validate Content:**
+```
+Act as the researcher agent and verify the technical accuracy and current version compatibility of the OpenShift commands in workshop/example/05-module-03.adoc
+```
+
+==== Quality Assurance Examples
+
+**Workshop Reviewer - Full Validation:**
+```
+Use the workshop-reviewer agent to perform a comprehensive review of workshop/templates/ against Red Hat quality standards, focusing on learning objectives, exercise structure, and technical accuracy
+```
+
+**Style Enforcer - Corporate Compliance:**
+```
+Act as the style-enforcer agent and check workshop/example/01-overview.adoc for Red Hat corporate style compliance, including headline capitalization, product naming, and inclusive language
+```
+
+**Technical Editor - Polish Content:**
+```
+Apply the technical-editor agent to improve the clarity, formatting, and technical accuracy of workshop/example/03-module-01.adoc
+```
+
+**Accessibility Checker - Inclusive Design:**
+```
+Use the accessibility-checker agent to review workshop/templates/ for WCAG 2.1 AA compliance, screen reader compatibility, and inclusive design principles
+```
+
+==== Red Hat Style and Citation Examples
+
+**Style Guide Compliance Check:**
+```
+Act as the style-enforcer agent and validate this content follows Red Hat corporate style:
+- Headlines use sentence case (not title case)
+- Product names follow official Red Hat naming (no "the" prefix)
+- Numbers are written as numerals (including numbers under 10)
+- Oxford commas are used consistently
+- Prohibited language is avoided (whitelist/blacklist, vague terms like "robust")
+```
+
+**Citation and Claims Validation:**
+```
+Use the style-enforcer agent to check for unsupported claims in workshop/example/01-overview.adoc and ensure any superlatives like "best," "leading," or "most" include proper citations or quantifiable metrics
+```
+
+**Inclusive Language Review:**
+```
+Apply the style-enforcer agent to scan workshop/templates/ for non-inclusive terms and replace with Red Hat approved alternatives (allowlist/denylist instead of whitelist/blacklist, primary/secondary instead of master/slave)
+```
+
+==== Multi-Agent Workflows
+
+**Complete Workshop Development:**
+```
+1. Act as the technical-writer agent and create a new workshop module on Kubernetes networking with progressive skill building
+2. Use the researcher agent to validate all technical commands, current version compatibility, and industry best practices
+3. Apply the workshop-reviewer agent to check learning progression, exercise structure, and technical accuracy
+4. Use the style-enforcer agent to ensure Red Hat corporate style compliance and professional tone
+5. Apply the accessibility-checker agent to verify WCAG 2.1 AA compliance and inclusive design principles
+6. Use the technical-editor agent for final content polish and consistency
+```
+
+**Workshop Enhancement:**
+```
+1. Act as the technical-writer agent and enhance workshop/example/ with clear learning objectives and structured exercises
+2. Use the researcher agent to validate technical accuracy and add current industry context
+3. Apply the style-enforcer agent for Red Hat style compliance and professional tone validation
+4. Use the technical-editor agent for final clarity and consistency improvements
+```
+
+=== File-Specific Agent Requests
+
+**Review Specific Files:**
+```
+Act as the workshop-reviewer agent and validate content/modules/ROOT/pages/workshop/example/03-module-01.adoc
+```
+
+**Check Multiple Files:**
+```
+Use the style-enforcer agent to check all files in workshop/templates/ for Red Hat style compliance
+```
+
+**Compare Content:**
+```
+Act as the technical-editor agent and compare workshop/example/ with workshop/templates/ for consistency
+```
+
+== Agent Integration with Verification System
+
+The agents automatically use verification prompts from the showroom-content-wizard repository:
+
+=== Workshop Verification Prompts
+- `enhanced_verification_workshop.txt`: Comprehensive workshop validation
+- `verify_workshop_structure.txt`: Workshop structure and pedagogy
+- `verify_technical_accuracy_workshop.txt`: Technical command verification
+
+=== Workshop Enhancement Prompts
+- `enhanced_verification_storytelling.txt`: Narrative engagement validation
+- `verify_business_context.txt`: Business scenario authenticity
+- `verify_emotional_journey.txt`: Personal protagonist arc validation
+
+=== Style and Accessibility Prompts
+- `redhat_style_guide_validation.txt`: Corporate style compliance
+- `verify_accessibility_compliance_workshop.txt`: Workshop accessibility
+- `verify_content_quality.txt`: General content quality
+
+== Workshop Structure Patterns
+
+=== Engaging Workshop Structure (Personal Protagonist Approach)
+```
+= Module Title
+Brief engaging intro with business crisis/personal stakes
+
+== Learning objectives
+- Specific outcomes with business impact
+- Measurable skills with real-world application
+
+== Exercise 1: Foundation success
+Personal context and internal dialogue
+=== Prerequisites
+=== Steps with emotional reactions
+=== Success moments and breakthrough realizations
+
+== Exercise 2: Building momentum
+Progressive complexity with confidence building
+=== Advanced steps with business validation
+
+== Module summary
+- What you accomplished for [Company]
+- Business impact realized
+- Your journey progress (emotional arc)
+- Next steps preview
+```
+
+=== Development Workflow Structure
+```
+content/modules/ROOT/
+├── assets/images/          # Screenshots and diagrams
+├── examples/              # Downloadable files and samples
+├── pages/                # Core workshop modules
+│   ├── 00-index.adoc     # Facilitator guide
+│   ├── 01-overview.adoc  # Business context setup
+│   ├── 02-details.adoc   # Technical requirements
+│   └── 03-module-01.adoc # First breakthrough module
+└── partials/             # Reusable content blocks
+```
+
+== Red Hat Style Guide Examples
+
+=== Common Style Corrections
+
+**Headline Capitalization:**
+```
+❌ Incorrect: "Accelerating Application Development With Red Hat OpenShift"
+✅ Correct: "Accelerating application development with Red Hat OpenShift"
+```
+
+**Product Naming:**
+```
+❌ Incorrect: "The Red Hat OpenShift Platform" or "RHEL 9"
+✅ Correct: "Red Hat OpenShift" and "Red Hat Enterprise Linux 9"
+```
+
+**Number Formatting:**
+```
+❌ Incorrect: "Five ways to improve security"
+✅ Correct: "5 ways to improve security"
+```
+
+**Inclusive Language:**
+```
+❌ Prohibited: "whitelist configuration", "master branch", "guys"
+✅ Preferred: "allowlist configuration", "main branch", "team"
+```
+
+**Claims and Citations:**
+```
+❌ Unsupported: "Best-in-class container platform"
+✅ Supported: "Leading container platform by enterprise adoption (Forrester Wave 2024)"
+```
+
+**Oxford Commas:**
+```
+❌ Incorrect: "Security, scalability and performance"
+✅ Correct: "Security, scalability, and performance"
+```
+
+=== Style Enforcement Agent Examples
+
+**Fix headline capitalization:**
+```
+Act as the style-enforcer agent and convert all headlines in workshop/example/ to sentence case following Red Hat style guide requirements
+```
+
+**Validate product names:**
+```
+Use the style-enforcer agent to scan workshop/templates/ and ensure all Red Hat product names follow official naming conventions without "the" prefix
+```
+
+**Check for prohibited terms:**
+```
+Apply the style-enforcer agent to identify and replace any non-inclusive language in workshop/example/ with Red Hat approved alternatives
+```
+
+**Citation requirements:**
+```
+Act as the style-enforcer agent and flag any unsupported superlative claims in workshop/templates/01-overview.adoc that need citations or quantification
+```
+
+== Best Practices
+
+=== Agent Usage Tips
+- **Be specific**: Include file paths and exact requirements
+- **Use progressive refinement**: Start with one agent, then apply others
+- **Combine agents**: Use multiple agents for comprehensive quality assurance
+- **Iterate**: Apply the same agent multiple times as content improves
+
+=== Content Development Workflow
+1. **Create**: Use technical-writer agent for initial content
+2. **Research**: Apply researcher agent for technical validation
+3. **Review**: Use workshop-reviewer agent for structure validation
+4. **Style**: Apply style-enforcer agent for Red Hat compliance
+5. **Polish**: Use technical-editor agent for final improvements
+6. **Accessibility**: Apply accessibility-checker agent for inclusive design
+
+=== Quality Assurance Checklist
+- [ ] Learning objectives are clear and measurable
+- [ ] Exercises include proper validation steps
+- [ ] Technical commands are accurate and tested
+- [ ] Red Hat corporate style is followed
+- [ ] Content is accessible and inclusive
+- [ ] Images have descriptive alt text
+- [ ] Code blocks specify language for syntax highlighting
+
+== Troubleshooting
+
+=== Common Issues
+
+**Agent doesn't understand the request:**
+- Be more specific about the task and files involved
+- Include the full file path from repository root
+
+**Agent provides generic feedback:**
+- Reference specific agent configuration file
+- Ask for actionable recommendations with before/after examples
+
+**Multiple agents give conflicting advice:**
+- Apply agents in sequence (content → structure → style → accessibility)
+- Use workshop-reviewer agent to reconcile conflicts
+
+=== Getting Help
+
+**View agent configuration:**
+```
+Show me the content of .claude/agents/technical-writer.md
+```
+
+**Understand agent capabilities:**
+```
+Explain what the workshop-reviewer agent can do and how it differs from the technical-editor agent
+```
+
+**Agent debugging:**
+```
+Act as the workshop-reviewer agent and explain your evaluation criteria for workshop/example/03-module-01.adoc
+```
+
+== Examples Repository
+
+See `content/modules/ROOT/pages/workshop/example/` for a complete workshop implementation and `content/modules/ROOT/pages/workshop/templates/` for template files with formatting examples.
+
+The template guide at `workshop/templates/README-TEMPLATE-GUIDE.adoc` provides detailed formatting patterns for images, code blocks, and showroom variables.

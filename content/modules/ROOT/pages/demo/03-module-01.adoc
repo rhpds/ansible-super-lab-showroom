@@ -1,0 +1,186 @@
+= Demo Module 01: Understanding the Know/Show Structure
+:source-highlighter: rouge
+:toc: macro
+:toclevels: 1
+
+This module demonstrates how to structure a good demo using the **Know** and **Show** sections. We'll use examples from the showroom-rhads content to illustrate best practices.
+
+== Part 1 — The Know/Show Structure Explained
+
+=== Know
+_The Know/Show structure is the foundation of effective demo delivery. It separates what the presenter needs to understand from what they need to demonstrate._
+
+**Why This Structure Works:**
+
+* **Know sections** provide context, business value, and background information
+* **Show sections** give step-by-step instructions for the actual demonstration
+* This separation helps presenters understand the "why" before the "how"
+* It ensures demos focus on business value rather than just technical features
+
+**Example from a well-structured demo:**
+In an OpenShift demo, the Know section explains the customer's business challenge (6-8 week deployment cycles) before showing how to deploy an application using `oc new-app`. This helps presenters understand the business impact.
+
+=== Show
+* Review a well-structured demo as a reference:
+  * Notice how each module follows the Know/Show pattern
+  * See how business context is established before technical steps
+  * Observe the flow from problem to solution
+
+* Examine the Know section in a typical module:
+  * Look at the business challenge setup
+  * Notice the specific metrics (6-8 weeks → 5 minutes)
+  * See how customer pain points are clearly articulated
+
+== Part 2 — Business Context in Know Sections
+
+=== Know
+_Good Know sections don't just list technical features — they tell a story that resonates with the customer's business challenges._
+
+**Elements of an Effective Know Section:**
+
+* **Business Challenge:** What problem is the customer facing?
+* **Current State:** How bad is it now? (use specific metrics)
+* **Desired State:** What would success look like?
+* **Business Value:** Quantified benefits and outcomes
+* **Stakeholder Impact:** Who cares and why?
+
+**Real Example from a well-structured demo:**
+The overview page establishes a retail company's e-commerce platform challenge: "update the checkout service in 4 weeks for Black Friday" with current 10-week cycles. This creates urgency and relevance.
+
+=== Show
+* Study a well-structured demo overview as a reference:
+  * Notice the specific company scenario
+  * See the time constraint (4 weeks for Black Friday)
+  * Identify the current pain (10-week cycles)
+
+* Practice with OpenShift examples:
+  * Show how `oc new-app` reduces deployment time
+  * Demonstrate automatic scaling with `oc autoscale`
+  * Highlight the business value of self-service deployment
+
+* Review the Problem section:
+  * Count the specific pain points listed
+  * Notice how each point relates to business impact
+  * See the connection between technical issues and business outcomes
+
+== Part 3 — Technical Steps in Show Sections
+
+=== Know
+_Show sections should be clear, actionable, and focused on what the presenter needs to do, not what they need to understand._
+
+**Characteristics of Good Show Sections:**
+
+* **Step-by-step instructions** with clear numbering
+* **Screenshots and images** to guide the presenter
+* **Specific commands and inputs** that can be copied
+* **Expected outcomes** for each step
+* **Troubleshooting hints** for common issues
+
+**Example from a well-structured demo:**
+A typical module's Show section provides exact field values, button names, and expected screens, making it easy for presenters to follow along without guessing.
+
+=== Show
+* Study a well-structured demo's Show section:
+* Notice the specific field values provided:
+  * Application Name: `my-nodejs-app`
+  * Git Repository: `https://github.com/example/nodejs-ex`
+  * Image Stream: `nodejs:18`
+
+* Look at the image references:
+  * Each step has a corresponding screenshot
+  * Images are numbered sequentially (step-1.png, step-2.png)
+  * Screenshots show exactly what the presenter should see
+
+* Example of image formatting from showroom-rhads:
++
+[source,asciidoc]
+----
+image::tekton-dev-1.png[align="center",width=500]
+----
+
+* Tips for effective images:
+  * Use descriptive filenames (e.g., `oc-new-app-1.png`, `ansible-playbook-1.png`)
+  * Set appropriate width (usually 500-800 pixels)
+  * Center align for better presentation
+  * Include alt text for accessibility
+
+* Examine the command examples:
+  * Git commands are in code blocks
+  * Username/password placeholders use consistent formatting
+  * Expected outputs are clearly indicated
+
+* Practice with Ansible examples:
+  * Show how `ansible-playbook` automates configuration
+  * Demonstrate idempotent operations with `--check` mode
+  * Highlight the business value of infrastructure as code
+
+== Part 4 — Connecting Know and Show
+
+=== Know
+_The best demos seamlessly connect the business context (Know) with the technical demonstration (Show), making the value proposition clear throughout._
+
+**How to Connect Know and Show:**
+
+* **Reference the business challenge** during technical steps
+* **Highlight how each step solves** the identified problem
+* **Use consistent language** between Know and Show sections
+* **Provide context reminders** at key demonstration points
+
+**Example from a well-structured demo:**
+The module continuously references "the customer's transformation" and "business value" while showing technical steps. For instance, when demonstrating `oc new-app`, explain how this single command eliminates weeks of manual deployment work.
+
+=== Show
+* Review how the showroom-rhads modules maintain business focus:
+  * Look for business language in technical sections
+  * Notice how metrics are referenced during demonstrations
+  * See how customer benefits are reinforced
+
+* Practice connecting Know and Show:
+  * Take a technical step like `oc new-app` or `ansible-playbook`
+  * Rewrite it to include business context
+  * Ensure the connection is clear and natural
+
+* Example: Instead of just showing `oc new-app`, say:
+  "This single command eliminates the 3-5 business days your team currently spends waiting for platform setup, giving developers immediate access to deploy their applications."
+
+* Adding tip notes to your demo:
++
+[source,asciidoc]
+----
+[NOTE]
+====
+**Pro Tip:** Always connect technical commands to business value. 
+Instead of "This command creates a pod," say "This command creates a pod, 
+eliminating the need for manual container orchestration."
+====
+----
+
+* More tip note examples:
++
+[source,asciidoc]
+----
+[TIP]
+====
+**Best Practice:** Use the Know/Show structure consistently. 
+Each technical step should have a corresponding business context.
+====
+
+[IMPORTANT]
+====
+**Key Point:** Business value should be mentioned in every Show section. 
+Don't just demonstrate features—explain why they matter.
+====
+----
+
+== Key Takeaways
+
+* **Know sections** provide business context and understanding
+* **Show sections** give clear, actionable technical steps
+* **Connection between them** maintains business focus throughout
+* **Specific examples and metrics** make the demo compelling
+* **Consistent structure** helps presenters deliver effectively
+
+This Know/Show structure transforms technical demonstrations into compelling business stories that resonate with customers and drive value.
+
+
+

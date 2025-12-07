@@ -1,0 +1,110 @@
+= Workshop details
+:toc:
+:toc-placement: preamble
+:icons: font
+
+== Timing and schedule
+
+=== Full workshop ({{ X hours }})
+* **Module 1**: {{ Module 1 title }} ({{ X minutes }})
+* **Module 2**: {{ Module 2 title }} ({{ X minutes }})
+* **Module 3**: {{ Module 3 title }} ({{ X minutes }})
+* **Break time**: {{ X minutes }} between modules
+
+=== Abbreviated workshop ({{ X hours }})
+* **Module 1**: {{ Module 1 title }} ({{ X minutes }})
+* **Module 2**: {{ Module 2 title }} ({{ X minutes }})
+* **Module 3**: {{ Module 3 title abbreviated }} ({{ X minutes }})
+
+== Technical requirements
+
+=== Software versions
+* {{ Software/tool 1 }} {{ version }} or later
+* {{ Software/tool 2 }} {{ version }} or later
+* {{ Software/tool 3 }} {{ version }} or later
+* Web browser (Chrome, Firefox, Safari, Edge)
+
+=== Environment access
+Participants need access to:
+
+* {{ Platform/environment 1 }} (provided during workshop)
+* {{ Registry/service access }}
+* Terminal/command line environment
+* Code editor ({{ recommended editor }})
+
+=== Network requirements
+* Internet connectivity for {{ specific needs }}
+* Access to {{ external services/repositories }}
+* {{ Platform }} network access (specific URLs provided)
+
+== Environment setup
+
+=== Pre-workshop checklist
+□ **{{ Environment 1 }} access confirmed** - Test login credentials
+□ **{{ Tool 1 }} installed** - Verify installation
+□ **{{ Tool 2 }} configured** - Set up user configuration
+□ **Sample code downloaded** - Clone workshop repository
+□ **Network connectivity verified** - Test access to required URLs
+
+=== Setup validation
+Participants should run these commands to verify setup:
+
+```bash
+# Verify {{ tool 1 }}
+{{ command 1 }}
+
+# Verify {{ tool 2 }}
+{{ command 2 }}
+
+# Verify {{ tool 3 }}
+{{ command 3 }}
+
+# Test {{ connectivity }}
+{{ command 4 }}
+```
+
+== Troubleshooting guide
+
+=== Common setup issues
+
+**Problem**: "{{ Common error message 1 }}"
+→ **Solution**: {{ Solution steps }}
+
+**Problem**: "{{ Common error message 2 }}"
+→ **Solution**: {{ Solution steps }}
+
+**Problem**: "{{ Common error message 3 }}"
+→ **Solution**: {{ Solution steps }}
+
+**Problem**: "{{ Common error message 4 }}"
+→ **Solution**: {{ Solution steps }}
+
+=== During workshop support
+* Encourage participants to help each other
+* Provide alternative approaches for different operating systems
+* Have backup environments ready for technical difficulties
+* Use screen sharing for complex troubleshooting
+
+== Follow-up resources
+
+=== Next steps for participants
+* {{ Resource 1 }}: {{ Description }}
+* {{ Resource 2 }}: {{ Description }}
+* {{ Resource 3 }}: {{ Description }}
+* {{ Resource 4 }}: {{ Description }}
+
+=== Additional learning paths
+* **Intermediate**: {{ Advanced topics }}
+* **Advanced**: {{ Expert-level topics }}
+* **Certification**: {{ Relevant certification paths }}
+
+== Authors and contributors
+
+**Primary Author**: {{ Author name and title }}
+**Last Updated**: {{ Date }}
+**Workshop Version**: {{ Version number }}
+
+**Contact Information**:
+* Workshop feedback: {{ Email address }}
+* Technical questions: {{ Email address }}
+* Content updates: {{ Repository or contact method }}

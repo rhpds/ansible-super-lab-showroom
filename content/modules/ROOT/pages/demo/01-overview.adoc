@@ -1,0 +1,35 @@
+= {{ Product | Solution }} Demo Overview
+:toc:
+:toc-placement: preamble
+:icons: font
+
+{{ Product | Solution }} does X to solve Y.
+
+== Background
+Give the scenario.
+
+ACME inc is a company that takes too long to deploy new services.
+They are looking for ways to increase velocity.
+etc.
+
+== Problem
+ACME inc is a company that takes too long to deploy new services.
+They are looking for ways to increase velocity.
+etc.
+
+
+Benefits to the customer:
+
+
+Common Customer Questions to be ready for
+**"How does this work with our existing tools?"**
+→ Show Jenkins path (Module 4) - enhances rather than replaces existing investments
+
+**"What about compliance and security?"**
+→ Emphasize automated policy enforcement and SOC 2/PCI readiness
+
+**"How complex is the implementation?"**
+→ Highlight self-service templates and zero-configuration developer experience
+
+**"What's the business impact timeline?"**
+→ Reference ACME's 4-week transformation and quantified results

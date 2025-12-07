@@ -1,0 +1,90 @@
+= {{ Workshop Title }} overview
+:toc:
+:toc-placement: preamble
+:icons: font
+
+== Your role and mission
+
+You're {{ persona/role }} at {{ Company name }}, and you've been assigned to evaluate {{ technology }} for an important project.
+
+{{ Company name }} needs to {{ business requirement }} for {{ project context }}. Your manager has explained: "{{ quote explaining project importance and technical requirements }}."
+
+**Your assignment**: {{ specific task/responsibility you've been assigned }} using {{ technology }} to {{ solve specific problem }}.
+
+**The objective**: {{ measurable technical outcome or business benefit to demonstrate }}.
+
+== Success criteria for your mission
+
+By the end of this workshop, you'll have practical {{ technology }} skills to address {{ Company name }}'s project requirements:
+
+* {{ Learning objective 1 }} → {{ specific technical outcome }}
+* {{ Learning objective 2 }} → {{ business efficiency improvement }}
+* {{ Learning objective 3 }} → {{ time or cost savings metric }}
+* {{ Learning objective 4 }} → {{ risk reduction or reliability improvement }}
+* {{ Learning objective 5 }} → {{ scalability or maintenance benefit }}
+
+**Technical outcome**: {{ hands-on experience and skills applicable to current project }}
+
+**Business benefit**: {{ measurable improvement to operations or competitive position }}
+
+== Target audience
+This workshop is designed for:
+
+* {{ Target audience 1 }} who want {{ specific goal }}
+* {{ Target audience 2 }} looking to {{ improvement area }}
+* {{ Target audience 3 }} evaluating {{ technology }} adoption
+* Anyone interested in {{ hands-on experience area }}
+
+== Prerequisites
+You should have:
+
+* {{ Prerequisite 1 }}
+* {{ Prerequisite 2 }}
+* {{ Prerequisite 3 }}
+* {{ Technical requirements }}
+
+== {{ Company name }}'s project challenges
+
+**The situation**: {{ Company name }} needs to {{ business challenge description }} for {{ project context or client requirements }}.
+
+**Project timeline**: {{ specific deadline or evaluation period }} for technology assessment and recommendations.
+
+**Current challenges** (operational pain points):
+
+* **{{ Challenge 1 }}**: {{ specific technical or process limitation }} → {{ impact on development or delivery }}
+* **{{ Challenge 2 }}**: {{ efficiency or scalability issue }} → {{ effect on team productivity or costs }}
+* **{{ Challenge 3 }}**: {{ reliability or maintenance challenge }} → {{ business risk or operational overhead }}
+* **{{ Challenge 4 }}**: {{ integration or complexity issue }} → {{ impact on system maintainability }}
+
+**The opportunity**: {{ Technology }} technology can address these challenges, and you've been selected to evaluate its feasibility for {{ Company name }}'s use case.
+
+**Technical perspective**: "{{ technology }} has proven benefits in similar environments, but I need to evaluate how it would integrate with our specific requirements and infrastructure."
+
+== Your vision of success
+
+If {{ technology }} proves effective for {{ Company name }}'s use case, here's the potential technical improvements:
+
+**Immediate improvements** ({{ short timeframe }}):
+* **{{ Benefit 1 }}**: {{ specific improvement }} → {{ measurable technical outcome }}
+* **{{ Benefit 2 }}**: {{ efficiency gain }} → {{ operational benefit }}
+
+**Strategic benefits** ({{ longer timeframe }}):
+* **{{ Benefit 3 }}**: {{ scalability improvement }} → {{ business growth enablement }}
+* **{{ Benefit 4 }}**: {{ cost or maintenance reduction }} → {{ resource optimization }}
+* **{{ Benefit 5 }}**: {{ reliability or performance gain }} → {{ competitive advantage }}
+
+**Success metric**: {{ demonstrable improvement that can be presented to stakeholders as a viable solution for operational challenges }}.
+
+== Common questions
+
+**"{{ Common question 1 }}"**
+→ {{ Response referencing specific module or exercise }}
+
+**"{{ Common question 2 }}"**
+→ {{ Response referencing specific module or exercise }}
+
+**"{{ Common question 3 }}"**
+→ {{ Response referencing specific module or exercise }}
+
+**"{{ Common question 4 }}"**
+→ {{ Response referencing specific module or exercise }}

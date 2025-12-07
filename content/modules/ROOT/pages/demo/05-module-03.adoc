@@ -1,0 +1,377 @@
+= Demo Module 03: Advanced Demo Techniques and Customization
+:source-highlighter: rouge
+:toc: macro
+:toclevels: 1
+
+This module builds on Modules 01 and 02 to cover advanced demo techniques, customization strategies, and how to adapt your demo for different audiences and scenarios. We'll use the OpenShift and Ansible examples from previous modules to demonstrate advanced implementation techniques.
+
+== Part 1 — Adapting Demos for Different Audiences
+
+=== Know
+_One-size-fits-all demos rarely work. Successful presenters adapt their content, timing, and focus based on their audience's role, technical level, and decision-making authority._
+
+**Audience Types and Adaptations:**
+
+* **C-Level Executives:** Focus on business outcomes, ROI, and strategic value
+* **IT Directors:** Emphasize integration, compliance, and operational efficiency
+* **Developers:** Show technical capabilities, automation, and developer experience
+* **Security Teams:** Highlight compliance, governance, and risk mitigation
+* **Business Users:** Demonstrate productivity gains and user experience improvements
+
+**Adaptation Examples using OpenShift/Ansible:**
+The content balances technical depth with business value, making it suitable for both technical and business audiences. Notice how each section can be emphasized or de-emphasized based on audience needs.
+
+=== Show
+* Analyze how your demo serves multiple audiences:
+  * Business context in Know sections appeals to executives
+  * Technical details in Show sections satisfy developers
+  * Security and compliance sections address governance concerns
+  * ROI metrics support business case development
+
+* Practice audience adaptation with OpenShift examples:
+  * For executives: Focus on `oc new-app` reducing deployment time from days to minutes
+  * For developers: Show the technical details of `oc get pods` and `oc logs`
+  * For security teams: Emphasize `oc policy` and RBAC capabilities
+
+* Adding audience-specific images to your demo:
++
+[source,asciidoc]
+----
+// For executive audience
+image::executive-dashboard.png[align="center",width=700,title="Executive Dashboard - Business Metrics"]
+
+// For technical audience  
+image::technical-details.png[align="center",width=600,title="Technical Details - Implementation Steps"]
+
+// For security audience
+image::security-compliance.png[align="center",width=600,title="Security & Compliance - Policy Enforcement"]
+----
+
+* Practice audience adaptation:
+  * Take one section from your demo
+* Rewrite it for a different audience type
+* Adjust technical depth and business focus
+* Test your adaptation with colleagues
+
+* Practice with Ansible examples:
+  * For operations teams: Focus on `ansible-playbook --check` for safe testing
+  * For developers: Show how to write playbooks with variables and loops
+  * For compliance teams: Emphasize audit trails and policy enforcement
+
+== Part 2 — Customizing the Demo Template
+
+=== Know
+_The showroom_template_default provides a solid foundation, but successful demos require customization to match your specific solution, customer, and presentation style._
+
+**Customization Areas:**
+
+* **Company/Industry Examples:** Replace ACME with relevant customer scenarios
+* **Product/Service Details:** Update technical specifications and capabilities
+* **Business Challenges:** Adapt problems to match customer's industry
+* **Metrics and ROI:** Use industry-specific benchmarks and calculations
+* **Integration Examples:** Show compatibility with customer's existing tools
+
+**Customization Best Practices:**
+* Keep the Know/Show structure intact
+* Maintain the business focus and timing
+* Adapt examples to be relevant and relatable
+* Ensure technical accuracy for your solution
+* Test customizations with your team
+
+=== Show
+* Study how your demo could be customized:
+  * Replace generic company names with your customer's industry
+  * Update deployment cycle metrics with relevant benchmarks
+  * Modify time constraints with industry-specific deadlines
+  * Adapt technical steps to match your solution's workflow
+
+* Practice customization with OpenShift examples:
+  * Replace `oc new-app` with your specific deployment method
+  * Update scaling examples with your customer's typical workloads
+  * Modify security examples to match their compliance requirements
+
+* Adding customization tips to your demo:
++
+[source,asciidoc]
+----
+[IMPORTANT]
+====
+**Customization Tip:** Always research your customer's industry before the demo.
+Use their specific terminology and reference their real challenges.
+====
+
+[NOTE]
+====
+**Pro Tip:** Create a customer research checklist:
+- Industry-specific pain points
+- Regulatory compliance requirements  
+- Current technology stack
+- Decision-making process
+====
+
+[WARNING]
+====
+**Warning:** Don't over-customize. Keep the core Know/Show structure intact.
+Customize examples and language, not the fundamental demo flow.
+====
+----
+
+* Practice template customization:
+  * Choose a section from your demo
+* Identify elements to customize for your solution
+* Rewrite the section with your specific details
+* Maintain the Know/Show structure and business focus
+
+* Practice with Ansible customization:
+  * Adapt playbook examples to your customer's infrastructure
+  * Customize variables for their specific environment
+  * Modify compliance checks for their regulatory requirements
+
+== Part 3 — Advanced Presentation Techniques
+
+=== Know
+_Advanced demo techniques go beyond basic Know/Show structure to create memorable, impactful customer experiences that drive decisions._
+
+**Advanced Techniques:**
+
+* **Storytelling:** Weave customer scenarios into narrative arcs
+* **Interactive Elements:** Engage customers with questions and participation
+* **Visual Aids:** Use diagrams, charts, and screenshots effectively
+* **Analogies:** Connect complex concepts to familiar experiences
+* **Social Proof:** Reference customer success stories and case studies
+
+**Technique Examples from showroom-rhads:**
+The ACME story creates a compelling narrative, the quantified benefits provide social proof, and the progressive module structure builds understanding step-by-step.
+
+=== Show
+* Identify advanced techniques in showroom-rhads:
+  * Notice the ACME story progression across modules
+  * See how metrics are used as social proof
+  * Observe the visual flow from problem to solution
+  * Analyze how technical complexity is managed
+
+* Practice advanced techniques:
+  * Develop your own customer story
+  * Create analogies for your solution's benefits
+  * Design interactive elements for your demo
+  * Practice storytelling with your content
+
+* Adding advanced technique tips to your demo:
++
+[source,asciidoc]
+----
+[TIP]
+====
+**Storytelling Tip:** Use the "Hero's Journey" structure:
+1. Customer faces a challenge (current state)
+2. Discovers your solution (call to adventure)
+3. Implements and overcomes (transformation)
+4. Achieves success (new state)
+====
+
+[NOTE]
+====
+**Analogy Tip:** Connect complex concepts to familiar experiences.
+Example: "OpenShift is like having a smart factory that automatically 
+builds, tests, and ships your applications."
+====
+
+[IMPORTANT]
+====
+**Interactive Tip:** Ask customers to imagine scenarios.
+"Imagine if your team could deploy 10 applications in the time it 
+currently takes to deploy one. What would that mean for your business?"
+====
+----
+
+== Part 4 — Handling Complex Technical Scenarios
+
+=== Know
+_Complex technical scenarios require special handling to maintain audience engagement while demonstrating sophisticated capabilities._
+
+**Complex Scenario Strategies:**
+
+* **Simplify First:** Start with basic concepts before advanced features
+* **Use Analogies:** Connect technical concepts to familiar experiences
+* **Progressive Disclosure:** Reveal complexity gradually
+* **Focus on Outcomes:** Emphasize business results over technical details
+* **Provide Context:** Explain why technical complexity is necessary
+
+**Complex Scenario Examples from showroom-rhads:**
+The multi-environment progression (dev → stage → prod) shows complexity while maintaining business focus. Each step builds on the previous one, making complexity manageable.
+
+=== Show
+* Study complex scenarios in showroom-rhads:
+  * Analyze the dev → stage → prod progression
+  * Notice how each environment adds complexity
+  * See how business value is maintained throughout
+  * Observe how technical details are balanced with outcomes
+
+* Practice handling complexity:
+  * Identify complex aspects of your solution
+  * Develop simplified explanations
+  * Create progressive disclosure strategies
+  * Practice transitioning between simple and complex concepts
+
+== Part 5 — Demo Preparation and Practice
+
+=== Know
+_Great demos don't happen by accident. They require systematic preparation, practice, and continuous improvement based on feedback and results._
+
+**Preparation Checklist:**
+
+* **Content Mastery:** Know your material inside and out
+* **Technical Setup:** Ensure all systems and demos work reliably
+* **Audience Research:** Understand customer's business and challenges
+* **Timing Practice:** Rehearse timing for each section
+* **Question Preparation:** Anticipate and prepare for common questions
+
+**Practice Strategies:**
+* **Dry Runs:** Practice with colleagues and get feedback
+* **Video Recording:** Record yourself and identify improvement areas
+* **Time Management:** Practice with realistic timing constraints
+* **Adaptation Practice:** Practice adjusting content for different audiences
+* **Technical Troubleshooting:** Practice handling common technical issues
+
+=== Show
+* Use showroom-rhads as a practice framework:
+  * Practice the Know/Show structure with your content
+  * Time yourself against the recommended structure
+  * Adapt the flow for your specific solution
+  * Use the customer questions as practice scenarios
+
+* Develop your practice routine:
+  * Schedule regular practice sessions
+  * Get feedback from colleagues and mentors
+  * Record and review your presentations
+  * Continuously improve based on customer feedback
+
+== Part 6 — Measuring Demo Success
+
+=== Know
+_Demo success isn't just about completing the presentation — it's about achieving your business objectives and moving the customer toward a decision._
+
+**Success Metrics:**
+
+* **Engagement:** Customer participation and questions
+* **Understanding:** Customer comprehension of key points
+* **Interest:** Follow-up requests and next steps
+* **Decision Progress:** Movement toward purchase or implementation
+* **Referrals:** Customer willingness to introduce you to others
+
+**Success Indicators from showroom-rhads:**
+The structured approach and clear business value proposition are designed to drive these success metrics. Notice how each section builds toward a clear decision point.
+
+=== Show
+* Analyze success factors in showroom-rhads:
+  * Identify how each section contributes to success
+  * Notice the clear progression toward decision points
+  * See how business value is reinforced throughout
+  * Observe how follow-up is structured
+
+* Develop your success measurement:
+  * Define success metrics for your demos
+  * Create feedback collection mechanisms
+  * Track customer progression through your sales cycle
+  * Continuously improve based on results
+
+== Key Takeaways
+
+* **Adapt your demo** for different audiences and scenarios
+* **Customize the template** while maintaining structure and focus
+* **Use advanced techniques** to create memorable experiences
+* **Handle complexity** by simplifying and providing context
+* **Prepare systematically** and practice continuously
+* **Measure success** beyond just completing the presentation
+
+* **Reference showroom-rhads** for real-world examples of these advanced techniques in action
+
+Remember: The best demos are not just presentations — they are strategic business conversations that move customers from awareness to action. Use these techniques to transform your demos into powerful business tools.
+
+== Image and Tip Reference Guide
+
+=== Image Formatting Examples
+
+* Basic image with alignment and width:
++
+[source,asciidoc]
+----
+image::screenshot.png[align="center",width=500]
+----
+
+* Image with title and caption:
++
+[source,asciidoc]
+----
+image::demo-flow.png[align="center",width=600,title="Demo Flow Diagram"]
+----
+
+* Multiple images in a row:
++
+[source,asciidoc]
+----
+image::step1.png[align="left",width=250,title="Step 1"]
+image::step2.png[align="center",width=250,title="Step 2"]  
+image::step3.png[align="right",width=250,title="Step 3"]
+----
+
+=== Tip Note Examples
+
+* Basic tip:
++
+[source,asciidoc]
+----
+[TIP]
+====
+**Pro Tip:** Always connect technical features to business value.
+====
+----
+
+* Important note:
++
+[source,asciidoc]
+----
+[IMPORTANT]
+====
+**Key Point:** Business context should be established before technical demonstration.
+====
+----
+
+* Warning:
++
+[source,asciidoc]
+----
+[WARNING]
+====
+**Caution:** Don't lose business focus while demonstrating technical features.
+====
+----
+
+* Note with multiple points:
++
+[source,asciidoc]
+----
+[NOTE]
+====
+**Best Practices:**
+* Use consistent terminology
+* Maintain timing discipline
+* Engage with questions
+* Connect to customer challenges
+====
+----
+
+=== Image Naming Conventions
+
+* Use descriptive names: `oc-new-app-step1.png`, `ansible-playbook-output.png`
+* Number sequentially: `step-01.png`, `step-02.png`, `step-03.png`
+* Include context: `executive-dashboard.png`, `technical-details.png`
+* Use consistent format: `module-01-overview.png`, `module-02-timing.png`
+
+=== Tip Note Best Practices
+
+* Keep tips concise and actionable
+* Use consistent formatting and structure
+* Include specific examples when possible
+* Connect tips to the main content
+* Use appropriate note types (TIP, NOTE, IMPORTANT, WARNING)

@@ -1,0 +1,90 @@
+= Container development workshop overview
+:toc:
+:toc-placement: preamble
+:icons: font
+
+== Your role and mission
+
+You're a senior developer at ACME Corporation, and you've been assigned to evaluate containerization for an important client project.
+
+ACME needs to improve deployment times for a key client contract. Your manager has explained: "We need to reduce deployment times significantly to meet client expectations and project timelines."
+
+**Your assignment**: Evaluate containerization technology and determine if it can address ACME's deployment challenges within the project timeline.
+
+**The objective**: Demonstrate whether containers can improve deployment speed and reliability for ACME's development workflow.
+
+== Success criteria for your mission
+
+By the end of this workshop, you'll have practical container skills to address ACME's deployment challenges:
+
+* Create and manage container images using industry best practices → **ensure consistent deployments across environments**
+* Deploy containerized applications to Red Hat OpenShift efficiently → **demonstrate significantly faster deployment times**
+* Configure application networking and storage for production workloads → **meet client scalability requirements**
+* Implement CI/CD workflows that reduce manual deployment steps → **improve development team efficiency**
+* Troubleshoot common container deployment issues → **maintain reliable production systems**
+
+**Technical outcome**: You'll have hands-on experience with container technology that directly applies to ACME's current challenges.
+
+**Business benefit**: Proven deployment approach that reduces time-to-market and improves operational reliability.
+
+== Target audience
+This workshop is designed for:
+
+* Software developers who want faster environment provisioning
+* DevOps engineers looking to improve deployment consistency
+* Technical professionals evaluating container adoption
+* Anyone interested in hands-on container development experience
+
+== What you need to succeed
+You should have:
+
+* Basic command line experience (Linux/Unix) - you've used a terminal before
+* Understanding of web application concepts - you know what a web server does
+* Access to a computer with internet connectivity
+* Basic container knowledge and willingness to learn (no prior container experience required)
+
+== ACME Corporation's deployment challenges
+
+**The situation**: ACME Corporation needs to improve deployment efficiency for a client project with specific timeline requirements.
+
+**Project timeline**: Evaluate containerization technology and provide recommendations within the current project cycle.
+
+**Current challenges** (operational pain points):
+
+* **Long provisioning times**: Environment setup takes 2 to 3 weeks → slows down development iterations and client deliveries
+* **Environment inconsistencies**: Applications behave differently across dev, staging, and production → creates debugging overhead and deployment risk
+* **Manual processes**: Deployment requires significant manual intervention → introduces human error and limits scalability
+* **Complex configurations**: Each environment has unique setup requirements → increases maintenance overhead and onboarding time
+
+**The opportunity**: Containerization technology can address these deployment challenges, and you've been selected to evaluate its feasibility for ACME's use case.
+
+**Technical perspective**: "Container technology has proven benefits at other organizations, but I need to evaluate how it would work with our specific applications and infrastructure."
+
+== Your vision of success
+
+If containerization proves effective for ACME's use case, here's the potential technical improvements:
+
+**Immediate improvements** (short-term):
+* **Faster deployments**: Reduce deployment time from weeks to minutes → improve development velocity and client responsiveness
+* **Environment consistency**: Eliminate environment-specific deployment issues → more predictable release cycles
+
+**Strategic benefits** (longer-term):
+* **Better resource utilization**: More efficient infrastructure usage → reduced operational costs
+* **Automated scaling**: Applications can scale based on demand → improved performance during traffic spikes
+* **Improved development workflow**: Developers can focus on features instead of deployment complexity → increased team productivity
+
+**Success metric**: A demonstrable improvement in deployment speed and reliability that can be presented to stakeholders as a viable solution for ACME's operational challenges.
+
+== Common questions
+
+**"Can we containerize existing applications without major changes?"**
+→ Yes. Module 2 demonstrates containerizing ACME's web application without modifying the application code
+
+**"What about security considerations?"**
+→ Module 3 covers security scanning, policies, and compliance features built into container platforms
+
+**"How does this integrate with our current CI/CD pipeline?"**
+→ Module 4 shows integration approaches with existing tools like Jenkins
+
+**"Is container adoption sustainable for our team?"**
+→ The workshop demonstrates practical skills and sustainable practices for ongoing container use

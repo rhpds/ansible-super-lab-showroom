@@ -1,0 +1,29 @@
+---
+type: showroom
+
+# Set the left column width to 30%
+default_width: 30
+# Persist the URL state so browser refresh doesn't reset the UI
+persist_url_state: true
+
+tabs:
+  # OCP Console
+  # - name: OCP Console
+  #   url: 'https://console-openshift-console.${DOMAIN}'
+
+  # Single terminal
+  # - name: Bastion
+  #   path: /wetty
+  #   port: 443
+
+  # Vertical split terminals
+  # - name: Bastion
+  #   path: /wetty
+  #   port: 443
+  #   secondary_name: Bastion
+  #   secondary_path: /wetty
+  #   secondary_port: 443
+
+  # External page
+  - name: Llamastack Docs
+    url: 'https://llama-stack.readthedocs.io/en/latest/'

@@ -1,0 +1,242 @@
+= Workshop Module 3: {{ Module title }}
+:source-highlighter: rouge
+:toc: macro
+:toclevels: 1
+
+This module demonstrates {{ final workshop topic and production deployment }}.
+
+== Part 1: {{ Production deployment topic }}
+
+===
+Deploy your {{ application type }} to {{ platform }}:
+
+* {{ Step 1 description }}:
++
+[source,bash]
+----
+{{ login or connection command }}
+----
+
+* {{ Step 2 description }}:
++
+[source,bash]
+----
+{{ project/namespace creation }}
+----
+
+* {{ Step 3 description }}:
++
+[source,bash]
+----
+{{ verification command }}
+----
+
+* {{ Step 4 deployment }}:
++
+[source,bash]
+----
+# Tag for {{ platform }} registry
+{{ image tagging command }}
+
+# Push to registry
+{{ push command }}
+----
+
+* {{ Step 5 description }}:
++
+[source,bash]
+----
+{{ deployment command }}
+----
+
+* {{ Step 6 verification }}:
++
+[source,bash]
+----
+{{ status check commands }}
+----
+
+* {{ Step 7 exposure }}:
++
+[source,bash]
+----
+{{ service exposure }}
+{{ route creation }}
+----
+
+* {{ Final verification }}:
++
+[source,bash]
+----
+{{ URL retrieval }}
+----
+
+// Screenshot showing the deployed application
+image::deployed-application.png[align="center",width=600,title="Successfully Deployed Application"]
+
+== Part 2: {{ Scaling and availability topic }}
+
+===
+Configure scaling and high availability:
+
+* {{ Step 1 scaling }}:
++
+[source,bash]
+----
+{{ scaling command }}
+----
+
+* {{ Step 2 verification }}:
++
+[source,bash]
+----
+{{ pod listing command }}
+----
+
+* {{ Step 3 resource limits }}:
++
+[source,bash]
+----
+{{ resource configuration command }}
+----
+
+* {{ Step 4 health checks }}:
++
+[source,bash]
+----
+{{ health check configuration }}
+----
+
+* {{ Step 5 autoscaling }}:
++
+[source,bash]
+----
+{{ autoscaler setup }}
+----
+
+* {{ Step 6 verification }}:
++
+[source,bash]
+----
+{{ autoscaler status }}
+----
+
+* {{ Step 7 rolling updates }}:
++
+[source,bash]
+----
+{{ update command }}
+----
+
+* {{ Step 8 monitoring }}:
++
+[source,bash]
+----
+{{ rollout status }}
+----
+
+// Side-by-side images showing before and after scaling
+image::before-scaling.png[align="left",width=300,title="Single Instance"]
+image::after-scaling.png[align="right",width=300,title="Multiple Instances"]
+
+== Part 3: {{ Monitoring and troubleshooting topic }}
+
+===
+Explore monitoring and troubleshooting:
+
+* {{ Step 1 logs }}:
++
+[source,bash]
+----
+{{ log viewing command }}
+----
+
+* {{ Step 2 events }}:
++
+[source,bash]
+----
+{{ events command }}
+----
+
+* {{ Step 3 resource monitoring }}:
++
+[source,bash]
+----
+{{ resource usage command }}
+----
+
+* {{ Web console access step }}:
+  * Navigate to {{ platform }} web console
+  * Select your project: {{ project-name }}
+  * View the {{ view-name }} view
+  * Click on your deployment for detailed metrics
+
+* {{ Load simulation }}:
++
+[source,bash]
+----
+# Get the route URL
+ROUTE_URL=$({{ route command }})
+
+# Generate load
+for i in {1..100}; do {{ load command }} & done
+----
+
+* {{ Monitoring response }}:
++
+[source,bash]
+----
+{{ monitoring command }}
+----
+
+* {{ Autoscaler status }}:
++
+[source,bash]
+----
+{{ autoscaler description }}
+----
+
+* {{ Troubleshooting }}:
++
+[source,bash]
+----
+{{ troubleshooting command }}
+----
+
+// Multiple monitoring screenshots in sequence
+image::step1-monitoring.png[align="left",width=250,title="Step 1: Baseline"]
+image::step2-monitoring.png[align="center",width=250,title="Step 2: Load Applied"]
+image::step3-monitoring.png[align="right",width=250,title="Step 3: Auto-scaled"]
+
+== Module 3 summary
+
+**What you learned:**
+* {{ Key learning 1 }}
+* {{ Key learning 2 }}
+* {{ Key learning 3 }}
+
+**Key achievements for {{ company }}:**
+* **{{ Achievement 1 }}**: {{ Specific improvement }}
+* **{{ Achievement 2 }}**: {{ Operational benefit }}
+* **{{ Achievement 3 }}**: {{ Business value }}
+* **{{ Achievement 4 }}**: {{ Strategic advantage }}
+
+**Business transformation completed:**
+* **Before**: {{ Previous state with metrics }}
+* **After**: {{ New state with improvements }}
+
+**Production benefits realized:**
+* {{ Quantified benefit 1 }}
+* {{ Quantified benefit 2 }}
+* {{ Quantified benefit 3 }}
+* {{ Capability improvement }}
+
+**Next steps for {{ company }}:**
+* {{ Recommendation 1 }}
+* {{ Recommendation 2 }}
+* {{ Recommendation 3 }}
+* {{ Recommendation 4 }}
+
+**Workshop conclusion:**
+You have successfully {{ workshop achievement summary }}.
+These skills provide the foundation for {{ future capabilities }}.

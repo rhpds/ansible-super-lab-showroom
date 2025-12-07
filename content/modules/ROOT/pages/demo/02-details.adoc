@@ -1,0 +1,68 @@
+= {{ Product | Solution }} Demo Details
+:toc:
+:toc-placement: preamble
+:icons: font
+
+== Proposed Timing
+For example:
+**Opening (5 minutes):**
+
+* Discuss background and introduct use case
+* "Start at the end" describing the solution to the problem
+
+**Technical Demo (10-15 minutes):**
+
+* Follow the guide and demo the solution.
+* Focus on automation and business velocity, not just technical features.
+* Each part has a **Know** and most parts have a **Show** section.
+
+**Closing (5-10+ minutes):**
+
+* Repeat the problem and emphasize how the solution solved that problem
+* Move from the imaginary problem to the customer's real problem
+* Save time for questions and interationss!
+
+== Products and Versions
+Add a table with the products and versions used in the demo.
+
+[cols="3,1"]
+|===
+|Product Name |Product Version
+
+|OpenShift |4.19
+|Advanced Developer Suite |1.1
+|===
+
+== Credentials
+Add a table with the list of credentials here.
+They will also be included in the **Show** sections, but include them here for convenience.
+
+[cols="2,1,1"]
+|===
+|System/URL |Username |Password
+
+|https://console.example.com[OpenShift Console^] |admin |password123
+|https://api.example.com[OpenShift API^] |user |secret456
+|===
+
+== Troubleshooting Common Issues
+Add a list of common issues that you might encounter and how to solve them.
+
+* Thing x fails
+** Fix it by doing a
+* Thing y fails
+** Fix it by doing b
+
+== Follow-up Resources
+Include a curated list of other resources that are relevant to the demo.
+
+== Authors and Contact Information
+For questions or feedback about the content of this demo, please contact the authors:
+
+* Slack channel
+* Author list
+
+For technical issues, reach out to Red Hat Demo Platform team:
+
+* Slack channel
+* Ticket link

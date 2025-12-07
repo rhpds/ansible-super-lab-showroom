@@ -1,0 +1,46 @@
+= {{ Workshop Title }}
+:source-highlighter: rouge
+:toc: macro
+:toclevels: 1
+
+toc::[]
+
+This guide helps workshop facilitators deliver an effective {{ technology/topic }} hands-on learning experience to participants.
+
+Every workshop session is different and you will need to adapt this guide to your specific audience and time constraints.
+For instance, if you have less than the noted amount of time, you can skip some sections or combine modules.
+
+The following sections will help you understand the guide and how to use it to prepare and execute the workshop.
+
+== Workshop overview
+The **Workshop Overview** section provides an overview of the learning objectives, target audience, and expected outcomes.
+It includes the business context for {{ technology/topic }} and benefits participants will gain.
+It also provides presentation tips and common participant questions you might encounter.
+
+IMPORTANT: You need to read this section thoroughly to understand the learning objectives and participant expectations.
+
+These workshops focus on hands-on skill building through practical exercises.
+You are encouraged to dive into technical details when participants ask questions.
+However, maintain focus on the learning objectives and ensure all participants can follow along.
+
+== Workshop details
+The **Workshop Details** section provides a single location to find logistical information for the workshop.
+Here you will find:
+
+* Proposed timing for each module
+* Required tools and software versions
+* Environment setup instructions
+* Troubleshooting common issues
+* Follow-up resources and next steps
+* Authors and contact information
+
+IMPORTANT: Review the technical requirements before the workshop to ensure all participants can complete the exercises.
+
+== Workshop modules
+This is the main learning content of the workshop.
+The modules contain step-by-step hands-on exercises for participants to complete.
+
+Encourage participants to ask questions and help each other during hands-on activities.
+
+== Next steps
+Get started by reading the **Workshop Overview** section!

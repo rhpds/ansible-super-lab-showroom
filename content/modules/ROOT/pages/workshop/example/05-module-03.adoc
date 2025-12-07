@@ -1,0 +1,239 @@
+= Workshop Module 3: Production deployment with Red Hat OpenShift
+:source-highlighter: rouge
+:toc: macro
+:toclevels: 1
+
+This module demonstrates deploying containerized applications to Red Hat OpenShift for production use.
+
+== Part 1: OpenShift deployment fundamentals
+
+== Exercise 1: Deploying your application to OpenShift
+Deploy your containerized application to OpenShift:
+
+* Log in to your OpenShift cluster:
++
+[source,bash]
+----
+oc login --server=<your-cluster-url>
+----
+
+* Create a new project for ACME applications:
++
+[source,bash]
+----
+oc new-project acme-applications --display-name="ACME Corporation Apps"
+----
+
+* Verify you're in the correct project:
++
+[source,bash]
+----
+oc project
+----
+
+* Push your container image to the OpenShift registry:
++
+[source,bash]
+----
+# Tag for OpenShift registry
+podman tag acme/web-app:v2.0 default-route-openshift-image-registry.apps.<cluster>/acme-applications/web-app:v2.0
+
+# Push to registry (you may need to log in to registry first)
+podman push default-route-openshift-image-registry.apps.<cluster>/acme-applications/web-app:v2.0
+----
+
+* Create a deployment for your application:
++
+[source,bash]
+----
+oc create deployment acme-web-app --image=image-registry.openshift-image-registry.svc:5000/acme-applications/web-app:v2.0
+----
+
+* Verify the deployment:
++
+[source,bash]
+----
+oc get deployments
+oc get pods
+----
+
+* Expose the application as a service:
++
+[source,bash]
+----
+oc expose deployment acme-web-app --port=8080
+----
+
+* Create a route to make the application accessible:
++
+[source,bash]
+----
+oc expose service acme-web-app
+----
+
+* Get the application URL:
++
+[source,bash]
+----
+oc get route acme-web-app
+----
+
+* Test your deployed application using the route URL
+
+== Part 2: Scaling and high availability
+
+== Exercise 2: Configuring scaling and high availability
+Configure scaling and high availability for your application:
+
+* Scale your application to multiple replicas:
++
+[source,bash]
+----
+oc scale deployment acme-web-app --replicas=3
+----
+
+* Verify multiple pods are running:
++
+[source,bash]
+----
+oc get pods -l app=acme-web-app
+----
+
+* Configure resource limits for your deployment:
++
+[source,bash]
+----
+oc patch deployment acme-web-app -p '{"spec":{"template":{"spec":{"containers":[{"name":"web-app","resources":{"requests":{"memory":"128Mi","cpu":"100m"},"limits":{"memory":"256Mi","cpu":"200m"}}}]}}}}'
+----
+
+* Add health checks to your deployment:
++
+[source,bash]
+----
+oc patch deployment acme-web-app -p '{"spec":{"template":{"spec":{"containers":[{"name":"web-app","readinessProbe":{"httpGet":{"path":"/health","port":8080},"initialDelaySeconds":5,"periodSeconds":10},"livenessProbe":{"httpGet":{"path":"/health","port":8080},"initialDelaySeconds":15,"periodSeconds":20}}]}}}}'
+----
+
+* Set up horizontal pod autoscaling:
++
+[source,bash]
+----
+oc autoscale deployment acme-web-app --min=2 --max=10 --cpu-percent=70
+----
+
+* Verify the autoscaler configuration:
++
+[source,bash]
+----
+oc get hpa
+----
+
+* Test rolling updates by updating the image:
++
+[source,bash]
+----
+oc set image deployment/acme-web-app web-app=image-registry.openshift-image-registry.svc:5000/acme-applications/web-app:v2.0
+----
+
+* Watch the rolling update process:
++
+[source,bash]
+----
+oc rollout status deployment/acme-web-app
+----
+
+== Part 3: Monitoring and troubleshooting
+
+== Exercise 3: Monitoring and troubleshooting your application
+Explore monitoring and troubleshooting capabilities:
+
+* View application logs:
++
+[source,bash]
+----
+oc logs -l app=acme-web-app --tail=50
+----
+
+* Monitor application events:
++
+[source,bash]
+----
+oc get events --sort-by='.lastTimestamp'
+----
+
+* Check resource usage:
++
+[source,bash]
+----
+oc top pods -l app=acme-web-app
+----
+
+* Access the OpenShift web console for visual monitoring:
+  * Navigate to Developer perspective
+  * Select your project: acme-applications
+  * View the Topology view to see your application
+  * Click on your deployment to see detailed metrics
+
+* Simulate application load to see autoscaling:
++
+[source,bash]
+----
+# Get the route URL
+ROUTE_URL=$(oc get route acme-web-app -o jsonpath='{.spec.host}')
+
+# Generate some load
+for i in {1..100}; do curl http://$ROUTE_URL/ & done
+----
+
+* Monitor the autoscaling response:
++
+[source,bash]
+----
+watch oc get pods -l app=acme-web-app
+----
+
+* View autoscaler status:
++
+[source,bash]
+----
+oc describe hpa acme-web-app
+----
+
+* Troubleshoot a problem by examining pod details:
++
+[source,bash]
+----
+oc describe pod <pod-name>
+----
+
+== Module 3 summary
+
+**What you learned:**
+* How to deploy containerized applications to OpenShift
+* Scaling and high availability configuration
+* Monitoring and troubleshooting production applications
+
+**Key achievements for ACME:**
+* **Deployment automation**: From manual weeks to automated minutes
+* **High availability**: Zero-downtime updates and automatic scaling
+* **Operational efficiency**: Built-in monitoring and self-healing capabilities
+* **Developer productivity**: Self-service deployment platform
+
+**Business transformation completed:**
+* **Before**: 2 to 3 weeks for application deployment, manual scaling, frequent downtime
+* **After**: Minutes for deployment, automatic scaling, high availability architecture
+
+**Production benefits realized:**
+* 95% reduction in deployment time
+* 99.9% application availability
+* 70% improvement in resource utilization
+* Enablement of CI/CD practices
+
+**Next steps for ACME:**
+* Implement CI/CD pipelines for automated testing and deployment
+* Add monitoring and alerting for business metrics
+* Explore advanced OpenShift features like service mesh and operators
+* Scale container adoption across additional applications
+
+**Workshop conclusion:**
+You have successfully containerized an application and deployed it to production using Red Hat OpenShift.
+These skills provide the foundation for modern application development and deployment practices.

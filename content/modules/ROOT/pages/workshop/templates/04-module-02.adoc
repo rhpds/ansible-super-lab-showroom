@@ -1,0 +1,199 @@
+= Workshop Module 2: {{ Module title }}
+:source-highlighter: rouge
+:toc: macro
+:toclevels: 1
+
+In this module, you will {{ description of hands-on activities and skills to be developed }}.
+
+== Learning objectives
+By the end of this module, you will be able to:
+
+* {{ Learning objective 1 }}
+* {{ Learning objective 2 }}
+* {{ Learning objective 3 }}
+* {{ Learning objective 4 }}
+
+== Background concepts
+{{ Explanation of concepts that build on Module 1 }}.
+
+**Key concepts for this module:**
+* **{{ Concept 1 }}**: {{ Definition and relevance }}
+* **{{ Concept 2 }}**: {{ Technical explanation }}
+* **{{ Concept 3 }}**: {{ Best practice context }}
+* **{{ Concept 4 }}**: {{ Enterprise consideration }}
+
+== Exercise 1: {{ Exercise title }}
+
+{{ Description of the first major exercise in this module }}.
+
+=== Prerequisites
+* {{ Completion requirement from Module 1 }}
+* {{ Additional setup needed }}
+
+=== Steps
+
+. {{ Step 1 preparation }}:
++
+[source,bash]
+----
+{{ setup commands }}
+----
+
+. {{ Step 2 creation }}:
++
+[source,bash]
+----
+cat > {{ filename }} << 'EOF'
+{{ file content example }}
+EOF
+----
+
+. {{ Step 3 build/process }}:
++
+[source,bash]
+----
+{{ build command }}
+----
+
+. {{ Step 4 verification }}:
++
+[source,bash]
+----
+{{ verification commands }}
+----
+
+=== Expected results
+{{ What participants should see/achieve }}.
+
+// Screenshot of successful result
+image::{{ exercise1-success }}.png[align="center",width=600,title="Exercise 1 Successful Completion"]
+
+=== Validation checklist
+□ {{ Validation item 1 }}
+□ {{ Validation item 2 }}
+□ {{ Validation item 3 }}
+□ {{ Validation item 4 }}
+
+== Exercise 2: {{ Testing and validation exercise }}
+
+{{ Description of testing/validation exercise }}.
+
+=== Steps
+
+. {{ Test setup }}:
++
+[source,bash]
+----
+{{ test preparation }}
+----
+
+. {{ Execute tests }}:
++
+[source,bash]
+----
+{{ test execution commands }}
+----
+
+. {{ Monitor results }}:
++
+[source,bash]
+----
+{{ monitoring commands }}
+----
+
+. {{ Validate functionality }}:
++
+{{ Manual testing steps or browser actions }}
+
+=== Troubleshooting common issues
+
+**Issue**: {{ Specific error message or symptom }}
+**Cause**: {{ Why this happens }}
+**Solution**:
+[source,bash]
+----
+{{ Resolution commands }}
+----
+
+**Issue**: {{ Another common problem }}
+**Cause**: {{ Root cause explanation }}
+**Solution**: {{ Step-by-step resolution }}
+
+== Exercise 3: {{ Advanced/optimization exercise }}
+
+{{ Description of advanced exercise that demonstrates best practices }}.
+
+=== Prerequisites
+* {{ Successful completion of previous exercises }}
+* {{ Additional tools or access }}
+
+=== Steps
+
+. {{ Advanced configuration }}:
++
+[source,bash]
+----
+{{ advanced setup commands }}
+----
+
+. {{ Implementation }}:
++
+[source,bash]
+----
+{{ complex implementation commands }}
+----
+
+. {{ Testing and validation }}:
++
+[source,bash]
+----
+{{ comprehensive testing }}
+----
+
+. {{ Performance or security check }}:
++
+[source,bash]
+----
+{{ validation commands }}
+----
+
+=== Comparison with basic approach
+{{ Explanation of improvements achieved with advanced techniques }}.
+
+// Before and after comparison images
+image::{{ before-optimization }}.png[align="left",width=300,title="Basic Approach"]
+image::{{ after-optimization }}.png[align="right",width=300,title="Optimized Approach"]
+
+== Challenge exercise (Optional)
+
+{{ Description of optional challenge for advanced participants }}.
+
+=== Challenge requirements
+* {{ Requirement 1 }}
+* {{ Requirement 2 }}
+* {{ Requirement 3 }}
+
+=== Hints
+* {{ Helpful hint 1 }}
+* {{ Helpful hint 2 }}
+* {{ Resource reference }}
+
+== Module summary
+
+**Skills developed:**
+* {{ Practical skill 1 }}
+* {{ Technical competency 2 }}
+* {{ Best practice 3 }}
+
+**Key achievements:**
+* {{ Measurable accomplishment 1 }}
+* {{ Capability gained 2 }}
+* {{ Foundation built for next module }}
+
+**Best practices learned:**
+* {{ Best practice 1 }}
+* {{ Security consideration }}
+* {{ Performance optimization }}
+
+**Next module preview:**
+Module 3 will cover {{ preview of final module content }} where you will apply these skills in {{ context }}.

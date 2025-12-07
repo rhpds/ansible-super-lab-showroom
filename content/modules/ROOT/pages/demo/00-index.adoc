@@ -1,0 +1,61 @@
+= How to Use This Demo Guide
+:source-highlighter: rouge
+:toc: macro
+:toclevels: 1
+
+toc::[]
+
+This guide helps sales engineers and technical presenters deliver an effective {{ Product | Solution }} demonstration to customers.
+
+Every demo is different and you will have to adapt this guide to your specific needs.
+For instance, if you have less than the noted amount of time, you can skip some of the sections.
+
+The following sections will help you understand the guide and how to use it to prepare and execute the demo.
+
+== Demo Overview
+The **Demo Overview** section will provide an overview of the demo, the background or use case, and benefits to the customer.
+It will also provide some presentation tips and common customer questions that you might receive. 
+
+IMPORTANT: You need to read this section thoroughly to understand the background of the demo and the business context.
+
+These demos are meant to focus on the business value rather than the technical details.
+You are, of course, welcome to dive into the technical details if the customer asks for it.
+However, it is better to avoid focusing on the low level details in most cases.
+
+== Demo Details
+The **Demo Details** section will provide a single location to find technical details for the demo.
+Here you will find:
+
+* Proposed timing for the demo
+* Products and versions
+* Credentials
+* Troubleshooting common issues
+* Follow-up resources
+* Authors and contact information
+
+IMPORTANT: TODO: Add a link to the anchors on the demo details page.
+
+== Demo Modules
+This is the main content of the demo.
+Most sections are written with both a **Know** and a **Show** section.
+
+=== Know
+Content in the **Know** section is a mix of background and insights for you and the customer.
+It will describe what you are going to show and why it is important.
+
+It is not a script for you to follow, so make sure you read it thoroughly and understand the what and the why of what you will show.
+
+You'll often find additional information covering:
+
+* Business Challenge
+* Technical Solution
+* Business Value
+
+=== Show
+Content in the **Show** section is a step-by-step guide for you to follow.
+There will be less narrative in these sections with the focus on what you need to do.
+
+Unless otherwise noted, you need to follow the steps in the **Show** section in order.
+
+== Next Steps
+Get started by reading the **Demo Overview** section!

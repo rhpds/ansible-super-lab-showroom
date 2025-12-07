@@ -1,0 +1,252 @@
+= Workshop Module 2: Application containerization
+:source-highlighter: rouge
+:toc: macro
+:toclevels: 1
+
+This module demonstrates how to containerize existing applications using Dockerfiles and best practices.
+
+== Part 1: Creating your first Dockerfile
+
+== Exercise 1: Creating a Dockerfile for your application
+Create a Dockerfile for a sample web application:
+
+* Create a new directory for your project:
++
+[source,bash]
+----
+mkdir ~/container-workshop
+cd ~/container-workshop
+----
+
+* Create a simple web application:
++
+[source,bash]
+----
+cat > app.py << 'EOF'
+from flask import Flask
+import os
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    return f'<h1>Hello from ACME Corporation!</h1><p>Hostname: {os.uname().nodename}</p>'
+
+@app.route('/health')
+def health():
+    return {'status': 'healthy', 'service': 'acme-web-app'}
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080)
+EOF
+----
+
+* Create a requirements file:
++
+[source,bash]
+----
+cat > requirements.txt << 'EOF'
+Flask==2.3.2
+EOF
+----
+
+* Create your first Dockerfile:
++
+[source,bash]
+----
+cat > Dockerfile << 'EOF'
+# Use Red Hat Universal Base Image for Python
+FROM registry.redhat.io/ubi8/python-39
+
+# Set working directory
+WORKDIR /opt/app-root/src
+
+# Copy requirements and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY app.py .
+
+# Expose port 8080
+EXPOSE 8080
+
+# Run application as non-root user
+USER 1001
+
+# Start the application
+CMD ["python", "app.py"]
+EOF
+----
+
+* Build your container image:
++
+[source,bash]
+----
+podman build -t acme/web-app:v1.0 .
+----
+
+* Verify the image was created:
++
+[source,bash]
+----
+podman images acme/web-app
+----
+
+== Part 2: Testing and running containerized applications
+
+== Exercise 2: Testing your containerized application
+Test your containerized application:
+
+* Run your newly built image:
++
+[source,bash]
+----
+podman run -d --name acme-web-app -p 8081:8080 acme/web-app:v1.0
+----
+
+* Verify the container is running:
++
+[source,bash]
+----
+podman ps
+----
+
+* Test the application endpoints:
++
+[source,bash]
+----
+curl http://localhost:8081/
+curl http://localhost:8081/health
+----
+
+* Check application logs:
++
+[source,bash]
+----
+podman logs acme-web-app
+----
+
+* Monitor resource usage:
++
+[source,bash]
+----
+podman stats acme-web-app --no-stream
+----
+
+* Test the application in your web browser at http://localhost:8081
+
+* Stop and remove the test container:
++
+[source,bash]
+----
+podman stop acme-web-app
+podman rm acme-web-app
+----
+
+== Part 3: Advanced Dockerfile techniques
+
+== Exercise 3: Implementing advanced Dockerfile techniques
+Improve your Dockerfile with advanced techniques:
+
+* Create an enhanced Dockerfile:
++
+[source,bash]
+----
+cat > Dockerfile.advanced << 'EOF'
+# Multi-stage build for better security and size
+FROM registry.redhat.io/ubi8/python-39 as builder
+
+# Install build dependencies
+WORKDIR /opt/app-root/src
+COPY requirements.txt .
+RUN pip install --user --no-cache-dir -r requirements.txt
+
+# Production stage
+FROM registry.redhat.io/ubi8/python-39
+
+# Copy only the installed packages from builder stage
+COPY --from=builder /opt/app-root/.local /opt/app-root/.local
+
+# Set working directory
+WORKDIR /opt/app-root/src
+
+# Copy application code
+COPY app.py .
+
+# Create non-root user
+USER 1001
+
+# Add health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:8080/health || exit 1
+
+# Expose port
+EXPOSE 8080
+
+# Set environment variables
+ENV PATH=/opt/app-root/.local/bin:$PATH
+ENV FLASK_ENV=production
+
+# Start application
+CMD ["python", "app.py"]
+EOF
+----
+
+* Build the improved image:
++
+[source,bash]
+----
+podman build -f Dockerfile.advanced -t acme/web-app:v2.0 .
+----
+
+* Compare image sizes:
++
+[source,bash]
+----
+podman images acme/web-app
+----
+
+* Test the improved image:
++
+[source,bash]
+----
+podman run -d --name acme-web-app-v2 -p 8082:8080 acme/web-app:v2.0
+----
+
+* Verify health check functionality:
++
+[source,bash]
+----
+podman ps
+sleep 10
+podman inspect acme-web-app-v2 | grep -A 5 '"Health":'
+----
+
+* Clean up test containers:
++
+[source,bash]
+----
+podman stop acme-web-app-v2
+podman rm acme-web-app-v2
+----
+
+== Module 2 summary
+
+**What you learned:**
+* How to create Dockerfiles for existing applications
+* Container testing strategies and best practices
+* Advanced Dockerfile techniques for production use
+
+**Key takeaways for ACME:**
+* Containerization transforms manual deployment into automated, repeatable process
+* Dockerfile serves as documentation and ensures consistent environments
+* Security and optimization are critical for production container images
+
+**Business impact achieved:**
+* Deployment time reduced from weeks to minutes
+* Consistent application environments across all stages
+* Improved security through non-root execution and minimal attack surface
+
+**Next steps:**
+Module 3 will demonstrate deploying these containerized applications to Red Hat OpenShift for production use.
