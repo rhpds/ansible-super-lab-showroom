@@ -36,14 +36,14 @@ In order to test and develop on your local machine, you can use a specially buil
 +
 [source,sh]
 ----
-podman run --rm --name antora -e ANTORA_CONFIG=site.yml -v $PWD:/antora -p 8080:8080 -i -t ghcr.io/juliaaano/antora-viewer
+podman run --rm --name antora -v $PWD:/antora -p 8080:8080 -i -t ghcr.io/juliaaano/antora-viewer
 ----
 
 For SELinux environments, `:z` may need to be appended to the volume mount:
 
 [source,sh]
 ----
-podman run --rm --name antora -e ANTORA_CONFIG=site.yml -v $PWD:/antora:z -p 8080:8080 -i -t ghcr.io/juliaaano/antora-viewer
+podman run --rm --name antora -v $PWD:/antora:z -p 8080:8080 -i -t ghcr.io/juliaaano/antora-viewer
 ----
 
 Live-reload is not supported.
