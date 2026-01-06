@@ -20,8 +20,7 @@
 *** xref:31-events-dev-de.adoc[3.2. Events - Develop and publish Decision Environment]
 *** xref:32-events-scenario.adoc[3.3. Events - Execute a full EDA Scenario]
 ** Module 4: AI 
-*** xref:40-ai-lightspeed-code-assistant.adoc[4.1. AI - Ansible Lightspeed Code Assistant]
-*** xref:41-ai-lightspeed-int-assistant.adoc[4.2. AI - Ansible Lightspeed Intelligent Assistant]
-*** xref:42-ai-lightspeed-mcp.adoc[4.3. AI - Ansible MCP Server]
+*** xref:40-ai-lightspeed-int-assistant.adoc[4.1. AI - Ansible Lightspeed Intelligent Assistant]
+*** xref:41-ai-lightspeed-mcp.adoc[4.2. AI - Ansible MCP Server]
 * xref:appendix.adoc[Appendix]
 ** xref:appendix.adoc#refresh-showroom-content[Refresh Showroom Content]

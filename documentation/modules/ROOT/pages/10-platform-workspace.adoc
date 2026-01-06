@@ -25,7 +25,7 @@ After completing this module, you will be able to:
 
 == 2: Contributing to this Lab Documentation
 
-If you see an error in this lab, fork and submit a pull request against https://github.com/sabre1041/ansible_bootcamp_enablement
+If you see an error in this lab, fork and submit a pull request against https://github.com/rhpds/ansible-super-lab-showroom
 
 == 3: Dev Spaces console
 
@@ -137,4 +137,4 @@ For additional references, refer to the following resources:
 . https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/using_ansible_development_workspaces_for_automation_content_development/index[Using Ansible Development Workspaces for Automation Content Development]
 . https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.23/html/user_guide/getting-started-with-devspaces#authenticating-to-a-git-server-from-a-workspace[Authenticating to a Git server from a Workspace].
 . https://github.com/jeffcpullen/devspaces-example/[Source for the Dev Space Workspace]
-. https://github.com/sabre1041/ansible_bootcamp_enablement[Source for this lab content]
+. https://github.com/rhpds/ansible-super-lab-showroom[Source for this lab content]

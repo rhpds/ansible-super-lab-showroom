@@ -1,6 +1,6 @@
 ---
 site:
-  title: Automation and AI SuperLab
+  title: Ansible Automation Superlab
   start_page: modules::index.adoc
 
 content:
