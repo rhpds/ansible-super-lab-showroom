@@ -4,13 +4,13 @@ Welcome to the {lab_name}!
 
 == Overview
 
-The Automation AI Superlab provides a comprehensive, hands-on learning experience for Red Hat Ansible Automation Platform (AAP). This superlab covers the full spectrum of automation development, from basic concepts to advanced CI/CD pipelines, infrastructure as code, Event Driven Ansible and lastly an exploration of some of the Red Hat Ansible Lightspeed assistants.
+The {lab_name} provides a comprehensive, hands-on learning experience for Red Hat Ansible Automation Platform (AAP). This superlab covers the full spectrum of automation development, from basic concepts to advanced CI/CD pipelines, infrastructure as code, Event Driven Ansible and lastly an exploration of some of the AI integration within Ansible Automation Platform.
 
 Through a series of progressive labs, you'll gain practical experience with:
 
 * **Platform** - Covers OpenShift Dev Spaces, developer tooling, and the deployment of AAP on OpenShift.
 * **Content** - Focuses on creating custom Ansible Content Collections, Execution Environments, and playbooks for Windows.
-* **Events** - Dedicated to Event Driven Ansible (EDA), including rulebooks and event sources like AMQ Streams.
+* **Events** - Dedicated to Event Driven Ansible (EDA), including rulebooks and event sources, like AMQ Streams.
 * **AI** - Explores AIOps, Ansible Intelligent and Coding Assistant, and integrating AI with automation.
 
 == Prerequisites
@@ -29,36 +29,47 @@ The superlab is organized into sequential modules that build upon each other. Ov
 * **Platform** - Covers OpenShift Dev Spaces, developer tooling, and the deployment of AAP on OpenShift.
 * **Content** - Focuses on creating custom Ansible Content Collections, Execution Environments, and playbooks for Windows.
 * **Events** - Dedicated to Event Driven Ansible (EDA), including rulebooks and event sources like AMQ Streams.
-* **AI** - Explores AIOps, Ansible Intelligent and Coding Assistant, and integrating AI with automation.
+* **AI** - Explores AIOps, Ansible Intelligent Assistants, and integrating AI with AAP.
 
-. xref:10-platform-workspace.adoc[1a. Platform - Introduction and exploration of Dev Spaces Workspace]
-. xref:11-platform-dev-tooling.adoc[1b. Platform - Using Ansible developer tools]
-. xref:12-platform-aap_on_openshift.adoc[1c. Platform - AAP on OpenShift]
-. xref:20-content-windows.adoc[2a. Content - Creating automation for Windows]
-. xref:21-content-dev-ee.adoc[2b. Content - Develop a custom Execution Environment]
-. xref:22-content-dev-playbook.adoc[2c. Content - Develop a Playbook to execute it all]
-. xref:23-content-pipeline.adoc[2d. Content - Pipeline for collections]
-. xref:24-content-config-as-code.adoc[2d. Content - Config as Code]
-. xref:30-events-rulebooks.adoc[3a. Events - EDA Overview and Rulebook creation]
-. xref:31-events-dev-de.adoc[3b. Events - Develop and publish Decision Environment]
-. xref:32-events-scenario.adoc[3c. Events - Execute a full EDA Scenario]
-. xref:40-ai-lightspeed-code-assistant.adoc[4a. AI - Ansible Lightspeed Code Assistant]
-. xref:41-ai-lightspeed-int-assistant.adoc[4b. AI - Ansible Lightspeed Intelligent Assistant]
-. xref:42-ai-lightspeed-mcp.adoc[4c. AI - Ansible MCP Server]
+The following modules are included in this superlab:
+
+. Platform
+[arabic]
+.. xref:10-platform-workspace.adoc[Introduction and exploration of Dev Spaces Workspace]
+.. xref:11-platform-dev-tooling.adoc[Using Ansible developer tools]
+.. xref:12-platform-aap_on_openshift.adoc[Platform - AAP on OpenShift]
+. Content
+[arabic]
+.. xref:20-content-windows.adoc[Creating automation for Windows]
+.. xref:21-content-dev-ee.adoc[Develop a custom Execution Environment]
+.. xref:22-content-dev-playbook.adoc[Develop a Playbook to execute it all]
+.. xref:23-content-pipeline.adoc[Pipeline for collections]
+.. xref:24-content-config-as-code.adoc[Config as Code]
+. Events
+[arabic]
+.. xref:30-events-rulebooks.adoc[EDA Overview and Rulebook creation]
+.. xref:31-events-dev-de.adoc[Develop and publish Decision Environment]
+.. xref:32-events-scenario.adoc[Execute a full EDA Scenario]
+. AI
+[arabic]
+.. xref:40-ai-lightspeed-int-assistant.adoc[Ansible Lightspeed Intelligent Assistant]
+.. xref:41-ai-lightspeed-mcp.adoc[Ansible MCP Server]
 
 == Learning Outcomes
 
 By the end of this superlab, you will be able to:
 
 * Set up and configure development environments for Ansible automation
-* Develop, test, and publish Ansible collections
-* Implement CI/CD pipelines for automation content
+* Utilize Ansible developer tools effectively
 * Deploy and manage AAP across different platforms
-* Apply infrastructure as code principles to automation platforms
-* Troubleshoot and optimize automation workflows
+* Develop, test, and publish Ansible collections
+* Build, publish Ansible Execution Environments
+* Leverage Automation Hub for content distribution
+* Create and manage Event Driven Ansible rulebooks and scenarios
+* Integrate AI capabilities into Ansible Automation Platform
 
 == Getting Started
 
-Begin with xref:10-platform-workspace.adoc[Module 1a: Platform - Introduction and exploration of Dev Spaces Workspace]] to set up your development environment. Each module includes detailed instructions, code examples, and verification steps.
+Begin with xref:10-platform-workspace.adoc[Module 1a: Platform - Introduction and exploration of Dev Spaces Workspace] to set up your development environment. Each module includes detailed instructions, code examples, and verification steps.
 
 For questions or issues, refer to the xref:appendix.adoc[Appendix] or contact your instructor.
