@@ -1,140 +1,335 @@
-= Lab: Ansible Development in Dev Spaces
+= Lab: Ansible Model Context Protocol (MCP) Server
 
 [abstract]
-We will explore the Red Hat OpenShift Dev Spaces environment you will be working within and learn how to launch and configure development workspaces for Ansible automation development. This includes understanding the various components available in the lab environment, authenticating with git repositories, and using the Ansible Development Tools.
-
-This lab walks through the various components within the lab environment including launching, configuring and using Dev Spaces on OpenShift as your primary development environment for Ansible.
+We will explore the Ansible MCP Server and its role in integrating external AI tools with Ansible Automation Platform (AAP). This lab will guide you through how to deploy the Ansible MCP Server to your OpenShift environment and configure an external AI tool to interact with Ansible Automation Platform.
 
 == Learning Objectives
 
 After completing this module, you will be able to:
 
-* Navigate the Red Hat OpenShift Dev Spaces interface
-* Launch and configure development workspaces
-* Understand the components included in the lab environment
-* Set up authentication for git repositories
-* Use basic Ansible Development Tools features
+* Understand the role of MCP Servers in the AI ecosystem
+* Deploy the Ansible MCP Server to an OpenShift environment
+* Generate API tokens that can be used to interact with Ansible Automation Platform
+* Customize OpenShift Dev Spaces to inject variables into the workspace
+* Configure an external AI tool to connect and interact with Ansible Automation Platform using the Ansible MCP Server
 
-== 1: Introduction: What is included in the lab environment
+== 1: Introduction
 
-. Red Hat OpenShift Cluster
-. Ansible Automation Platform
-. Red Hat OpenShift Dev Spaces
-. link:https://about.gitea.com[Gitea,window=_blank] Git Server
-. Lab Instructions
+In the prior lab, you explored the Ansible Lightspeed Intelligent Assistant and how by leveraging LLM's, generative AI capabilities can be integrated into Ansible Automation Platform (AAP) to enable to be empowered through the use of a chat-based interface to interact with AAP using natural language prompts.
 
-== 2: Contributing to this Lab Documentation
+One of the limitation of LLM's is that they are essentially a snapshot in time and do not have access to real-time information or context about specific systems or environments. To overcome this limitation, the Ansible Model Context Protocol (MCP) Server was developed to provide a standardized way for LLM's and other AI tools to access real-time data and context from Ansible Automation Platform.
 
-If you see an error in this lab, fork and submit a pull request against https://github.com/sabre1041/ansible_bootcamp_enablement
+=== 1.1: What is the Model Context Protocol (MCP)?
 
-== 3: Dev Spaces console
+The link:https://modelcontextprotocol.io[Model Context Protocol (MCP)] is an open-source standard designed to universalize how AI models interact with external data and tools, effectively acting as a "USB-C" for the AI ecosystem. Instead of having to develop custom integrations for models to interact with external systems, MCP allows developers and consumers a standardized method for connecting AI models to a wide range of data sources and tools. This interoperability enables AI agents to securely access real-time information and perform complex tasks across different platforms without the need for model-specific code, significantly reducing development complexity while improving the accuracy and utility of AI-driven workflows.
 
-link:https://access.redhat.com/products/red-hat-openshift-dev-spaces/[Red Hat OpenShift Dev Spaces,window=_blank] provides consistent, reproducible development environments based on the open-source project link:https://eclipse.dev/che/[Eclipse Che,window=_blank].
+=== 1.2: What is the Ansible MCP Server
 
-It provides, by default, a Visual Studio Code (VS Code) environment as configured by a link:https://devfile.io[devfile,window=_blank], a YAML file that defines the entire workspace as code—including all necessary tools, runtimes, and project source. This file is used to instantly generate a pre-configured, containerized development environment, ensuring every developer on a team has an identical setup and solving the "it works on my machine" problem.
+The Ansible MCP Server enables connecting the Ansible Automation Platform with any preferred external AI tool (such as Claude, Cursor, or ChatGPT). The AI tools can access key information about the Ansible Automation Platform environment and perform a variety of tasks. Ansible users can query information, execute workflows, and perform automation tasks using natural language prompts directly within their preferred AI tool.
 
-=== 3.1: Launching Dev Spaces from OpenShift
+=== 1.3: Communication Workflow
+
+The following describes the workflow between the different parties involved in the communication process when using an external AI tool to interact with Ansible Automation Platform via the Ansible MCP Server.
+
+. AI client (The requester): The user initiates a request through their external AI agent (for example, Cursor or Claude) using natural-language prompts.
+. The AI model (The translator): The AI agent receives the request, interprets the intent, and maps it to the appropriate exposed Ansible toolset. It then sends a structured toolset call with the necessary parameters.
+. Ansible MCP server (The gatekeeper): Upon receiving the call, the Ansible MCP server validates the request. It uses the user’s API token to authenticate with the automation controller.
+. Ansible controller (The executor): The automation controller accepts the validated command from the MCP server and triggers the appropriate automation job.
+. Response loop: The automation result is returned to the Ansible MCP server, standardized into a format the AI agent can process, and displayed to the user via the AI client.
+
+=== 1.4: AAP Enabled Toolsets via MCP
+
+The following toolsets of Ansible Automation Platform are currently enabled via the Ansible MCP Server:
+
+. Job management
+. Inventory management
+. System monitoring
+. User management
+. Security/compliance
+. Platform configuration
+
+Given that the Ansible MCP Server enables access to end user and system level data, RBAC permissions can be applied to provide granular control over what data and actions are accessible via the MCP server.
+
+=== 1.5 End to End Workflow
+
+To make use of the Ansible MCP Server, the following steps are required:
+
+. Deploy the Ansible MCP Server within Ansible Automation Platform
+. Generate an API token for use by the external AI tool
+. Configure the external AI tool to connect to the Ansible MCP Server using the generated API token
+
+We will walk through each of these steps in the following sections.
+
+== 2: Deploying the Ansible MCP Server
+
+Deploy the Ansible MCP Server to your OpenShift environment by enabling the MCP capability within the `AnsibleAutomationPlatform` custom resource.
 
 . Launch the link:{openshift_cluster_console_url}[OpenShift Web Console,window=_blank]
 . Select the **htpasswd_provider** button and use the credentials provided in the xref:environment-details.adoc[Environment Details,window=_blank] page to login to the OpenShift console
-. Use the 9-block icon in the upper right to launch _Red Hat OpenShift Dev Spaces_ directly from the OpenShift console header.
+. Navigate to **Ecosystem** -> **Installed Operators**
+. From the _Project_ dropdown, ensure `aap` is selected
+. The `Ansible Automation Platform` operator is listed and installed within this project.
 +
-image::01-introduction/intro-dev_spaces_shortcut.png[OpenShift console header showing the 9-block application launcher icon for quick access to Dev Spaces]
-
-== 4: Dev Spaces Workspace
-
-=== 4.1: Launching a specific Dev Spaces Workspace
-
-Once you have launched the OpenShift Dev Spaces console, use the following steps toe access your Ansible Dev Space workspace.
-
-. Login via OpenShift authentication using the same credentials as the OpenShift console
-. Select **Allow selected permissions** to authorize access and launch the console
-. Scroll down and select the workspace titled **Ansible Dev Space**
+image::41-lightspeed-mcp/installed-operators-aap.png[Installed Operators in the aap Project]
 +
-image::01-introduction/intro3.png[Dev Spaces workspace selection page showing available workspaces including Ansible Dev Space]
+. Click on the `Ansible Automation Platform` operator which will display all of the resources that are managed by the operator.
+. In the top tab, click on `Ansible Automation Platform` and select **aap**.
 +
-NOTE: It will take a few minutes for the Dev Spaces instance to initialize. When it has loaded, a Visual Studio Code interface will appear.
+image::41-lightspeed-mcp/ansible-automation-platform-instances.png[Ansible Automation Platform Instances in the aap Project]
 +
-image::01-introduction/intro4.png[Dev Spaces workspace loading screen showing VS Code interface initialization]
+. Click on the **YAML** tab to edit the resource in YAML format.
+. Add the following to the `spec` section by updating the configuration to enable the MCP server:
 +
-. Click the **Trust Publishers and Install** button to trust the extension publishers that are included within the Dev Spaces workspace
-. Click the **Yes, I trust the Authors** button to trust the workspace authors (your instructors).
-. Wait a few minutes until the additional extension icons appear for Ansible and OpenShift on the left side.
+[source,yaml]
+---
+spec:
+  mcp:
+    disabled: false
+    allow_write_operations: false
+    image: quay.io/ablock/aap-mcp-server
+    image_version: bugfix
+---
 +
-image::01-introduction/intro5.png[VS Code interface in Dev Spaces showing Ansible and OpenShift extension icons in the left sidebar]
-
-== 5: Ansible and OpenShift Extensions
-
-For this lab, we have have provided a link:https://code.visualstudio.com/docs/editing/workspaces/workspaces[.code-workspace,window=_blank] configuration that included these extensions along with additional configurations to curate your development environment. See https://github.com/jeffcpullen/devspaces-example/blob/main/devspaces.code-workspace for the source of this workspace configuration.
-
-. Click on the **Ansible** extension icon to access the Ansible Development Tools extension (covered in a subsequent lab)
+NOTE: Setting `allow_write_operations` to `false` will restrict the MCP server to read-only operations. This is the preferred option, especially in Enterprise environments, when beginning to incorporate AAP with external AI tools. The AI tool may perform unwanted actions if write operations are enabled without fully understanding the implications. For the purpose of this lab, access to write operations will be restricted.
 +
-image::01-introduction/intro6.png[Ansible extension interface in VS Code showing available Ansible development tools]
+IMPORTANT: A custom MCP image is being used for this lab as defined in the `image` and `image_version` properties above due to an issue identified with the official MCP image. This issue is expected to be resolved in a future release of Ansible Automation Platform and can be tracked link:https://issues.redhat.com/browse/AAP-62002[here].
++ 
+. Click the **Save** button to apply the changes.
 
-== 6: User Credentials in Workspaces
+Once the configuration has been applied, the Ansible Automation Platform operator will begin to reconcile the changes. This process can take several minutes to complete.
 
-NOTE: This section describes a key feature of OpenShift Dev Spaces which enables secure access to git repositories. These details are shared for informational purposes only. No action is required to be performed in your Dev Spaces workspace.
+A new _Deployment_ resource named `<instance_name>-mcp` will be created when the MCP capability is enabled, where `<instance_name>` is the name of your `AnsibleAutomationPlatform` custom resource.
 
-OpenShift Dev Spaces includes the capability to store user credentials for Git repositories, such as Personal Access Tokens (PATs), which can be applied to all your workspaces. This can be accomplished after logging into the Red Hat OpenShift Dev Spaces dashboard. Click on the top right drop down next to your username and icon and select, **User Preferences**. In the User Preferences page, select **Personal Access Tokens** and add a git Personal Access Token (PAT) associated with the desired Git provider.
+== 3: Generating an API Token
 
-For more information, see the https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.23/html/user_guide/getting-started-with-devspaces#authenticating-to-a-git-server-from-a-workspace[Authenticating to a Git server from a Workspace].
+To allow an external AI tool to interact with Ansible Automation Platform via the Ansible MCP Server, an API token must be generated which can then be configured in the external AI tool. An API token in Ansible Automation Platform can either be associated with an OAuth Application or as a Personal Account Token (PAT). For the purpose of this lab, we will use the Personal Access Token method.
 
-== 7: Accessing a Terminal
+=== 3.1: Creating a Personal Access Token (PAT)
 
-The majority of the exercises in this lab will be performed using the Visual Studio Code terminal.
+Create a Personal Access Token (PAT) by performing the following:
 
-. Open a new terminal by selecting the VS Code menu starting with the hamburger (3 horizontal lines) in the top left, then selecting **Terminal** -> **New Terminal**
+. Launch the link:{aap_controller_web_url}[Ansible Automation Platform,window=_blank] web interface and login using the credentials from the xref:environment-details.adoc[Environment Details,window=_blank] page.
+. From the navigation menu on the left, expand **Automation Content** and click on **API Token**.
 +
-image::01-introduction/intro7.png[VS Code terminal interface showing basic command line operations in the Dev Spaces environment]
+image::41-lightspeed-mcp/api-token-overview.png[API Token Overview]
 +
-. Explore the environment:
+. On the API Token page, click the **Create API Token** button
+. On the Create API Token page, enter the following details:
+  
+  * _Description_: `mcp`
+  * _OAuth Application_: Leave this field blank which will result in a Personal Access Token (PAT) being created.
+  * _Scope_: Select **Read** to restrict the token to read-only operations.
++
+image::41-lightspeed-mcp/api-token-details.png[API Token Creation Details]
++
+. Click **Create token** to generate the API token which will be displayed in the resulting dialog
+
+NOTE: Make sure to store the token securely, as it will not be displayed again.
+
+== 4: Configuring an External AI Tool
+
+Now that the Ansible MCP Server is deployed and an API token has been generated, the final step is to configure an external AI tool to connect to the Ansible MCP Server using the generated API token. We will utilize our OpenShift Dev Spaces environment and the link:https://opencode.ai[OpenCode,window=_blank] project to demonstrate how to utilize the Ansible MCP Server. OpenCode is already installed in your Dev Spaces workspace. However, you will need to perform some configuration steps prior to its use.
+
+=== 4.1: Customizing a Dev Spaces Workspace
+
+There are multiple methods that can be used to customize OpenShift Dev Spaces workspace. For this lab, we will create a `ConfigMap` and `Secret` resource within the `admin-devspaces` project that contains your workspace to externalize and inject environment variables into your workspace. These values will be referenced by the OpenCode configuration file that you will then define to drive the functionality of the tool.
+
+Labels and annotations are applied to the `ConfigMap` and `Secret` resources so that they become eligible for injection into the Dev Spaces workspace. By setting the `controller.devfile.io/mount-to-devworkspace` label to `true`, the Dev Spaces controller will automatically mount the resources into the workspace. The contents of the `ConfigMap` or `Secret` can either by mounted as files or environment variables. This is dictated by the `controller.devfile.io/mount-as` annotation.
+
+First, create a `ConfigMap` resource to contain the non-sensitive configuration values by performing the following in the OpenShift web console. Instead of using the OpenShift web console to interactively create the ConfigMap, you will import the raw YAML definition using the _Import YAML_ feature.
+
+. Launch the link:{openshift_cluster_console_url}[OpenShift Web Console,window=_blank]
+. Select the **htpasswd_provider** button and use the credentials provided in the xref:environment-details.adoc[Environment Details,window=_blank] page to login to the OpenShift console
+. On the top navigation bar, click on the **+** icon and select **Import YAML**
++
+image::41-lightspeed-mcp/openshift-overview-import-yaml.png[Import YAML option in OpenShift console]
+. Enter the following into the _Import YAML_ dialog:
++
+[source,yaml]
+----
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: superlab-devspaces-config
+  namespace: admin-devspaces
+  labels:
+    controller.devfile.io/mount-to-devworkspace: 'true'
+    controller.devfile.io/watch-configmap: 'true'
+  annotations:
+    controller.devfile.io/mount-as: env
+data:
+  AAP_MCP_URL: https://aap-mcp-aap.{openshift_cluster_ingress_domain}/mcp
+  LITELLM_MODEL_NAME: {litellm_available_models_list}
+  LITELLM_URL: {litellm_api_base_url}
+  OPENCODE_CONFIG: /project/devspaces-example/opencode.json
+----
++
+NOTE: Notice the value of the `controller.devfile.io/mount-as` annotation in the snippet above is set to `env`, which means the contents of the `ConfigMap` will be mounted as environment variables in the Dev Spaces workspace.
++
+. Click the **Create** button to create the ConfigMap resource.
+
+Now, create a `Secret` resource to contain the sensitive configuration values by repeating the same steps as above by using the _Import YAML_ feature.
+
+. On the top navigation bar, click on the **+** icon and select **Import YAML**
+. Enter the following into the _Import YAML_ dialog. Make sure to replace `PLACEHOLDER_REPLACE_ME` with the AAP API Token you generated in the prior section:
++
+[source,yaml]
+----
+kind: Secret
+apiVersion: v1
+metadata:
+  name: superlab-devspaces-secret
+  namespace: admin-devspaces
+  labels:
+    controller.devfile.io/mount-to-devworkspace: 'true'
+    controller.devfile.io/watch-secret: 'true'
+  annotations:
+    controller.devfile.io/mount-as: env
+stringData:
+  AAP_MCP_API_KEY: PLACEHOLDER_REPLACE_ME
+  LITELLM_API_KEY: {litellm_virtual_key}
+type: Opaque
+----
++
+. Click the **Create** button to create the Secret resource.
+
+With the environment variables defined in the `ConfigMap` and `Secret` now defined within OpenShift, the next step is to restart your Dev Spaces workspace so that it can mount the values contained within these resources. To restart your Dev Spaces workspace, perform the following steps in the OpenShift web console:
+
+. Use the 9-block icon in the upper right to launch Red Hat OpenShift Dev Spaces directly from the OpenShift console header.
++
+image::41-lightspeed-mcp/dev_spaces_shortcut.png[OpenShift Dev Spaces Shortcut Icon]
++
+. Within the Dev Spaces console, on the _Workspaces_ page, click the kebab menu (three vertical dots) next to your `ansible-dev-spaces-example-xxxx` workspace and select **Restart Workspace**.
++
+image::41-lightspeed-mcp/restart-devspaces-workspace.png[Restart Dev Spaces Workspace option]
++
+. Click the **Open** link next to your workspace to relaunch the workspace
+
+When the workspace has started, you can verify that the environment variables are correctly mounted by executing the following command in the terminal which will check for the presence of the environment variables as defined in the `ConfigMap` and `Secret` resources:
 
 [source,bash]
 ----
-$ whoami
-
-user
+env | grep -E "(AAP_MCP|LITELLM)"
 ----
+
+The output should display values that correspond to the environment variables defined in the `ConfigMap` and `Secret` resources previously.
+
+=== 4.2: Configuring OpenCode
+
+With the necessary environment variables now mounted into your Dev Spaces workspace, the next step is to introduce the external AI tool that will interact with Ansible Automation Platform via the Ansible MCP Server. For this lab, we will utilize link:https://opencode.ai[OpenCode,window=_blank], an open-source AI development platform that enables developers to build, deploy, and manage AI applications. OpenCode provides a unified interface for interacting with various AI models and services, making it easier to integrate AI capabilities into applications.
+
+You may have noticed earlier that one of the environment variables defined in the `ConfigMap` resource was the `OPENCODE_CONFIG` property, which specifies the location of the OpenCode configuration file (Hint: you run the command `env | grep OPENCODE_CONFIG` to see the value). This file does not exist yet as we will need to create it as part of this exercise. An link:https://opencode.ai/docs/config[OpenCode configuration file] contains details related to the inference service as well as any MCP servers that should be utilized. 
+
+Create a new file named `opencode.json` at the root of the `devspaces-example` workspace containing the following:
+
+[source,json]
+----
+{
+    "$schema": "https://opencode.ai/config.json",
+    "autoupdate": false,
+    "enabled_providers": [
+        "LiteLLM"
+    ],
+    "mcp": {
+        "aap": {
+            "type": "remote",
+            "enabled": true,
+            "oauth": false,
+            "url": "{env:AAP_MCP_URL}",
+            "headers": {
+                "Authorization": "Bearer {env:AAP_MCP_API_KEY}"
+            }
+        }
+    },
+    "provider": {
+        "LiteLLM": {
+            "npm": "@ai-sdk/openai-compatible",
+            "name": "LiteLLM",
+            "options": {
+                "baseURL": "{env:LITELLM_URL}",
+                "apiKey": "{env:LITELLM_API_KEY}",
+            },
+            "models": {
+                "llama-scout-17b": {
+                    "name": "{env:LITELLM_MODEL_NAME}",
+                    "limit": {
+                        "context": 120000,
+                        "output": 120000
+                    }
+                }
+            }
+        }
+    }
+}
+----
+
+In this configuration file, we are specifying details related to our inference service along with the AAP MCP Server. Take note of the variables beginning with `{env:...}` which will replace the the values with the content injected from the _Secret_ or _ConfigMap_ defined previously.
+
+=== 4.4: Using OpenCode to Interact with the Ansible MCP Server
+
+With all of the configuration steps complete, let's utilize OpenCode to interact with the Ansible MCP Server.
+
+To launch OpenCode, execute the following command:
 
 [source,bash]
 ----
-cat /etc/redhat-release`
-
-Red Hat Enterprise Linux release 9.6 (Plow)
+opencode
 ----
 
+Like many other AI coding tools, OpenCode is a Text User Interface (TUI) based tool which allows you to interact directly with the tool. By launching OpenCode, you will be placed at a prompt for which you can enter commands or execute queries:
+
+image::41-lightspeed-mcp/opencode-overview.png[OpenCode Overview]
+
+As you can see, OpenCode is leveraging the LiteLLM inference service along with the {litellm_available_models_list} Model that was defined in the _ConfigMap_.
+
+Use the `/status` command to view the status of the tool including any integration with external components, such as the AAP MCP server.
 
 [source,bash]
 ----
-$ ansible --version
-
-ansible [core 2.16.14]
-  config file = None
-  configured module search path = ['/home/user/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
-  ansible python module location = /usr/local/lib/python3.11/site-packages/ansible
-  ansible collection location = /home/user/.ansible/collections:/usr/share/ansible/collections
-  executable location = /usr/local/bin/ansible
-  python version = 3.11.11 (main, Aug 21 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-5)] (/usr/bin/python3.11)
-  jinja version = 3.1.6
-  libyaml = True
+/status
 ----
+
+If your MCP server is running and the API token that was stored in the _Secret_ is being loaded properly, the status being displayed should look similar to the following:
+
+image::41-lightspeed-mcp/opencode-status.png[OpenCode Status]
+
+The `aap` MCP server displays _Connected_ indicating that it is able to integrate with Ansible Automation Platform as needed. If the status being displayed indicates an error, investigate any message/error code that may be present. In addition, you can view the logs from the AAP MCP Sever pod that is running in the `aap` Project. The pod will have a name of `<instance_name>-mcp-xxxx` which may provide additional insights related to the failed integration.
+
+Hit the `ESC` key to exit the status dialog to return to the main prompt.
+
+Now, lets start a chat session using our natural language that retrieves details that originate from Ansible Automation Platform that is facilitated through the integration with the AAP MCP Server.
+
+Let's ask for information related to the _Job Templates_ that have been defined:
+
+[source,bash]
+----
+How many job templates are in AAP?
+----
+
+In a few moments, you will see OpenCode making queries to the _Tools_ exposed by the AAP MCP Server and then providing a natural language response based on the information retrieved.
+
+One of the best parts about AI coding tools is their ability to retain context related to prior commands and interactions. The responses you receive may ask you a follow up question for which additional queries can be performed. The ability to gain insights using natural language is just one way that AI tools are transforming how we use technology.
+
+This chat session only scratches the surface for how AI tools . However, feel free to continue the chat session or start a new session to continuing to converse with the LLM, obtaining realtime insights from Ansible Automation Platform though the use of the Ansible MCP Server.
 
 == Conclusion
 
 In this lab, you have learned:
 
-. The resources provided in the lab environment
-. Assessing the OpenShift environment
-. How to launch and navigate an Red Hat OpenShift Dev Spaces workspace
-. How to provide feedback and contributions to this lab environment
+. An overview of the Model Context Protocol (MCP) and its role in the AI ecosystem
+. MCP capabilities provided by Ansible Automation Platform
+. How to deploy the AAP MCP Server
+. How to configure an AI chat tool (OpenCode) to integrate with the APP MCP Server
+. Interact with the Ansible MCP Server using natural language prompts
 
-This foundation prepares you to start your Ansible Bootcamp Enablement journey.
+The MCP capabilities provided by Ansible Automation Platform are not limited to the MCP Server that was used in this exercise. MCP capabilities are also available in Ansible Lightspeed intelligent assistant which enables realtime insights to be applied to the responses provided by the chatbot within the AAP user interface. Enabling this capability can be achieved by defining additional properties within the chatbot secret that is referenced in the `AnsibleAutomationPlatform` custom resource. Consult the Ansible Lightspeed intelligent assistant documentation for further details.
 
 == Helpful Links
 
 For additional references, refer to the following resources:
 
-. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/using_ansible_development_workspaces_for_automation_content_development/index[Using Ansible Development Workspaces for Automation Content Development]
-. https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.23/html/user_guide/getting-started-with-devspaces#authenticating-to-a-git-server-from-a-workspace[Authenticating to a Git server from a Workspace].
-. https://github.com/jeffcpullen/devspaces-example/[Source for the Dev Space Workspace]
-. https://github.com/sabre1041/ansible_bootcamp_enablement[Source for this lab content]
+. https://modelcontextprotocol.io[Model Context Protocol (MCP),window=_blank]
+. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/installing_on_openshift_container_platform/deploy-ansible-mcp-server-operator-install[Ansible MCP Server Documentation,window=_blank].
+. link:https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/installing_on_openshift_container_platform/deploying-chatbot-operator[Ansible Lightspeed intelligent assistant Documentation,window=_blank]
+. https://opencode.ai[OpenCode,window=_blank]
+

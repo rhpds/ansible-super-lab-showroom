@@ -31,7 +31,7 @@ AAP has been installed in the `aap` Namespace using an link:https://docs.redhat.
 
 . Launch the link:{openshift_cluster_console_url}[OpenShift Web Console,window=_blank]
 . Select the **htpasswd_provider** button and use the credentials provided in the xref:environment-details.adoc[Environment Details,window=_blank] page to login to the OpenShift console.
-. Navigate to **Operators** -> **Installed Operators**
+. Navigate to **Ecosystem** -> **Installed Operators**
 . From the _Project_ dropdown, ensure `aap` is selected
 . The `Ansible Automation Platform` operator is listed and installed within this project.
 +
@@ -308,7 +308,7 @@ image::08-aap-openshift/aap-operator-install-2.png[AAP Operator Install - Namesp
 +
 The operator will take moment to install itself into the selected namespace.
 +
-. Navigate to **Operators** on the left hand navigation -> **Installed Operators**.
+. Navigate to **Ecosystem** on the left hand navigation -> **Installed Operators**.
 * Next to the `Project:` dropdown in the top left, ensure `my-aap` is the project shown.
 +
 Under the list of installed operators you should now see `Ansible Automation Platform` with a version of `2.5.+0.1...` and a status of `Successful`.
@@ -341,7 +341,7 @@ You are now redirected to the _Secret details_ page of the newly created _Secret
 
 Deploy a new instance of AAP using the operator.
 
-. Navigate to **Operators** on the left hand navigation -> **Installed Operators**.
+. Navigate to **Ecosystem** on the left hand navigation -> **Installed Operators**.
 . Next to the `Project:` dropdown in the top left, ensure `my-aap` is the project shown.
 . Click on the `Ansible Automation Platform` operator.
 . In the toolbar, click on `All instances`.
@@ -403,7 +403,7 @@ When the `AnsibleAutomationPlatform` custom resource is successfully deployed, t
 
 This can be verified by performing the following steps:
 
-. Navigate to **Operators** on the left hand navigation -> **Installed Operators**.
+. Navigate to **Ecosystem** on the left hand navigation -> **Installed Operators**.
 . Next to the `Project:` dropdown in the top left, ensure `my-aap` is the project shown.
 * Click on the `Ansible Automation Platform` operator.
 * In the toolbar click on `All instances`.
@@ -441,7 +441,7 @@ Likewise, if updates are made to already deployed `AnsibleAutomationPlatform`, `
 
 Let's demonstrate this assertion by modifying the already created `AnsibleAutomationPlatform` custom resource to also deploy an instance of Automation Hub and observe how the AAP deployment gets updated.
 
-. Navigate to **Operators** on the left hand navigation -> **Installed Operators**.
+. Navigate to **Ecosystem** on the left hand navigation -> **Installed Operators**.
 . Next to the `Project:` dropdown in the top left, ensure `my-aap` is the project shown.
 . Click on the `Ansible Automation Platform` operator.
 . In the toolbar click on **All instances**.
