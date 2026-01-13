@@ -201,6 +201,16 @@ image::20-content-windows/dev_spaces_created_role.png[New Role]
   ansible.builtin.debug:
     var: website_status
     verbosity: 1
+
+- name: Test IIS locally on the Windows Server
+  ansible.windows.win_uri:
+    url: "http://localhost"
+    return_content: yes
+  register: local_test
+
+- name: Debug captured result
+  ansible.builtin.debug:
+    var: local_test
 ...
 ----
 +
