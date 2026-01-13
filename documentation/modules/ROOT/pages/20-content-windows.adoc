@@ -11,7 +11,7 @@ After completing this module, you will be able to:
 . Use `ansible.windows` and `microsoft.iis` collections
 . Ensure prerequisites are installed
 . Install and use Chocolatey
-. Install and configure filebeat
+. Install and configure Filebeat
 
 == 1: Managing Windows Hosts
 
