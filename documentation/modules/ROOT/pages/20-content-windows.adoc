@@ -15,7 +15,7 @@ After completing this module, you will be able to:
 
 == 1: Managing Windows Hosts
 
-Ansible can use a variety of connectivity options to connect to Windows. In this lab a Windows 2019 Server has been configured using `psrp` to connect. See the link:https://docs.ansible.com/projects/ansible/latest/os_guide/intro_windows.html[Ansible documentation] for full details.
+Ansible can use a variety of connectivity options to connect to Windows. In this lab, a Windows 2019 Server has been configured using `psrp` to connect. See the link:https://docs.ansible.com/projects/ansible/latest/os_guide/intro_windows.html[Ansible documentation] for full details.
 
 === 1.1: Validate Connectivity to Windows host
 
