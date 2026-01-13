@@ -1,140 +1,151 @@
-= Lab: Ansible Development in Dev Spaces
+= Lab: Ansible Lightspeed Intelligent Assistant
 
 [abstract]
-We will explore the Red Hat OpenShift Dev Spaces environment you will be working within and learn how to launch and configure development workspaces for Ansible automation development. This includes understanding the various components available in the lab environment, authenticating with git repositories, and using the Ansible Development Tools.
-
-This lab walks through the various components within the lab environment including launching, configuring and using Dev Spaces on OpenShift as your primary development environment for Ansible.
+We will explore how to begin to integrate generative Artificial Intelligence (AI) capabilities with Ansible Automation Platform (AAP) using the Ansible Lightspeed Intelligent Assistant. This lab will guide you through the process of deploying Ansible Lightspeed intelligent assistant and interacting with the service within the Ansible Automation Platform user interface.
 
 == Learning Objectives
 
 After completing this module, you will be able to:
 
-* Navigate the Red Hat OpenShift Dev Spaces interface
-* Launch and configure development workspaces
-* Understand the components included in the lab environment
-* Set up authentication for git repositories
-* Use basic Ansible Development Tools features
+* Deploy and configure Ansible Lightspeed intelligent assistant
+* Interact with Ansible Lightspeed intelligent assistant within Ansible Automation Platform interface
+* Understand the role of Ansible Lightspeed intelligent assistant within Ansible Automation Platform
 
-== 1: Introduction: What is included in the lab environment
+== 1: Introduction: Ansible Lightspeed intelligent assistant
 
-. Red Hat OpenShift Cluster
-. Ansible Automation Platform
-. Red Hat OpenShift Dev Spaces
-. link:https://about.gitea.com[Gitea,window=_blank] Git Server
-. Lab Instructions
+Ansible Lightspeed intelligent assistant is a chat interface embedded within the Ansible Automation Platform, using generative artificial intelligence (AI) to answer questions about the Ansible Automation Platform.
 
-== 2: Contributing to this Lab Documentation
+The Ansible Lightspeed intelligent assistant enables users to use natural language prompts in English and Large Language Models (LLM's)to generate quick, accurate, and personalized responses. These responses empower Ansible users to work more efficiently, thereby improving productivity and the overall quality of their work.
 
-If you see an error in this lab, fork and submit a pull request against https://github.com/sabre1041/ansible_bootcamp_enablement
+== 2: LLM Support
 
-== 3: Dev Spaces console
+=== 2.1: LLM Requirements
 
-link:https://access.redhat.com/products/red-hat-openshift-dev-spaces/[Red Hat OpenShift Dev Spaces,window=_blank] provides consistent, reproducible development environments based on the open-source project link:https://eclipse.dev/che/[Eclipse Che,window=_blank].
+An LLM provider must be available for use by the Ansible Lightspeed intelligent assistant. As of Ansible Automation Platform 2.6, the following LLM providers are supported:
 
-It provides, by default, a Visual Studio Code (VS Code) environment as configured by a link:https://devfile.io[devfile,window=_blank], a YAML file that defines the entire workspace as code—including all necessary tools, runtimes, and project source. This file is used to instantly generate a pre-configured, containerized development environment, ensuring every developer on a team has an identical setup and solving the "it works on my machine" problem.
+* Red Hat Providers 
+** Red Hat Enterprise Linux AI
+** Red Hat OpenShift AI
+** Red Hat AI Inference Server
+* Third-Party Providers
+** OpenAI
+** Microsoft Azure OpenAI
 
-=== 3.1: Launching Dev Spaces from OpenShift
+=== 2.2: Access to LLM's in this Lab Environment
+
+The lab environment has been configured to leverage models provided by a self hosted link:https://www.litellm.ai[LiteLLM,window=_blank] instance. Access to models are available to you with details provided in the xref:environment-details.adoc[Environment Details,window=_blank] page.
+
+=== 3: Deploying Ansible Lightspeed intelligent assistant
+
+Utilize the steps within this section to deploy and configure Ansible Lightspeed intelligent assistant
+
+==== 3.1: Configuring Ansible Lightspeed intelligent
+
+The configuration for the Ansible Lightspeed intelligent assistant is provided within a _Secret_ resource in the same namespace as Ansible Automation Platform. This configuration secret requires the following keys to be provided:
+
+* `chatbot_model` - Name of the LLM model for use
+* `chatbot_url` - Base URL for the inference service
+* `chatbot_token` - API key for the inference service
+
+Configure the Secret by performing the following;
 
 . Launch the link:{openshift_cluster_console_url}[OpenShift Web Console,window=_blank]
 . Select the **htpasswd_provider** button and use the credentials provided in the xref:environment-details.adoc[Environment Details,window=_blank] page to login to the OpenShift console
-. Use the 9-block icon in the upper right to launch _Red Hat OpenShift Dev Spaces_ directly from the OpenShift console header.
+. Navigate to **Workloads** on the left hand navigation -> **Secrets**. From the project dropdown at the top, select **aap**.
+. Click on the **Create** button and select **Key/value secret**.
 +
-image::01-introduction/intro-dev_spaces_shortcut.png[OpenShift console header showing the 9-block application launcher icon for quick access to Dev Spaces]
-
-== 4: Dev Spaces Workspace
-
-=== 4.1: Launching a specific Dev Spaces Workspace
-
-Once you have launched the OpenShift Dev Spaces console, use the following steps toe access your Ansible Dev Space workspace.
-
-. Login via OpenShift authentication using the same credentials as the OpenShift console
-. Select **Allow selected permissions** to authorize access and launch the console
-. Scroll down and select the workspace titled **Ansible Dev Space**
+image::40-lightspeed-int-assistant/secrets-overview.png[Secrets Contained in the AAP Project]
 +
-image::01-introduction/intro3.png[Dev Spaces workspace selection page showing available workspaces including Ansible Dev Space]
+. For the _Secret name_, enter `alia-chatbot-secret`.
+. For the _Key_ enter `chatbot_model`
+. For the _Value_ enter the name of the model you would like to use. For a list of available models, consult the xref:environment-details.adoc[Environment Details,window=_blank] page.
+. Click the **Add key/value** link to add another key/value pair.
+. For the new _Key_ enter `chatbot_url`
+. For the _value_ enter the base URL for the inference service: {litellm_api_base_url}
+. Click the **Add key/value** link to add another key/value pair.
+. For the new _Key_ enter `chatbot_token`
+. For the _Value_ enter the API key: {litellm_virtual_key}
+. Click the **Create** button.
+
+==== 3.2: Enabling Ansible Lightspeed intelligent
+
+Ansible Automation intelligent assistant is enabled by updating the  `AnsibleAutomationPlatform` custom resource. Update the `AnsibleAutomationPlatform` resource in the _aap_ Project by performing the following in the OpenShift web console:
+
+. Navigate to **Ecosystem** -> **Installed Operators**
+. From the _Project_ dropdown, ensure `aap` is selected
+. The `Ansible Automation Platform` operator is listed and installed within this project.
 +
-NOTE: It will take a few minutes for the Dev Spaces instance to initialize. When it has loaded, a Visual Studio Code interface will appear.
+image::40-lightspeed-int-assistant/installed-operators-aap.png[Installed Operators in the aap Project]
 +
-image::01-introduction/intro4.png[Dev Spaces workspace loading screen showing VS Code interface initialization]
+. Click on the `Ansible Automation Platform` operator which will display all of the resources that are managed by the operator.
+. In the top tab, click on `Ansible Automation Platform` and select **aap**.
 +
-. Click the **Trust Publishers and Install** button to trust the extension publishers that are included within the Dev Spaces workspace
-. Click the **Yes, I trust the Authors** button to trust the workspace authors (your instructors).
-. Wait a few minutes until the additional extension icons appear for Ansible and OpenShift on the left side.
+image::40-lightspeed-int-assistant/ansible-automation-platform-instances.png[Ansible Automation Platform Instances in the aap Project]
 +
-image::01-introduction/intro5.png[VS Code interface in Dev Spaces showing Ansible and OpenShift extension icons in the left sidebar]
-
-== 5: Ansible and OpenShift Extensions
-
-For this lab, we have have provided a link:https://code.visualstudio.com/docs/editing/workspaces/workspaces[.code-workspace,window=_blank] configuration that included these extensions along with additional configurations to curate your development environment. See https://github.com/jeffcpullen/devspaces-example/blob/main/devspaces.code-workspace for the source of this workspace configuration.
-
-. Click on the **Ansible** extension icon to access the Ansible Development Tools extension (covered in a subsequent lab)
+. Click on the **YAML** tab to edit the resource in YAML format.
+. Locate the `spec.lightspeed` section update the configuration to match the following:
 +
-image::01-introduction/intro6.png[Ansible extension interface in VS Code showing available Ansible development tools]
-
-== 6: User Credentials in Workspaces
-
-NOTE: This section describes a key feature of OpenShift Dev Spaces which enables secure access to git repositories. These details are shared for informational purposes only. No action is required to be performed in your Dev Spaces workspace.
-
-OpenShift Dev Spaces includes the capability to store user credentials for Git repositories, such as Personal Access Tokens (PATs), which can be applied to all your workspaces. This can be accomplished after logging into the Red Hat OpenShift Dev Spaces dashboard. Click on the top right drop down next to your username and icon and select, **User Preferences**. In the User Preferences page, select **Personal Access Tokens** and add a git Personal Access Token (PAT) associated with the desired Git provider.
-
-For more information, see the https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.23/html/user_guide/getting-started-with-devspaces#authenticating-to-a-git-server-from-a-workspace[Authenticating to a Git server from a Workspace].
-
-== 7: Accessing a Terminal
-
-The majority of the exercises in this lab will be performed using the Visual Studio Code terminal.
-
-. Open a new terminal by selecting the VS Code menu starting with the hamburger (3 horizontal lines) in the top left, then selecting **Terminal** -> **New Terminal**
+[source,yaml]
+---
+spec:
+  lightspeed:
+    disabled: false
+    chatbot_config_secret_name: alia-chatbot-secret
+---
 +
-image::01-introduction/intro7.png[VS Code terminal interface showing basic command line operations in the Dev Spaces environment]
-+
-. Explore the environment:
+. Click the **Save** button to apply the changes.
 
-[source,bash]
+Once the configuration has been applied, the Ansible Automation Platform operator will begin to reconcile the changes. This process can take several minutes to complete.
+
+Confirm the AAP operator detected the changes by verifying the Ansible Lightspeed intelligent assistant _Deployments_ have been created by navigating to **Workloads** -> **Deployments**. Two Deployment resources are created as part of this process:
+
+. `<instance_name>-lightspeed-api`
+. `<instance_name>-lightspeed-chatbot-api`
+
+image::40-lightspeed-int-assistant/lightspeed-deployments.png[Ansible Lightspeed intelligent assistant Deployments]
+
+You can confirm that the Pods associated with these Deployments are running by selecting each Deployment and navigating to the _Pods_ tab.
+
+== 4: Using Ansible Lightspeed intelligent assistant
+
+Now that Ansible Lightspeed intelligent assistant has been deployed and configured, you can interact with the assistant within the Ansible Automation Platform user interface.
+
+Launch the link:{aap_controller_web_url}[Ansible Automation Platform,window=_blank] web interface and login using the credentials from the xref:environment-details.adoc[Environment Details,window=_blank] page.
+
+When Ansible Lightspeed intelligent assistant is available, a chat icon will be present on the navigation bar at the top of the console. Click on the chat icon to launch the Ansible Lightspeed intelligent assistant interface which will appear on the right side of the screen.
+
+image::40-lightspeed-int-assistant/alia-overview.png[Accessing Ansible Lightspeed intelligent assistant in AAP]
+
+You can now enter natural language prompts in the chat interface to interact with the Ansible Lightspeed intelligent assistant. For example, you can ask questions about Ansible Automation Platform features, request help with playbook development, or seek guidance on best practices.
+
+Enter a prompt in the chat interface and click the **Send** button (For example "What is a Job Template?"). The assistant will process your request and provide a response based on the information available service.
+
+image::40-lightspeed-int-assistant/alia-response.png[Chat Interaction with Ansible Lightspeed intelligent assistant]
+
+[NOTE]
+====
+You may experience an issue where the Ansible Lightspeed intelligent assistant provides a response similar to the following:
+
+[source,xml]
 ----
-$ whoami
-
-user
+<tool_calls>[{"name": "knowledge_search", "arguments": {"query": "job template in Ansible"}}]</tool_calls>
 ----
 
-[source,bash]
-----
-cat /etc/redhat-release`
+This is a link:https://issues.redhat.com/browse/AAP-60898[known issue,window=_blank] which will be addressed in a future release of Ansible Automation Platform. To resolve this issue, simply retry the request by entering the same prompt again.
+====
 
-Red Hat Enterprise Linux release 9.6 (Plow)
-----
-
-
-[source,bash]
-----
-$ ansible --version
-
-ansible [core 2.16.14]
-  config file = None
-  configured module search path = ['/home/user/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
-  ansible python module location = /usr/local/lib/python3.11/site-packages/ansible
-  ansible collection location = /home/user/.ansible/collections:/usr/share/ansible/collections
-  executable location = /usr/local/bin/ansible
-  python version = 3.11.11 (main, Aug 21 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-5)] (/usr/bin/python3.11)
-  jinja version = 3.1.6
-  libyaml = True
-----
+Continue conversing with the Ansible Lightspeed intelligent assistant to explore its capabilities and how it can assist you with your Ansible Automation Platform tasks.
 
 == Conclusion
 
-In this lab, you have learned:
+In this lab, you have successfully learned how to deploy and configure Ansible Lightspeed intelligent assistant within Ansible Automation Platform. 
 
-. The resources provided in the lab environment
-. Assessing the OpenShift environment
-. How to launch and navigate an Red Hat OpenShift Dev Spaces workspace
-. How to provide feedback and contributions to this lab environment
-
-This foundation prepares you to start your Ansible Bootcamp Enablement journey.
+. Reviewed how Ansible Lightspeed intelligent assistant integrates generative AI capabilities with Ansible Automation Platform
+. Configured an OpenShift _Secret_ containing the necessary LLM connection details
+. Deployed the Ansible Lightspeed intelligent assistant by updating the `AnsibleAutomationPlatform` custom resource
+. Interacted with Ansible Lightspeed intelligent assistant through the AAP user interface
 
 == Helpful Links
 
-For additional references, refer to the following resources:
-
-. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/using_ansible_development_workspaces_for_automation_content_development/index[Using Ansible Development Workspaces for Automation Content Development]
-. https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.23/html/user_guide/getting-started-with-devspaces#authenticating-to-a-git-server-from-a-workspace[Authenticating to a Git server from a Workspace].
-. https://github.com/jeffcpullen/devspaces-example/[Source for the Dev Space Workspace]
-. https://github.com/sabre1041/ansible_bootcamp_enablement[Source for this lab content]
+. link:https://www.redhat.com/en/technologies/management/ansible/ansible-lightspeed[Ansible Lightspeed Website,window=_blank]
+. link:https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/installing_on_openshift_container_platform/deploying-chatbot-operator[Ansible Lightspeed intelligent assistant Documentation,window=_blank]
