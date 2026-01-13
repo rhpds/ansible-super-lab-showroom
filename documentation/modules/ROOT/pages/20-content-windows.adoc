@@ -284,7 +284,7 @@ In the next lab we will create an execution environment containing this collecti
 In this lab, you have learned:
 
 . How to validate connectivity to Windows servers from AAP
-. Using ansible-creator to scaffold directories for efficient content creation
+. Using `ansible-creator` to scaffold the collection and roles associated with automation targeting a Windows instance
 . Create content using ansible.windows and microsoft.iis collections
 . Create content to ensure prerequisites are installed including .NET and Chocolatey
 . Use Chocolatey to install filebeat
