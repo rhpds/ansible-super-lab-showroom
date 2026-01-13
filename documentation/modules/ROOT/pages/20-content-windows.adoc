@@ -38,7 +38,7 @@ image::20-content-windows/aap_run_command.png[Run Command]
 +
 image::20-content-windows/aap_win_ping.png[Module]
 +
-. For **Execution Environment** just choose **Next** without a selection, it will use the default EE
+. For **Execution Environment**, just choose **Next** without a selection, it will use the default EE
 . For **Credential** select **Windows** then **Next**
 +
 image::20-content-windows/aap_run_command_credential.png[Credential]
