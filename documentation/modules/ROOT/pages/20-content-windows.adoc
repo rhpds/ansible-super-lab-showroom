@@ -443,8 +443,13 @@ NOTE: You may need to do this from a terminal or open the `/home/user/` folder i
 
 ==== 3.2.1: Setup ansible.cfg
 
-The scaffold file is fine the way it is, specifying the inventory file. However, Automation Hub entries need to be added to install collections.
+The scaffold file is fine the way it is, specifying the inventory file. However, Automation Hub entries need to be added to install collections. Since we have not configured Automation Hub with the collections required, in this step we will use upstream Hub. 
 
+. First, obtain a token from https://console.redhat.com/ansible/automation-hub/token/[Automation Hub]
+. Under **Offline Token** click **Load Token** and copy this token and store it somewhere secure as it cannot be displayed again
++
+NOTE: For additional information see https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/managing_automation_content/managing-cert-valid-content#token-management-hub_cloud-sync[Managing Automation Content Documentation]
++
 . Add the following to the provided `ansible.cfg`:
 +
 [source,bash,role=execute,title="/projects/lab_playbooks/ansible.cfg"]
@@ -465,6 +470,8 @@ token={your_token}
 [galaxy_server.galaxy]
 url=https://galaxy.ansible.com
 ----
++
+IMPORTANT: Be sure to replace `{your_token}` with the token in step 2.
 
 ==== 3.2.2: Install python libraries
 
