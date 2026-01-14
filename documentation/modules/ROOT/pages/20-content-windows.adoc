@@ -131,18 +131,20 @@ ansible-creator init collection red_hat_one.super_lab /projects/lab_collection/
 +
 [source,bash]
 ----
-for role in web_server log_shippper
+for role in web_server log_shipper
   do 
     ansible-creator add resource role ${role} /projects/lab_collection/
   done
 ----
 +
 . Open the directory at a lower level of the file structure in order to see all of these files in VSCode by selecting the hamburger (3 dashes) menu in the top left and choosing **File** -> **Open Folder**
-. In the dialogue box enter #/projects/# then **OK**
+. The dialogue box should contain #/projects/# then hit **OK**
 +
 image::20-content-windows/dev_spaces_open_folder.png[Open Folder]
 +
 . Dev Spaces will reload with the root as the **/projects/** directory
+
+Proceed to <<ansible-creator-content, 2.2: Add content to the collection>>.
 
 [#ansible-creator-gui]
 ==== 2.1.2: Using the Ansible Creator UI
@@ -184,6 +186,9 @@ image::20-content-windows/ansible_creator_role1.png[Ansible Creator - Collection
 +
 image::20-content-windows/ansible_creator_role2.png[Ansible Creator - Collection]
 
+Proceed to <<ansible-creator-content, 2.2: Add content to the collection>>.
+
+[#ansible-creator-content]
 === 2.2: Add content to the collection
 
 The following sections can be done in either the UI or CLI. Navigate in the newly created `/projects/lab_collection/roles/` directory to the newly created roles.
@@ -192,9 +197,10 @@ image::20-content-windows/collection_dir_tree.png[Collection Roles]
 
 ==== 2.2.1: Build Web Server Role
 
-. Create a new task file in the `tasks` directory for the `web_server` role pre-requisites:
+. Navigate to the directory for the `web_server` role. 
+. Create a new task file in the `tasks` directory for the tasks to setup IIS:
 +
-[source,yaml, title="/projects/lab_collection/roles/web_server/tasks/prerequisites.yml"]
+[source,yaml, title="/projects/lab_collection/roles/web_server/tasks/setup.yml"]
 ----
 ---
 - name: Install IIS Web-Server features and management tools
@@ -211,9 +217,9 @@ image::20-content-windows/collection_dir_tree.png[Collection Roles]
 ...
 ----
 +
-. Create another new task file in that same `tasks` directory for the installation tasks:
+. Create another new task file in that same `tasks` directory to configure the site:
 +
-[source,yaml, title="/projects/lab_collection/roles/web_server/tasks/web_server.yml"]
+[source,yaml, title="/projects/lab_collection/roles/web_server/tasks/website.yml"]
 ----
 ---
 - name: Ensure the website physical path directory exists
@@ -244,7 +250,14 @@ image::20-content-windows/collection_dir_tree.png[Collection Roles]
   ansible.builtin.debug:
     var: r_website_status
     verbosity: 1
-
+...
+----
++
+. Create another new task file in that same `tasks` directory for validation tasks:
++
+[source,yaml, title="/projects/lab_collection/roles/web_server/tasks/validate.yml"]
+----
+---
 - name: Test IIS locally on the Windows Server
   ansible.windows.win_uri:
     url: "http://localhost"
@@ -274,13 +287,17 @@ Deployed on {{ ansible_facts['date_time']['date'] }} at {{ ansible_facts['date_t
 [source,yaml, title="/projects/lab_collection/roles/web_server/tasks/main.yml"]
 ----
 ---
-- name: Include prerequisite tasks
+- name: Include setup tasks
   ansible.builtin.include_tasks:
-    file: prerequisites.yml
+    file: setup.yml
 
-- name: Include web server tasks
+- name: Include website tasks
   ansible.builtin.include_tasks:
-    file: web_server.yml
+    file: website.yml
+
+- name: Include validate tasks
+  ansible.builtin.include_tasks:
+    file: validate.yml
 ...
 ----
 +
@@ -290,9 +307,10 @@ image::20-content-windows/web_server_role.png[Log Shipper Role]
 
 ==== 2.2.2: Build Log Shipper Role
 
+. Navigate to the `/projects/lab_collection/roles/log_shipper/` directory
 . Create a new task file in the `tasks` directory to handle setup requirements:
 +
-[source,yaml, title="/projects/lab_collection/roles/log_shipper/tasks/setup.yml"]
+[source,yaml, title="/projects/lab_collection/roles/log_shipper/tasks/prerequisites.yml"]
 ----
 ---
 - name: Install .NET Framework 4.8 via Web Installer
@@ -310,8 +328,19 @@ image::20-content-windows/web_server_role.png[Log Shipper Role]
 - name: Reboot when required
   ansible.windows.win_reboot:
   when: r_dotnet_install['reboot_required']
+...
+----
++
+. Create a new task file in the `tasks` directory to handle setup requirements:
++
+[source,yaml, title="/projects/lab_collection/roles/log_shipper/tasks/chocolatey.yml"]
+----
+---
+- name: Include prerequisite tasks
+  ansible.builtin.include_tasks:
+    file: prerequisites.yml
 
-- name: Ensure Chocolatey is installed (requires .NET 4.8 from above)
+- name: Ensure Chocolatey is installed (requires .NET 4.8)
   chocolatey.chocolatey.win_chocolatey:
     name: chocolatey
     state: present
@@ -320,7 +349,7 @@ image::20-content-windows/web_server_role.png[Log Shipper Role]
 +
 . Create another new task file in the `tasks` directory to install our log shipper, Filebeat:
 +
-[source,yaml, title="/projects/lab_collection/roles/log_shipper/tasks/install.yml"]
+[source,yaml, title="/projects/lab_collection/roles/log_shipper/tasks/filebeat.yml"]
 ----
 ---
 - name: Install a filebeat with Chocolatey
@@ -335,13 +364,13 @@ image::20-content-windows/web_server_role.png[Log Shipper Role]
 [source,yaml, title="/projects/lab_collection/roles/log_shipper/tasks/main.yml"]
 ----
 ---
-- name: Include setup tasks
+- name: Include Chocolatey tasks
   ansible.builtin.include_tasks:
-    file: setup.yml
+    file: chocolatey.yml
 
 - name: Include install tasks
   ansible.builtin.include_tasks:
-    file: install.yml
+    file: filebeat.yml
 ...
 ----
 +
@@ -353,7 +382,11 @@ image::20-content-windows/log_shipper_role.png[Log Shipper Role]
 
 Now that the code is written, it is time to try running it. A few steps are needed to do that in Dev Spaces before pushing to git.
 
+NOTE: If needed, ensure a terminal is open by selecting the hamburger (3 dashes) in the top left and choosing **Terminal** -> **New Terminal**
+
 === 3.1: Use Ansible Creator to create Playbook directory
+
+For the remainder of this lab the `ansible-creator` CLI will be used for simplicity and speed. It is of course possible to create this same playbook directory from the extension UI.
 
 . From Dev Spaces create a playbook directory:
 +
@@ -372,7 +405,9 @@ A few steps need to be taken to modify the scaffold files to ensure they work wi
 
 ==== 3.2.1: Populate the Inventory
 
-. Remove the entry in `/projects/lab_playbooks/inventory/group_vars/all.yml` for `ansible_user`
+. Comment or remove the two entries in `/projects/lab_playbooks/inventory/group_vars/all.yml`, specifically for `ansible_user` to ensure it doesn't interfere with our actual user, which will be provided via a secrets file later instead of announced to the world in inventory.
++
+image::20-content-windows/group_vars_all.png[group_vars all]
 +
 . Modify the main inventory file and replace it with these lab details:
 +
@@ -476,7 +511,7 @@ ansible-galaxy collection install --requirements-file collections/requirements.y
 
 ==== 3.2.2: Configure Collection directory
 
-This playbook scaffold required a collection name when executing. The reason is `ansible-creator` creates a collection and single role for use by this playbook. Since we already have our own separate collection, we will remove the provided collection and link it to `/projects/lab_collection/`.
+This `ansible-creator` command required a collection name when executing. The reason is it creates a sample collection and single role embedded for use by this playbook. Since we already have our own separate collection, we will remove the provided collection and link it to `/projects/lab_collection/`.
 
 . Remove the provided collection directory:
 +
@@ -491,6 +526,10 @@ rm --force --recursive /projects/lab_playbooks/collections/ansible_collections/r
 ----
 ln --symbolic /projects/lab_collection/ /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab
 ----
++
+. If you expand `/projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab` it show list the two roles created in `/projects/lab_collection/`
++
+image::20-content-windows/playbook_dir_with_collection_link.png[Linked Collection Directory]
 +
 NOTE: This is only for our lab environment, this is not needed for AAP.
 
@@ -514,15 +553,40 @@ NOTE: This is only for our lab environment, this is not needed for AAP.
 ...
 ----
 
-==== 3.2.2: Test Roles
+=== 3.3: Test Content
 
-. From `/projects/lab_playbooks/` run:
+. Since an `ansible.cfg` and inventory are configured, ensure everything is executed from the `/projects/lab_playbooks/` directory:
 +
 [source,bash]
 ----
-ansible-playbook site.yml -e @/home/user/secrets.yml
+cd /projects/lab_playbooks/
 ----
 +
+. Start by replicating the initial `win_ping` from AAP at the start of this lab:
++
+[source,bash]
+----
+ansible --module-name ansible.builtin.win_ping windows --extra-vars @/home/user/secrets.yml
+----
++
+. If everything was configured properly, a result identical to what was seen in AAP will be shown:
++
+[source,bash]
+----
+windows | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+----
++
+. If connectivity worked, execute the entire playbook:
++
+[source,bash]
+----
+ansible-playbook site.yml --extra-vars @/home/user/secrets.yml
+----
++
+. If everything worked, after a few minutes the server will be configured and running both IIS and Filebeat.
 . Use `curl` to test the site remotely:
 +
 [source,bash]
@@ -535,17 +599,18 @@ Hostname windows.lab.sandbox-5tt52-ocp4-cluster.svc.cluster.local
 
 == 3: Next Steps
 
-In the next lab we will create an execution environment containing this collection and a corresponding playbook to call this new role.
+In the next lab we will create an execution environment containing this collection, build it and commit everything to git.
 
 == Conclusion
 
-In this lab, you have learned:
+In this lab, you have learned how to:
 
-. How to validate connectivity to Windows servers from AAP
-. Using `ansible-creator` to scaffold the collection and roles associated with automation targeting a Windows instance
-. Create content using ansible.windows and microsoft.iis collections
+. Validate connectivity to Windows servers from AAP
+. Use `ansible-creator` to scaffold the collection, roles, playbooks and inventory associated with automation targeting a Windows instance
+. Create content using `ansible.windows` and `microsoft.iis` collections
 . Create content to ensure prerequisites are installed including .NET and Chocolatey
-. Use Chocolatey to install filebeat
+. Use Chocolatey to install Filebeat
+. Use Dev Spaces and Ansible Development Tools (ADT) to create, modify and test content
 
 == Helpful Links
 
@@ -553,6 +618,7 @@ For additional references, refer to the following resources:
 
 . https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/using_ansible_development_workspaces_for_automation_content_development/index[Using Ansible Development Workspaces for Automation Content Development]
 . https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.23/html/user_guide/getting-started-with-devspaces#authenticating-to-a-git-server-from-a-workspace[Authenticating to a Git server from a Workspace].
+. https://docs.ansible.com/projects/creator/[Ansible-Creator Documentation]
 . https://github.com/jeffcpullen/devspaces-example/[Source for the Dev Space Workspace]
 . https://docs.ansible.com/projects/ansible/latest/os_guide/intro_windows.html[Ansible Windows Guide]
 . https://console.redhat.com/ansible/automation-hub/repo/published/microsoft/iis/[microsoft.iis collection]
