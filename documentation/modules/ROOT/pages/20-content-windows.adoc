@@ -82,7 +82,7 @@ Bonus lab: If desired, feel free to replace the `psrp` connection details with `
 . At the bottom of the page edit the **Variables** section
 . For reference, here are the variables as defined using `psrp`
 +
-[source,yaml]
+[source,yaml,role=execute]
 ----
 ansible_connection: psrp
 ansible_psrp_auth: negotiate
@@ -91,7 +91,7 @@ ansible_psrp_cert_validation: ignore
 +
 . Replace with the following variables. Unlike with `psrp` which can auto-negotiate, you must specify a transport for `winrm` so pick one of the three defined below. Feel free to try all three, but only one at a time. NOTE: Additional options include `certificate` and `kerberos`, which are not configured in this lab.
 +
-[source,yaml]
+[source,yaml,role=execute]
 ----
 ansible_connection: winrm
 ansible_winrm_server_cert_validation: ignore
@@ -122,14 +122,14 @@ NOTE: Choose either this section or <<ansible-creator-gui, 2.1.2 Using the Ansib
 . If needed, ensure a terminal is open by selecting the hamburger (3 dashes) in the top left and choosing **Terminal** -> **New Terminal**
 . Use `ansible-creator` to quickly scaffold a directory structure to contain a new collection:
 +
-[source,bash]
+[source,bash,role=execute]
 ----
 ansible-creator init collection red_hat_one.super_lab /projects/lab_collection/
 ----
 +
 . Add two new roles to manage the software the Windows server:
 +
-[source,bash]
+[source,bash,role=execute]
 ----
 for role in web_server log_shipper
   do 
@@ -200,7 +200,7 @@ image::20-content-windows/collection_dir_tree.png[Collection Roles]
 . Navigate to the directory for the `web_server` role. 
 . Create a new task file in the `tasks` directory for the tasks to setup IIS:
 +
-[source,yaml, title="/projects/lab_collection/roles/web_server/tasks/setup.yml"]
+[source,yaml,role=execute,title="/projects/lab_collection/roles/web_server/tasks/setup.yml"]
 ----
 ---
 - name: Install IIS Web-Server features and management tools
@@ -219,7 +219,7 @@ image::20-content-windows/collection_dir_tree.png[Collection Roles]
 +
 . Create another new task file in that same `tasks` directory to configure the site:
 +
-[source,yaml, title="/projects/lab_collection/roles/web_server/tasks/website.yml"]
+[source,yaml,role=execute,title="/projects/lab_collection/roles/web_server/tasks/website.yml"]
 ----
 ---
 - name: Ensure the website physical path directory exists
@@ -255,7 +255,7 @@ image::20-content-windows/collection_dir_tree.png[Collection Roles]
 +
 . Create another new task file in that same `tasks` directory for validation tasks:
 +
-[source,yaml, title="/projects/lab_collection/roles/web_server/tasks/validate.yml"]
+[source,yaml,role=execute,title="/projects/lab_collection/roles/web_server/tasks/validate.yml"]
 ----
 ---
 - name: Test IIS locally on the Windows Server
@@ -273,18 +273,17 @@ image::20-content-windows/collection_dir_tree.png[Collection Roles]
 +
 . Next, create the template file for the web server content:
 +
-[source,bash, title="/projects/lab_collection/roles/web_server/files/index.html.j2"]
+[source,bash,role=execute,title="/projects/lab_collection/roles/web_server/files/index.html.j2"]
 ----
 Welcome to Super Lab IIS Server
 Machine ID {{ ansible_facts['machine_id'] }}
 Hostname {{ ansible_facts['fqdn'] + '.' + ansible_facts['interfaces'][0]['dns_domain'] }}
 Deployed on {{ ansible_facts['date_time']['date'] }} at {{ ansible_facts['date_time']['time'] }}
-
 ----
 +
 . Next, edit the main task file and replace the contents with the following:
 +
-[source,yaml, title="/projects/lab_collection/roles/web_server/tasks/main.yml"]
+[source,yaml,role=execute,title="/projects/lab_collection/roles/web_server/tasks/main.yml"]
 ----
 ---
 - name: Include setup tasks
@@ -310,7 +309,7 @@ image::20-content-windows/web_server_role.png[Log Shipper Role]
 . Navigate to the `/projects/lab_collection/roles/log_shipper/` directory
 . Create a new task file in the `tasks` directory to handle setup requirements:
 +
-[source,yaml, title="/projects/lab_collection/roles/log_shipper/tasks/prerequisites.yml"]
+[source,yaml,role=execute,title="/projects/lab_collection/roles/log_shipper/tasks/prerequisites.yml"]
 ----
 ---
 - name: Install .NET Framework 4.8 via Web Installer
@@ -333,7 +332,7 @@ image::20-content-windows/web_server_role.png[Log Shipper Role]
 +
 . Create a new task file in the `tasks` directory to handle setup requirements:
 +
-[source,yaml, title="/projects/lab_collection/roles/log_shipper/tasks/chocolatey.yml"]
+[source,yaml,role=execute,title="/projects/lab_collection/roles/log_shipper/tasks/chocolatey.yml"]
 ----
 ---
 - name: Include prerequisite tasks
@@ -349,7 +348,7 @@ image::20-content-windows/web_server_role.png[Log Shipper Role]
 +
 . Create another new task file in the `tasks` directory to install our log shipper, Filebeat:
 +
-[source,yaml, title="/projects/lab_collection/roles/log_shipper/tasks/filebeat.yml"]
+[source,yaml,role=execute,title="/projects/lab_collection/roles/log_shipper/tasks/filebeat.yml"]
 ----
 ---
 - name: Install a filebeat with Chocolatey
@@ -361,7 +360,7 @@ image::20-content-windows/web_server_role.png[Log Shipper Role]
 +
 . Lastly, replace main task file with the following:
 +
-[source,yaml, title="/projects/lab_collection/roles/log_shipper/tasks/main.yml"]
+[source,yaml,role=execute,title="/projects/lab_collection/roles/log_shipper/tasks/main.yml"]
 ----
 ---
 - name: Include Chocolatey tasks
@@ -390,7 +389,7 @@ For the remainder of this lab the `ansible-creator` CLI will be used for simplic
 
 . From Dev Spaces create a playbook directory:
 +
-[source,bash]
+[source,bash,role=execute]
 ----
 ansible-creator init playbook red_hat_one.super_lab /projects/lab_playbooks/
 ----
@@ -411,7 +410,7 @@ image::20-content-windows/group_vars_all.png[group_vars all]
 +
 . Modify the main inventory file and replace it with these lab details:
 +
-[source,yaml, title="/projects/lab_playbooks/inventory/hosts.yml"]
+[source,yaml,role=execute,title="/projects/lab_playbooks/inventory/hosts.yml"]
 ----
 ---
 all:
@@ -432,7 +431,7 @@ In AAP a credential is used. We will simulate that here with a file that is NOT 
 
 . Add the following to a secrets file in your home directory:
 +
-[source,yaml, title="/home/user/secrets.yml"]
+[source,yaml,role=execute,title="/home/user/secrets.yml"]
 ----
 ---
 ansible_user: {windows_user}
@@ -448,7 +447,7 @@ The scaffold file is fine the way it is, specifying the inventory file. However,
 
 . Add the following to the provided `ansible.cfg`:
 +
-[source,bash, title="/projects/lab_playbooks/ansible.cfg"]
+[source,bash,role=execute,title="/projects/lab_playbooks/ansible.cfg"]
 ----
 [galaxy]
 server_list = hub, hub_validated, galaxy
@@ -473,14 +472,14 @@ Install the required library for either WinRM or PSRP:
 
 . The lab defaults to the newest protocol using PSRP:
 +
-[source,bash]
+[source,bash,role=execute]
 ----
 pip install pypsrp
 ----
 +
 . If you want to use WinRM, install that library:
 +
-[source,bash]
+[source,bash,role=execute]
 ----
 pip install pywinrm
 ----
@@ -491,7 +490,7 @@ This directory will call the roles we created. We need to install these collecti
 
 . Modify the provided `requirements.yml` file and replace its contents:
 +
-[source,yaml, title="/projects/lab_playbooks/collections/requirements.yml"]
+[source,yaml,role=execute,title="/projects/lab_playbooks/collections/requirements.yml"]
 ----
 ---
 collections:
@@ -503,7 +502,7 @@ collections:
 +
 . Install the collections from the base of the `lab_playbooks` directory so it can read the `ansible.cfg` file:
 +
-[source,bash]
+[source,bash,role=execute]
 ----
 cd /projects/lab_playbooks/
 ansible-galaxy collection install --requirements-file collections/requirements.yml
@@ -515,14 +514,14 @@ This `ansible-creator` command required a collection name when executing. The re
 
 . Remove the provided collection directory:
 +
-[source,bash]
+[source,bash,role=execute]
 ----
 rm --force --recursive /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/
 ----
 +
 . Now create a symbolic link to the collection we created earlier:
 +
-[source,bash]
+[source,bash,role=execute]
 ----
 ln --symbolic /projects/lab_collection/ /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab
 ----
@@ -537,7 +536,7 @@ NOTE: This is only for our lab environment, this is not needed for AAP.
 
 . Next, replace the contents of `site.yml` with this:
 +
-[source,yaml, title="/projects/lab_playbooks/site.yml"]
+[source,yaml,role=execute,title="/projects/lab_playbooks/site.yml"]
 ----
 ---
 - name: Setup Windows Server
@@ -557,21 +556,21 @@ NOTE: This is only for our lab environment, this is not needed for AAP.
 
 . Since an `ansible.cfg` and inventory are configured, ensure everything is executed from the `/projects/lab_playbooks/` directory:
 +
-[source,bash]
+[source,bash,role=execute]
 ----
 cd /projects/lab_playbooks/
 ----
 +
 . Start by replicating the initial `win_ping` from AAP at the start of this lab:
 +
-[source,bash]
+[source,bash,role=execute]
 ----
 ansible --module-name ansible.builtin.win_ping windows --extra-vars @/home/user/secrets.yml
 ----
 +
 . If everything was configured properly, a result identical to what was seen in AAP will be shown:
 +
-[source,bash]
+[source,bash,role=execute]
 ----
 windows | SUCCESS => {
     "changed": false,
@@ -581,7 +580,7 @@ windows | SUCCESS => {
 +
 . If connectivity worked, execute the entire playbook:
 +
-[source,bash]
+[source,bash,role=execute]
 ----
 ansible-playbook site.yml --extra-vars @/home/user/secrets.yml
 ----
@@ -589,7 +588,7 @@ ansible-playbook site.yml --extra-vars @/home/user/secrets.yml
 . If everything worked, after a few minutes the server will be configured and running both IIS and Filebeat.
 . Use `curl` to test the site remotely:
 +
-[source,bash]
+[source,bash,role=execute]
 ----
 $ curl http://windows.aap.svc.cluster.local
 Welcome to Super Lab IIS Server
