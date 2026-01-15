@@ -857,5 +857,5 @@ For additional references, refer to the following resources:
 . https://github.com/jeffcpullen/devspaces-example/[Source for the Dev Space Workspace]
 . https://docs.ansible.com/projects/ansible/latest/os_guide/intro_windows.html[Ansible Windows Guide]
 . https://console.redhat.com/ansible/automation-hub/repo/published/microsoft/iis/[microsoft.iis collection]
-. https://www.elastic.co/beats/filebeat[Filebeat]
+. https://www.elastic.co/beats/filebeat[Filebeat collection]
 . https://chocolatey.org/[Chocolatey]
