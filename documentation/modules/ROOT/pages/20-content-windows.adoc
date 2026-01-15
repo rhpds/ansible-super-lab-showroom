@@ -51,7 +51,7 @@ image::20-content-windows/aap_run_command_results.png[Results]
 
 === 1.2: Review Connectivity Details
 
-In the previous section an ad-hoc command was run to verify connectivity. Let's review some of these artifacts used to connect to Windows:
+In the previous section, an ad-hoc command was run to verify connectivity. Let's review some of these artifacts used to connect to Windows:
 
 . Navigate to **Automation Execution** -> **Infrastructure** -> **Hosts**
 . Notice that unlike when selecting *Inventories* as was done in the previous section, looking directly at the **Hosts** section does *NOT* allow running ad-hoc commands
