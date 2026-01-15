@@ -57,11 +57,11 @@ NOTE: Make sure to store the token securely, as it will not be displayed again.
 
 In your Dev Spaces terminal, create a file containing the following variables. These will configure `ansible-galaxy` and `ansible-builder` to use your PAH instance instead of upstream to pull and push collections and execution environments.
 
-. First, create a file in your `/home/user/` directory with the following contents, be sure to use your PAH API token created previously:
+. First, create a file in your `/projects/env/` directory with the following contents, be sure to use your PAH API token created previously:
 +
 NOTE: Replace #{your_api_token}# below with the personal API token you just copied from PAH.
 +
-[source,bash,role=execute,subs="verbatim,attributes,quotes",title="/home/user/set_pah_vars.env"]
+[source,bash,role=execute,subs="verbatim,attributes,quotes",title="/projects/env/set_pah_vars.env"]
 ----
 # This file contains configuration variables and is intended to be sourced, not executed.
 
@@ -93,7 +93,7 @@ printenv | grep ANSIBLE
 +
 TIP: Also create a corresponding file to clear these variables for any troubleshooting purposes:
 +
-[source,bash,role=execute,title="/home/user/unset_pah_vars.env"]
+[source,bash,role=execute,title="/projects/env/unset_pah_vars.env"]
 ----
 # This is only needed to switch between upstream Automation Hub and PAH
 
@@ -121,7 +121,7 @@ printenv | grep ANSIBLE
 +
 [source,bash,role=execute]
 ----
-source /home/user/set_pah_vars.env
+source /projects/env/set_pah_vars.env
 ----
 +
 [source,output,subs="verbatim,attributes,quotes"]
@@ -468,7 +468,7 @@ Login Succeeded!
 ansible-builder build --tag my-pah-ee:1.0 --build-arg TOKEN=${PAH_API_TOKEN}
 ----
 +
-NOTE: The `${PAH_API_TOKEN}` environment variable was set previously containing the value of the API Token from PAH. Set this variable once again if your terminal session has been restarted via the `/home/user/set_pah_vars.env` file.
+NOTE: The `${PAH_API_TOKEN}` environment variable was set previously containing the value of the API Token from PAH. Set this variable once again if your terminal session has been restarted via the `/projects/env/set_pah_vars.env` file.
 +
 [source,output,subs="verbatim,quotes"]
 ----
