@@ -48,3 +48,20 @@ The following table contains the URL's and credentials for accessing resources c
 |Gitea Password
 |{gitea_password}
 |===
+
+=== LiteLLM Access
+
+[cols="1,1"]
+|===
+|API Endpoint
+|link:{litellm_api_base_url}[{litellm_api_base_url},window=_blank]
+
+|Virtual API Key
+|{litellm_virtual_key}
+
+|Available Models
+|{litellm_available_models_list}
+
+|Key Duration
+|{litellm_key_duration}
+|===
