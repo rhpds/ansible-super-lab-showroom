@@ -834,7 +834,7 @@ ok: [windows] => {
 
 == 3: Next Steps
 
-In the next lab we will create an execution environment containing this collection, build it and commit everything to git.
+In the next lab, we will create an Execution Environment containing this collection, build it and commit everything to a git repository.
 
 == Conclusion
 
