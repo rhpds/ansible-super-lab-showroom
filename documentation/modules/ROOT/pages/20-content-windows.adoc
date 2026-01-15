@@ -190,7 +190,7 @@ Use the `ansible-creator` UI to create two new roles:
 +
 image::20-content-windows/ansible_creator_role1.png[Ansible Creator - Collection]
 +
-. Without leaving this screen, keep all the other values the same other than the **Role Name**. Enter a new role called #log_shipper#
+. Without leaving this screen, create the other role by keeping the existing values the same with the exception of the **Role Name** field. Enter a new role called #log_shipper#
 . Click **Create**
 . Close this UI window
 . Click on the icon to return to the file structure
