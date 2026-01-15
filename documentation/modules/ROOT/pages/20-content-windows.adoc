@@ -454,9 +454,21 @@ all:
 
 In AAP a credential is used. We will simulate that here with a file that is NOT committed to any repositories.
 
+. Create a directory at `/projects/env/` to hold local scripts and variables we will use but do not want to commit to any repositories:
++
+[source,yaml,role=execute,title="/projects/env/"]
+----
+mkdir --verbose /projects/env/
+----
++
+[source,output]
+----
+mkdir: created directory '/projects/env/'
+----
++
 . Add the following to a secrets file in your home directory:
 +
-[source,yaml,role=execute,title="/home/user/secrets.yml"]
+[source,yaml,role=execute,title="/projects/env/secrets.yml"]
 ----
 ---
 ansible_user: {windows_user}
@@ -464,7 +476,7 @@ ansible_password: {windows_password}
 ...
 ----
 +
-NOTE: You may need to do this from a terminal or open the `/home/user/` folder in the UI.
+NOTE: You may need to do this from a terminal or open the `/projects/env/` folder in the UI.
 
 ==== 3.2.1: Setup ansible.cfg
 
@@ -668,7 +680,7 @@ cd /projects/lab_playbooks/
 +
 [source,bash,role=execute]
 ----
-ansible --module-name ansible.builtin.win_ping windows --extra-vars @/home/user/secrets.yml
+ansible --module-name ansible.builtin.win_ping windows --extra-vars @/projects/env/secrets.yml
 ----
 +
 [source,output]
@@ -683,7 +695,7 @@ windows | SUCCESS => {
 +
 [source,bash,role=execute]
 ----
-ansible-playbook site.yml --extra-vars @/home/user/secrets.yml --check
+ansible-playbook site.yml --extra-vars @/projects/env/secrets.yml --check
 ----
 +
 NOTE: This run will fail the first time you run it. The output will be reviewed in the following steps.
@@ -731,7 +743,7 @@ NOTE: There are several ways to address this situation, but this was included in
 +
 [source,bash,role=execute]
 ----
-ansible-playbook site.yml --extra-vars @/home/user/secrets.yml
+ansible-playbook site.yml --extra-vars @/projects/env/secrets.yml
 ----
 +
 . Review the output. Notice this time the validation tasks did not run:
@@ -813,7 +825,7 @@ Hostname windows.lab.sandbox-5tt52-ocp4-cluster.svc.cluster.local
 +
 [source,bash,role=execute]
 ----
-ansible-playbook site.yml --extra-vars @/home/user/secrets.yml --check
+ansible-playbook site.yml --extra-vars @/projects/env/secrets.yml --check
 ----
 +
 . This time the validate tasks content matches `curl`:
