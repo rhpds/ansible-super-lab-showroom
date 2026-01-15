@@ -127,6 +127,11 @@ NOTE: Choose either this section or <<ansible-creator-gui, 2.1.2 Using the Ansib
 ansible-creator init collection red_hat_one.super_lab /projects/lab_collection/
 ----
 +
+[source,output]
+----
+    Note: collection project created at /projects/lab_collection
+----
++
 . Add two new roles to manage the software the Windows server:
 +
 [source,bash,role=execute]
@@ -135,6 +140,12 @@ for role in web_server log_shipper
   do 
     ansible-creator add resource role ${role} /projects/lab_collection/
   done
+----
++
+[source,output]
+----
+    Note: Resource added to /projects/lab_collection
+    Note: Resource added to /projects/lab_collection
 ----
 +
 . Open the directory at a lower level of the file structure in order to see all of these files in VSCode by selecting the hamburger (3 dashes) menu in the top left and choosing **File** -> **Open Folder**
@@ -217,6 +228,8 @@ image::20-content-windows/collection_dir_tree.png[Collection Roles]
 ...
 ----
 +
+TIP: `ansible-lint` will complain unless each file ends with and empty newline, so keep that in mind as you paste.
++
 . Create another new task file in that same `tasks` directory to configure the site:
 +
 [source,yaml,role=execute,title="/projects/lab_collection/roles/web_server/tasks/website.yml"]
@@ -245,6 +258,8 @@ image::20-content-windows/collection_dir_tree.png[Collection Roles]
           port: 80
     state: started
   register: r_website_status
+  when: not ansible_check_mode
+
 
 - name: Display website status
   ansible.builtin.debug:
@@ -281,6 +296,8 @@ Hostname {{ ansible_facts['fqdn'] + '.' + ansible_facts['interfaces'][0]['dns_do
 Deployed on {{ ansible_facts['date_time']['date'] }} at {{ ansible_facts['date_time']['time'] }}
 ----
 +
+NOTE: The reason this is plain text and not using HTML tags is because we cannot get directly to the webserver in a browser without some hoops. This is good enough for testing.
++
 . Next, edit the main task file and replace the contents with the following:
 +
 [source,yaml,role=execute,title="/projects/lab_collection/roles/web_server/tasks/main.yml"]
@@ -297,6 +314,9 @@ Deployed on {{ ansible_facts['date_time']['date'] }} at {{ ansible_facts['date_t
 - name: Include validate tasks
   ansible.builtin.include_tasks:
     file: validate.yml
+    apply:
+      check_mode: false
+  when: ansible_check_mode
 ...
 ----
 +
@@ -394,6 +414,11 @@ For the remainder of this lab the `ansible-creator` CLI will be used for simplic
 ansible-creator init playbook red_hat_one.super_lab /projects/lab_playbooks/
 ----
 +
+[source,output]
+----
+    Note: playbook project created at /projects/lab_playbooks
+----
++
 NOTE: If you used the UI method earlier you may only have the collection open. Feel free to use **File** -> **Open Folder** to ensure you can access the new folder under `/projects/lab_playbooks/` in the UI if needed.
 +
 image::20-content-windows/lab_playbooks_dir.png[Lab Playbooks directory]
@@ -484,6 +509,29 @@ Install the required library for either WinRM or PSRP:
 pip install pypsrp
 ----
 +
+[source,output]
+----
+Defaulting to user installation because normal site-packages is not writeable
+Collecting pypsrp
+  Downloading pypsrp-0.8.1-py3-none-any.whl (88 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 88.4/88.4 kB 14.9 MB/s eta 0:00:00
+Requirement already satisfied: cryptography in /usr/local/lib64/python3.11/site-packages (from pypsrp) (46.0.3)
+Collecting pyspnego<1.0.0
+  Downloading pyspnego-0.12.0-py3-none-any.whl (130 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.2/130.2 kB 37.3 MB/s eta 0:00:00
+Requirement already satisfied: requests>=2.9.1 in /usr/local/lib/python3.11/site-packages (from pypsrp) (2.32.5)
+Requirement already satisfied: charset_normalizer<4,>=2 in /usr/local/lib64/python3.11/site-packages (from requests>=2.9.1->pypsrp) (3.4.4)
+Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.11/site-packages (from requests>=2.9.1->pypsrp) (3.11)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.11/site-packages (from requests>=2.9.1->pypsrp) (2.3.0)
+Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.11/site-packages (from requests>=2.9.1->pypsrp) (2025.10.5)
+Requirement already satisfied: cffi>=2.0.0 in /usr/local/lib64/python3.11/site-packages (from cryptography->pypsrp) (2.0.0)
+Requirement already satisfied: pycparser in /usr/local/lib/python3.11/site-packages (from cffi>=2.0.0->cryptography->pypsrp) (2.23)
+Installing collected packages: pyspnego, pypsrp
+  WARNING: The script pyspnego-parse is installed in '/home/user/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+Successfully installed pypsrp-0.8.1 pyspnego-0.12.0
+----
++
 . If you want to use WinRM, install that library:
 +
 [source,bash,role=execute]
@@ -514,6 +562,32 @@ collections:
 cd /projects/lab_playbooks/
 ansible-galaxy collection install --requirements-file collections/requirements.yml
 ----
++
+[source,output]
+----
+ansible-galaxy [core 2.19.3]
+  config file = /projects/lab_playbooks/ansible.cfg
+  configured module search path = ['/home/user/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/local/lib/python3.11/site-packages/ansible
+  ansible collection location = /home/user/.ansible/collections:/usr/share/ansible/collections
+  executable location = /usr/local/bin/ansible-galaxy
+  python version = 3.11.13 (main, Aug 21 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-11)] (/usr/bin/python3.11)
+  jinja version = 3.1.6
+  pyyaml version = 6.0.3 (with libyaml v0.2.5)
+Using /projects/lab_playbooks/ansible.cfg as config file
+Starting galaxy collection install process
+Process install dependency map
+Starting collection install process
+Downloading https://console.redhat.com/api/automation-hub/v3/plugin/ansible/content/published/collections/artifacts/microsoft-iis-1.1.0.tar.gz to /home/user/.ansible/tmp/ansible-local-43743gaazt17/tmpo7v55uhh/microsoft-iis-1.1.0-jaf4wdj_
+Downloading https://console.redhat.com/api/automation-hub/v3/plugin/ansible/content/published/collections/artifacts/chocolatey-chocolatey-1.5.3.tar.gz to /home/user/.ansible/tmp/ansible-local-43743gaazt17/tmpo7v55uhh/chocolatey-chocolatey-1.5.3-l4u7_lip
+Installing 'microsoft.iis:1.1.0' to '/home/user/.ansible/collections/ansible_collections/microsoft/iis'
+microsoft.iis:1.1.0 was installed successfully
+Installing 'chocolatey.chocolatey:1.5.3' to '/home/user/.ansible/collections/ansible_collections/chocolatey/chocolatey'
+Downloading https://console.redhat.com/api/automation-hub/v3/plugin/ansible/content/published/collections/artifacts/ansible-windows-3.3.0.tar.gz to /home/user/.ansible/tmp/ansible-local-43743gaazt17/tmpo7v55uhh/ansible-windows-3.3.0-_e3i_hww
+chocolatey.chocolatey:1.5.3 was installed successfully
+Installing 'ansible.windows:3.3.0' to '/home/user/.ansible/collections/ansible_collections/ansible/windows'
+ansible.windows:3.3.0 was installed successfully
+----
 
 ==== 3.2.2: Configure Collection directory
 
@@ -523,14 +597,34 @@ This `ansible-creator` command required a collection name when executing. The re
 +
 [source,bash,role=execute]
 ----
-rm --force --recursive /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/
+rm --force --recursive --verbose /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/
+----
++
+[source,output]
+----
+removed '/projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/run/README.md'
+removed '/projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/run/tasks/main.yml'
+removed directory '/projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/run/tasks'
+removed directory '/projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/run'
+removed directory '/projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles'
+removed '/projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/README.md'
+removed '/projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/CHANGELOG.md'
+removed '/projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/meta/runtime.yml'
+removed directory '/projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/meta'
+removed '/projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/galaxy.yml'
+removed directory '/projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/'
 ----
 +
 . Now create a symbolic link to the collection we created earlier:
 +
 [source,bash,role=execute]
 ----
-ln --symbolic /projects/lab_collection/ /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab
+ln --symbolic --verbose /projects/lab_collection/ /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab
+----
++
+[source,output]
+----
+'/projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab' -> '/projects/lab_collection/'
 ----
 +
 . If you expand `/projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab` it show list the two roles created in `/projects/lab_collection/`
@@ -575,9 +669,7 @@ cd /projects/lab_playbooks/
 ansible --module-name ansible.builtin.win_ping windows --extra-vars @/home/user/secrets.yml
 ----
 +
-. If everything was configured properly, a result identical to what was seen in AAP will be shown:
-+
-[source,bash,role=execute]
+[source,output]
 ----
 windows | SUCCESS => {
     "changed": false,
@@ -585,11 +677,117 @@ windows | SUCCESS => {
 }
 ----
 +
-. If connectivity worked, execute the entire playbook:
+. If connectivity worked, execute the entire playbook but start in check mode first:
++
+[source,bash,role=execute]
+----
+ansible-playbook site.yml --extra-vars @/home/user/secrets.yml --check
+----
++
+NOTE: This run will fail the first time you run it. The output will be reviewed in the following steps.
++
+. The first role will succeed. Notice the tasks in `validate.yml` will run, which are specified _only_ to run in check mode. The contents on the web server are a default website:
++
+[source,output]
+----
+...
+TASK [red_hat_one.super_lab.web_server : Debug captured result] *********************************************************************************************************************************************************
+task path: /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/web_server/tasks/validate.yml:8
+ok: [windows] => {
+    "r_local_test": {
+        "accept_ranges": "bytes",
+        "changed": false,
+        "character_set": "ISO-8859-1",
+        "content": "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />\r\n<title>IIS Windows Server</title>\r\n<style type=\"text/css\">\r\n<!--\r\nbody {\r\n\tcolor:#000000;\r\n\tbackground-color:#0072C6;\r\n\tmargin:0;\r\n}\r\n\r\n#container {\r\n\tmargin-left:auto;\r\n\tmargin-right:auto;\r\n\ttext-align:center;\r\n\t}\r\n\r\na img {\r\n\tborder:none;\r\n}\r\n\r\n-->\r\n</style>\r\n</head>\r\n<body>\r\n<div id=\"container\">\r\n<a href=\"http://go.microsoft.com/fwlink/?linkid=66138&amp;clcid=0x409\"><img src=\"iisstart.png\" alt=\"IIS\" width=\"960\" height=\"600\" /></a>\r\n</div>\r\n</body>\r\n</html>",
+...
+----
++
+. The final task that fails is likely the following. This is due to a requirement that hasn't been installed yet:
++
+[source,output]
+----
+...
+TASK [red_hat_one.super_lab.log_shipper : Ensure Chocolatey is installed (requires .NET 4.8)] ***************************************************************************************************************************
+task path: /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/log_shipper/tasks/chocolatey.yml:6
+[ERROR]: Task failed: Module failed: Chocolatey 2.0.0 requires .NET Framework 4.8 or higher to be installed. Please install .NET Framework 4.8 or higher and try again, or specify a 1.x version of Chocolatey to install.
+Origin: /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/log_shipper/tasks/chocolatey.yml:6:3
+
+4     file: prerequisites.yml
+5
+6 - name: Ensure Chocolatey is installed (requires .NET 4.8)
+    ^ column 3
+
+fatal: [windows]: FAILED! => {"changed": false, "command": "", "msg": "Chocolatey 2.0.0 requires .NET Framework 4.8 or higher to be installed. Please install .NET Framework 4.8 or higher and try again, or specify a 1.x version of Chocolatey to install.", "rc": 0}
+
+PLAY RECAP **************************************************************************************************************************************************************************************************************
+windows                    : ok=19   changed=5    unreachable=0    failed=1    skipped=2    rescued=0    ignored=0   
+----
++
+. Run the playbook now:
 +
 [source,bash,role=execute]
 ----
 ansible-playbook site.yml --extra-vars @/home/user/secrets.yml
+----
++
+. Review the output. Notice this time the validation tasks did not run:
++
+[source,output]
+----
+...
+TASK [red_hat_one.super_lab.web_server : Include validate tasks] ********************************************************************************************************************************************************
+task path: /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/web_server/tasks/main.yml:10
+skipping: [windows] => {"changed": false, "false_condition": "ansible_check_mode", "skip_reason": "Conditional result was False"}
+...
+----
++
+. The missing .NET prerequisites were installed:
++
+[source,output]
+----
+...
+TASK [red_hat_one.super_lab.log_shipper : Install .NET Framework 4.8 via Web Installer] *********************************************************************************************************************************
+task path: /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/log_shipper/tasks/prerequisites.yml:2
+redirecting (type: modules) ansible.builtin.win_package to ansible.windows.win_package
+redirecting (type: modules) ansible.builtin.win_package to ansible.windows.win_package
+redirecting (type: modules) ansible.builtin.win_package to ansible.windows.win_package
+changed: [windows] => {"changed": true, "checksum": "CA87B70910F131B625D140FFBFD1C232EA27AB71", "elapsed": 1.5315671, "msg": "OK", "rc": 3010, "reboot_required": true, "status_code": 200}
+
+TASK [red_hat_one.super_lab.log_shipper : Debug .NET install] ***********************************************************************************************************************************************************
+task path: /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/log_shipper/tasks/prerequisites.yml:9
+ok: [windows] => {
+    "r_dotnet_install": {
+        "changed": true,
+        "checksum": "CA87B70910F131B625D140FFBFD1C232EA27AB71",
+        "elapsed": 1.5315671,
+        "failed": false,
+        "msg": "OK",
+        "rc": 3010,
+        "reboot_required": true,
+        "status_code": 200
+    }
+}
+
+TASK [red_hat_one.super_lab.log_shipper : Reboot when required] *********************************************************************************************************************************************************
+task path: /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/log_shipper/tasks/prerequisites.yml:14
+ansible.windows.win_reboot: rebooting server...
+ansible.windows.win_reboot validating reboot
+ansible.windows.win_reboot running post reboot test command
+ansible.windows.win_reboot: system successfully rebooted
+changed: [windows] => {"changed": true, "elapsed": 75, "rebooted": true, "unreachable": false}
+...
+----
+. The full run including reboot should take under 10 minutes:
++
+[source,output]
+----
+...
+TASK [red_hat_one.super_lab.log_shipper : Install a filebeat with Chocolatey] *******************************************************************************************************************************************
+task path: /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/log_shipper/tasks/filebeat.yml:2
+changed: [windows] => {"changed": true, "choco_cli_version": "2.6.0", "rc": 0, "stdout": "Installing the following packages:\r\nfilebeat\r\nBy installing, you accept licenses for the packages.\r\nDownloading package from source 'https://community.chocolatey.org/api/v2/'\r\n\r\nfilebeat v7.15.1 [Approved]\r\nfilebeat package files install completed. Performing other installation steps.\r\nDownloading filebeat 64 bit\r\n  from 'https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.15.1-windows-x86_64.zip'\r\n\r\nDownload of filebeat-7.15.1-windows-x86_64.zip (25.8 MB) completed.\r\nHashes match.\r\nExtracting C:\\Users\\Administrator\\AppData\\Local\\Temp\\chocolatey\\filebeat\\7.15.1\\filebeat-7.15.1-windows-x86_64.zip to C:\\ProgramData\\chocolatey\\lib\\filebeat\\tools...\r\nC:\\ProgramData\\chocolatey\\lib\\filebeat\\tools\r\nfilebeat\r\n ShimGen has successfully created a shim for filebeat.exe\r\n The install of filebeat was successful.\r\n  Deployed to 'C:\\ProgramData\\chocolatey\\lib\\filebeat\\tools'\r\n\r\nChocolatey installed 1/1 packages. \r\n See the log for details (C:\\ProgramData\\chocolatey\\logs\\chocolatey.log).\r\n", "stdout_lines": ["Installing the following packages:", "filebeat", "By installing, you accept licenses for the packages.", "Downloading package from source 'https://community.chocolatey.org/api/v2/'", "", "filebeat v7.15.1 [Approved]", "filebeat package files install completed. Performing other installation steps.", "Downloading filebeat 64 bit", "  from 'https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.15.1-windows-x86_64.zip'", "", "Download of filebeat-7.15.1-windows-x86_64.zip (25.8 MB) completed.", "Hashes match.", "Extracting C:\\Users\\Administrator\\AppData\\Local\\Temp\\chocolatey\\filebeat\\7.15.1\\filebeat-7.15.1-windows-x86_64.zip to C:\\ProgramData\\chocolatey\\lib\\filebeat\\tools...", "C:\\ProgramData\\chocolatey\\lib\\filebeat\\tools", "filebeat", " ShimGen has successfully created a shim for filebeat.exe", " The install of filebeat was successful.", "  Deployed to 'C:\\ProgramData\\chocolatey\\lib\\filebeat\\tools'", "", "Chocolatey installed 1/1 packages. ", " See the log for details (C:\\ProgramData\\chocolatey\\logs\\chocolatey.log)."]}
+
+PLAY RECAP **************************************************************************************************************************************************************************************************************
+windows                    : ok=21   changed=9    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
 ----
 +
 . If everything worked, after a few minutes the server will be configured and running both IIS and Filebeat.
@@ -597,10 +795,41 @@ ansible-playbook site.yml --extra-vars @/home/user/secrets.yml
 +
 [source,bash,role=execute]
 ----
-$ curl http://windows.aap.svc.cluster.local
+curl http://windows.aap.svc.cluster.local
+----
++
+[source,output]
+----
 Welcome to Super Lab IIS Server
 Machine ID S-1-5-21-2979851890-3482578088-4054385452
 Hostname windows.lab.sandbox-5tt52-ocp4-cluster.svc.cluster.local
+----
++
+. Run check mode once again, this time it will succeed:
++
+[source,bash,role=execute]
+----
+ansible-playbook site.yml --extra-vars @/home/user/secrets.yml --check
+----
++
+. This time the validate tasks content matches `curl`:
++
+[source,output]
+----
+...
+TASK [red_hat_one.super_lab.web_server : Test IIS locally on the Windows Server] ****************************************************************************************************************************************
+task path: /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/web_server/tasks/validate.yml:2
+ok: [windows] => {"accept_ranges": "bytes", "changed": false, "character_set": "ISO-8859-1", "content": "Welcome to Super Lab IIS Server\r\nMachine ID S-1-5-21-2979851890-3482578088-4054385452\r\nHostname windows.lab.sandbox-gtjkm-ocp4-cluster.svc.cluster.local\r\nDeployed on 2026-01-14 at 17:29:19\r\n", "content_encoding": "", "content_length": "190", "content_type": "text/html", "cookies": [], "date": "Thu, 15 Jan 2026 01:44:03 GMT", "e_tag": "\"36c620eebe85dc1:0\"", "elapsed": 0.3750282, "headers": ["Accept-Ranges", "Content-Length", "Content-Type", "Date", "ETag", "Last-Modified", "Server", "X-Powered-By"], "is_from_cache": false, "is_mutually_authenticated": false, "last_modified": "Thu, 15 Jan 2026 01:33:19 GMT", "method": "GET", "msg": "OK", "protocol_version": {"Build": -1, "Major": 1, "MajorRevision": -1, "Minor": 1, "MinorRevision": -1, "Revision": -1}, "response_uri": "http://localhost/", "server": "Microsoft-IIS/10.0", "status_code": 200, "status_description": "OK", "supports_headers": true, "url": "http://localhost", "x_powered_by": "ASP.NET"}
+
+TASK [red_hat_one.super_lab.web_server : Debug captured result] *********************************************************************************************************************************************************
+task path: /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/web_server/tasks/validate.yml:8
+ok: [windows] => {
+    "r_local_test": {
+        "accept_ranges": "bytes",
+        "changed": false,
+        "character_set": "ISO-8859-1",
+        "content": "Welcome to Super Lab IIS Server\r\nMachine ID S-1-5-21-2979851890-3482578088-4054385452\r\nHostname windows.lab.sandbox-gtjkm-ocp4-cluster.svc.cluster.local\r\nDeployed on 2026-01-14 at 17:29:19\r\n",
+...
 ----
 
 == 3: Next Steps
