@@ -49,10 +49,8 @@ image::21-content-dev-ee/api-token-overview.png[API Token Overview]
 +
 image::21-content-dev-ee/api-token-generate.png[Generate an API Token]
 +
-. Click the Copy to clipboard icon to copy it.
-
-image::21-content-dev-ee/api-token-copy.png[Copy the API Token]
-
+. Click the *Copy to clipboard* icon to copy it.
++
 NOTE: Make sure to store the token securely, as it will not be displayed again.
 
 ==== Step 2.1.3: Set Environment Variables
@@ -61,14 +59,14 @@ In your Dev Spaces terminal, create a file containing the following variables. T
 
 . First, create a file in your `/home/user/` directory with the following contents, be sure to use your PAH API token created previously:
 +
-NOTE: Replace `{your_api_token}` with the personal API token you just copied from PAH.
+NOTE: Replace #{your_api_token}# below with the personal API token you just copied from PAH.
 +
-[source,bash,role=execute,subs="verbatim,attributes",title="/home/user/pah_vars.env"]
+[source,bash,role=execute,subs="verbatim,attributes,quotes",title="/home/user/set_pah_vars.env"]
 ----
 # This file contains configuration variables and is intended to be sourced, not executed.
 
 # This is your unique token from Private Automation hub
-export PAH_API_TOKEN='{your_api_token}'
+export PAH_API_TOKEN='#{your_api_token}#'
 
 # Set the list of servers Ansible should know about
 export ANSIBLE_GALAXY_SERVER_LIST='published,certified,validated,community'
@@ -88,24 +86,71 @@ export ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=${PAH_API_TOKEN}
 # Configure the 'community' repository
 export ANSIBLE_GALAXY_SERVER_COMMUNITY_URL='{aap_controller_web_url}/pulp_ansible/galaxy/community/'
 export ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=${PAH_API_TOKEN}
+
+# Show loaded variables
+printenv | grep ANSIBLE
+----
++
+TIP: Also create a corresponding file to clear these variables for any troubleshooting purposes:
++
+[source,bash,role=execute,title="/home/user/unset_pah_vars.env"]
+----
+# This is only needed to switch between upstream Automation Hub and PAH
+
+# Clears all the following variables:
+unset PAH_API_TOKEN
+unset ANSIBLE_GALAXY_SERVER_LIST
+
+unset ANSIBLE_GALAXY_SERVER_PUBLISHED_URL
+unset ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN
+
+unset ANSIBLE_GALAXY_SERVER_CERTIFIED_URL
+unset ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN
+
+unset ANSIBLE_GALAXY_SERVER_VALIDATED_URL
+unset ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN
+
+unset ANSIBLE_GALAXY_SERVER_COMMUNITY_URL
+unset ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN
+
+# Show variables - this should be empty
+printenv | grep ANSIBLE
 ----
 +
 . Load these variables into your shell environment:
 +
 [source,bash,role=execute]
 ----
-source /home/user/pah_vars.env
+source /home/user/set_pah_vars.env
+----
++
+[source,output,subs="verbatim,attributes,quotes"]
+----
+ANSIBLE_GALAXY_SERVER_COMMUNITY_URL=https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/pulp_ansible/galaxy/community/
+ANSIBLE_GALAXY_SERVER_PUBLISHED_URL=https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/pulp_ansible/galaxy/published/
+ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=#{your_api_token}#
+ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=#{your_api_token}#
+ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=#{your_api_token}#
+ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=#{your_api_token}#
+ANSIBLE_GALAXY_SERVER_LIST=published,certified,validated,community
+ANSIBLE_GALAXY_SERVER_VALIDATED_URL=https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/pulp_ansible/galaxy/validated/
+ANSIBLE_GALAXY_SERVER_CERTIFIED_URL=https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/pulp_ansible/galaxy/rh-certified/
 ----
 
 == 3. Publishing our Custom Collection
 
 === 3.1: Prepare collection directory
 
-. Update the `galaxy.yml` file and remove `ansible.utils` from the list of `dependencies` so that the `dependencies` properties appears as follows:
+This lab will prepare the `/projects/lab_collection/` directory to be published.
+
+. Update the `galaxy.yml` file and remove `ansible.utils` from the list of `dependencies` to appear as follows:
 +
-[source,bash,role=execute,subs="verbatim,attributes",title=""]
+[source,bash,role=execute,subs="verbatim,attributes",title="/projects/lab_collection/galaxy.yml"]
 ----
-dependencies: {}
+dependencies:  
+  "ansible.windows": "*"
+  "chocolatey.chocolatey": "*"
+  "microsoft.iis": "*"
 ----
 +
 . Feel free to modify the rest of the file as desired, such as author and description details.
@@ -123,13 +168,9 @@ Create a new _Namespace_ in PAH.
 +
 image::21-content-dev-ee/navigate-namespaces.png[Namespaces navigation]
 +
-. Click on the **Create Namespace** button.
-+
-image::21-content-dev-ee/namespaces-overview.png[Namespaces overview]
-+
-. Enter `red_hat_one` for the name. The rest of the values can be left blank
 . Click **Create Namespace** to create the namespace.
-
+. Enter `red_hat_one` for the name. The rest of the values can be left blank. Click *Create namespace*:
++
 image::21-content-dev-ee/create-namespace.png[Namespace creation form]
 
 === 3.3: Build and Publish the Collection
@@ -147,13 +188,12 @@ cd /project/lab_collection/
 +
 [source,bash,role=execute]
 ----
-ansible-galaxy collection build
+ansible-galaxy collection build --verbose
 ----
 +
-. Should display:
-+
-[source,bash]
+[source,output]
 ----
+No config file found; using defaults
 Created collection for red_hat_one.super_lab at /projects/lab_collection/red_hat_one-super_lab-1.0.0.tar.gz
 ----
 +
@@ -161,17 +201,16 @@ Created collection for red_hat_one.super_lab at /projects/lab_collection/red_hat
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-ansible-galaxy collection publish --server {aap_controller_web_url}/api/galaxy/ red_hat_one-super_lab-1.0.0.tar.gz --token ${PAH_API_TOKEN}
+ansible-galaxy collection publish --server {aap_controller_web_url}/api/galaxy/ red_hat_one-super_lab-1.0.0.tar.gz --token ${PAH_API_TOKEN} --verbose
 ----
 +
-. Output:
-+
-[source,bash]
+[source,output]
 ----
-Publishing collection artifact '/projects/lab_collection/red_hat_one-super_lab-1.0.0.tar.gz' to cmd_arg https://aap-aap.apps.cluster-5tt52.dynamic.redhatworkshops.io/api/galaxy/
-Collection has been published to the Galaxy server cmd_arg https://aap-aap.apps.cluster-5tt52.dynamic.redhatworkshops.io/api/galaxy/
-Waiting until Galaxy import task https://aap-aap.apps.cluster-5tt52.dynamic.redhatworkshops.io/api/galaxy/v3/imports/collections/019bbddb-f6e4-7613-9975-45dec02119c3/ has completed
-Collection has been successfully published and imported to the Galaxy server cmd_arg https://aap-aap.apps.cluster-5tt52.dynamic.redhatworkshops.io/api/galaxy/
+No config file found; using defaults
+Publishing collection artifact '/projects/lab_collection/red_hat_one-super_lab-1.0.0.tar.gz' to cmd_arg https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/api/galaxy/
+Collection has been published to the Galaxy server cmd_arg https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/api/galaxy/
+Waiting until Galaxy import task https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/api/galaxy/v3/imports/collections/019bc27e-b50e-70f8-bbc8-6b2590228801/ has completed
+Collection has been successfully published and imported to the Galaxy server cmd_arg https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/api/galaxy/
 ----
 +
 NOTE: You can safely ignore any warnings that may be emitted during the publishing process, but as a bonus feel free to fix them.
@@ -180,11 +219,11 @@ NOTE: You can safely ignore any warnings that may be emitted during the publishi
 . Launch the link:{aap_controller_web_url}[Private Automation Hub,window=_blank] web interface and login using the credentials from the xref:environment-details.adoc[Environment Details,window=_blank] page.
 . From the navigation menu on the left, expand **Automation Content** and click on **Collection Approvals**.
 +
-image::21-content-dev-ee/collection-approvals-overview.png[Collection Approvals overview]
-+
-. The `red_hat_one.super_lab` should be listed as pending approval. Click the **Thumbs Up** icon to approve and sign the collection.
-+
 image::21-content-dev-ee/collections-approvals-pending.png[Approve the Collection]
++
+. The `red_hat_one.super_lab` should be listed as pending approval. Select this namespace checkbox and click the **Thumbs Up** icon all the way to the right to approve and sign the collection.
++
+image::21-content-dev-ee/collections-approvals-selection.png[Select Collection to Approve]
 +
 . Select the _Yes, I confirm that I want to approve these 1 collections._ checkbox and click **Approve collections** button.
 +
@@ -192,30 +231,28 @@ image::21-content-dev-ee/collections-approvals-approve-collection.png[Pending Ap
 +
 . Navigate to the **Collections** page in PAH to verify that your collection is published and available.
 +
-image::21-content-dev-ee/navigate-collections.png[Navigate to Collections]
-+
 . You should see your `red_hat_one.super_lab` collection listed and available for use.
-
++
 image::21-content-dev-ee/pah-collections.png[PAH Collections]
 
 == 4: Syncing a Base EE from the Red Hat Registry
 
 Before producing our own Execution Environment (EE) in subsequent steps, we'll configure PAH to pull in a certified base image from Red Hat. Since AAP images within the Red Hat Container Registry are private, we need to configure a credential within PATH to allow for the retrieval of images.
 
+=== 4.1: Configure Remote Registry
+
 . Launch the link:{aap_controller_web_url}[Private Automation Hub,window=_blank] web interface and login using the credentials from the xref:environment-details.adoc[Environment Details,window=_blank] page.
 . From the navigation menu on the left, expand **Automation Content** and click on **Remote Registries**.
-+
-image::21-content-dev-ee/remote-registries-overview.png[Navigate to Remote Registries]
 +
 . Click the **Create remote registry** button
 +
 image::21-content-dev-ee/create-remote-registry.png[Create Remote Registry]
 +
 . Enter the following details on the _Create Remote Registry_ page:
-.. Name: `redhat`
-.. URL: `https://registry.redhat.io`
-.. Username: `YOUR_REDHAT_USERNAME`
-.. Password: `YOUR_REDHAT_PASSWORD`
+.. _Name_: `redhat`
+.. _URL_: `https://registry.redhat.io`
+.. _Username_: `YOUR_REDHAT_USERNAME`
+.. _Password_: `YOUR_REDHAT_PASSWORD`
 .. Click **Create remote registry** to add the new registry.
 +
 image::21-content-dev-ee/create-remote-registry-details.png[Create Remote Registry Details]
@@ -224,35 +261,53 @@ NOTE: You can link:https://access.redhat.com/terms-based-registry[Create Service
 
 Now that details related to the Red Hat Container Registry have been added, configure PAH to sync the `ee-minimal-rhel9` image 
 
+=== 4.2: Synchronize base Execution Environment
+
 . From the navigation menu on the left, expand **Automation Content** and click on **Execution Environments**. 
-+
-image::21-content-dev-ee/execution-environments-navigate.png[Navigate to Execution Environments]
 +
 . Click the **Create execution environment** button.
 +
 image::21-content-dev-ee/create-execution-environment.png[Create Execution Environment]
 +
 . Enter the following details on the _Create Execution Environment_ page:
-.. Name: `ansible-automation-platform-25/ee-minimal-rhel9`
-.. Upstream Name: `ansible-automation-platform-25/ee-minimal-rhel9`
-.. Remote Registry: `redhat`
+.. Name: `ansible-automation-platform-26/ee-minimal-rhel9`
+.. Upstream Name: `ansible-automation-platform-26/ee-minimal-rhel9`
+.. Remote Registry: Use the drop-down to select `redhat` that was just created.
 .. To reduce the sync time and storage requirements, enter `latest` in the _Add tag(s) to include_ field and click **Add**
 .. Click the **Create execution environment** button to create the new EE.
-
++
 image::21-content-dev-ee/create-execution-environment-form.png[Create Execution Environments Form]
-
-Synchronize the Execution Environment into PAH from the Red Hat Container Registry.
-
-. Next to the `ansible-automation-platform-25/ee-minimal-rhel9` Execution Environment, click the kebab menu (three vertical dots) on the right hand side of the entry and select **Sync execution environment**.
++
+. Synchronize the Execution Environment into PAH from the Red Hat Container Registry.
+. Next to the `ansible-automation-platform-26/ee-minimal-rhel9` Execution Environment, click the kebab menu (three vertical dots) on the right hand side of the entry and select **Sync execution environment**.
 +
 image::21-content-dev-ee/execution-environment-sync.png[Sync Execution Environment]
 +
 . Click the checkbox next to the _Yes, I confirm I want to sync these 1 execution environments_.  the box to confirm and click **Sync execution environment**.
 . Click the **Sync Execution Environments** button to start the synchronization process.
-
++
 image::21-content-dev-ee/execution-environment-confirm-sync.png[Confirm Sync Execution Environment]
++
+. After the sync is complete, the `ee-minimal-rhel9` image will be available in your Private Automation Hub instance. Feel free to explore the details of the newly synchronized Execution Environment as you see fit.
 
-After the sync is complete, the `ee-minimal-rhel9` image will be available in your Private Automation Hub instance. Feel free to explore the details of the newly synchronized Execution Environment as you see fit.
+=== 4.3: Synchronize required collections
+
+. Go to Automation Content -> Remotes
+. Edit *rh-certified*
+. In the *Token* field, paste the token obtained in the previous lab for upstream Automation Hub
+. In the *Requirements file* field, paste the contents of `/projects/lab_playbooks/collections/requirements.yml`
++
+[source,yaml]
+----
+collections:
+  - chocolatey.chocolatey
+  - ansible.windows
+  - microsoft.iis
+----
++
+. Click *Save remote*
+. Go to Automation Content -> Repositories
+. Next to *rh-certified* click the kebob (3 dots) and select *Sync repository*
 
 == 5: Push Collection to Repository
 
@@ -285,9 +340,11 @@ image::21-content-dev-ee/gitea-create-repository.png[Gitea Create Repository]
 
 ==== 5.2: Append to the `.gitignore` file
 
-Back in your Dev Spaces instance, update the `.gitignore` file within the `my_pah_project` directory containing the `super_lab` collection and append the following lines to exclude files that should not be committed to the repository.
+Return to your Dev Spaces terminal. 
 
-[source,bash,role=execute,subs="verbatim,attributes",title=".gitignore"]
+. Update the `.gitignore` file within the `/projects/lab_collection` directory containing the collection and append the following lines to exclude files that should not be committed to the repository.
+
+[source,bash,role=execute,subs="verbatim,attributes",title="/projects/lab_collection/.gitignore"]
 ----
 context/
 .password
@@ -295,6 +352,7 @@ ansible.cfg
 .vscode/
 *.tar.gz
 *.json
+secrets.*
 ----
 
 === 5.3: Push collection to new repository
@@ -303,18 +361,18 @@ After an empty repository is created on your Gitea instance, the next step is to
 
 . Navigate to the link:{gitea_console_url}/{gitea_user}/red_hat_one_super_lab[red_hat_one_super_lab,window=_blank] repository.
 . In the section _Clone this repository_, click the **Copy URL** icon on the far right to copy Gitea repository URL for the _HTTPS_ protocol option.
-
-Now, from within the the terminal of your Dev Spaces instance, within the 'my_pah_project' directory, execute the following commands to initialize a new Git repository and push the content to the Gitea repository.
-
+. Now, from within the the terminal of your Dev Spaces instance, within the 'my_pah_project' directory, execute the following commands to initialize a new Git repository and push the content to the Gitea repository.
++
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
 git init
 git checkout -b main
 git add --all
 git commit -m "Uploading collection on initial commit"
-git remote add origin {gitea_console_url}/{gitea_user}/red_hat_one_super_lab.git
+git remote add origin {gitea_console_url}/{gitea_user}/red_hat_one_super_lab.git<1>
 git push -u origin main
 ----
+<1> This is the URL copied in a previous step.
 
 Since the repository requires authentication, you will be prompted to enter your Gitea username and password at the top of the Dev Spaces window.
 
@@ -341,7 +399,7 @@ Refresh the `red_hat_one_super_lab` page within the Gitea UI to confirm that the
 
 image::21-content-dev-ee/gitea-repository.png[Dev Spaces Git Authentication]
 
-The repository will be referenced later in the Ansible Bootcamp Lab: xref:06-ansible-cicd.adoc[Creating a CI/CD Pipeline]. 
+This repository will be referenced in later labs.
 
 == 6: Building a Custom Execution Environment
 
@@ -349,16 +407,16 @@ Now, we'll define and build a custom Execution Environment (EE) that uses our sy
 
 === 6.1: Define the Execution Environment
 
-Create a file named `execution-environment.yml` at the root of the `my_pah_project` directory with the following content.
+Create a file named `execution-environment.yml` at the root of the `lab_collection` directory with the following content.
 
-[source,yaml,title="execution-environment.yml",role=execute,subs="verbatim,attributes"]
+[source,yaml,title="/projects/lab_collection/execution-environment.yml",role=execute,subs="verbatim,attributes"]
 ----
 ---
 version: 3
 
 images:
   base_image:
-    name: aap-aap.{openshift_cluster_ingress_domain}/ansible-automation-platform-25/ee-minimal-rhel9:latest
+    name: aap-aap.{openshift_cluster_ingress_domain}/ansible-automation-platform-26/ee-minimal-rhel9:latest
 
 dependencies:
   ansible_core:
@@ -375,33 +433,84 @@ additional_build_steps:
     - ARG TOKEN
     - ENV ANSIBLE_GALAXY_SERVER_LIST='published,certified,validated,community'
     - ENV ANSIBLE_GALAXY_SERVER_CERTIFIED_URL='{aap_controller_web_url}/pulp_ansible/galaxy/rh-certified/'
-    - ENV ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=$TOKEN
+    - ENV ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=${TOKEN}
     - ENV ANSIBLE_GALAXY_SERVER_VALIDATED_URL='{aap_controller_web_url}/pulp_ansible/galaxy/validated/'
-    - ENV ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=$TOKEN
+    - ENV ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=${TOKEN}
     - ENV ANSIBLE_GALAXY_SERVER_COMMUNITY_URL='{aap_controller_web_url}/pulp_ansible/galaxy/community/'
-    - ENV ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=$TOKEN
+    - ENV ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=${TOKEN}
     - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_URL='{aap_controller_web_url}/pulp_ansible/galaxy/published/'
-    - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=$TOKEN
+    - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=${TOKEN}
 ----
 
 === 6.2: Build and Publish the Execution Environment
 
 Login to your PAH container registry, build the custom Execution Environment, and push the resulting image to your PAH instance using the following commands:
 
+. Login to to PAH container registry:
++
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
 # Log in to your PAH container registry with your AAP user credentials
 podman login aap-aap.{openshift_cluster_ingress_domain}
-
-# Build the EE. It will pull the base from PAH, then add our content.
-ansible-builder build --tag my-pah-ee:1.0 --build-arg TOKEN=$PAH_API_TOKEN
-
-# Tag and push the image to your PAH registry
+----
++
+[source,output]
+----
+Username: admin
+Password: 
+Login Succeeded!
+----
++
+. Build the Execution Environment. It will pull the base from PAH, then add our content:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+ansible-builder build --tag my-pah-ee:1.0 --build-arg TOKEN=${PAH_API_TOKEN}
+----
++
+NOTE: The `${PAH_API_TOKEN}` environment variable was set previously containing the value of the API Token from PAH. Set this variable once again if your terminal session has been restarted via the `/home/user/set_pah_vars.env` file.
++
+[source,output,subs="verbatim,quotes"]
+----
+Running command:
+  podman build -f context/Containerfile -t my-pah-ee:1.0 --build-arg=TOKEN=*_removed_*<1> context
+Complete! The build context can be found at: /projects/lab_collection/context
+----
+<1> Token is passed from the CLI and used in the build process
++
+. Tag and push the image to your PAH registry:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
 podman tag localhost/my-pah-ee:1.0 aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.0
+----
++
+. Push the newly build Execution Environment image to PAH:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
 podman push aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.0
 ----
-
-NOTE: The `$PAH_API_TOKEN` environment variable was set previously containing the value of the API Token from PAH. Set this variable once again if your terminal session has been restarted.
++
+[source,output]
+----
+Getting image source signatures
+Copying blob 8d7002e6f5a3 done   | 
+Copying blob deebe6823303 done   | 
+Copying blob 07f03aaea22a done   | 
+Copying blob 53cd9a4d07b1 done   | 
+Copying blob 8e88ef553a8b done   | 
+Copying blob aa5eefe60148 skipped: already exists  
+Copying blob e6db9dbd3832 done   | 
+Copying blob 8693db968fb4 done   | 
+Copying blob 79e63427b552 done   | 
+Copying blob 5f70bf18a086 done   | 
+Copying blob 1903d60376d1 done   | 
+Copying blob f129e8539ece done   | 
+Copying blob 972bd7578ec1 done   | 
+Copying config 2ee9809c70 done   | 
+Writing manifest to image destination
+----
 
 == 7: Adding a Custom Filter Plugin
 
@@ -453,7 +562,7 @@ version: 3
 
 images:
   base_image:
-    name: aap-aap.{openshift_cluster_ingress_domain}/ansible-automation-platform-25/ee-minimal-rhel9:latest
+    name: aap-aap.{openshift_cluster_ingress_domain}/ansible-automation-platform-26/ee-minimal-rhel9:latest
 
 dependencies:
   ansible_core:
