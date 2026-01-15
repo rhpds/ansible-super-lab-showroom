@@ -842,7 +842,7 @@ In this lab, you have learned how to:
 
 . Validate connectivity to Windows servers from AAP
 . Use `ansible-creator` to scaffold the collection, roles, playbooks and inventory associated with automation targeting a Windows instance
-. Create content using `ansible.windows` and `microsoft.iis` collections
+. Create content using the `ansible.windows` and `microsoft.iis` collections
 . Create content to ensure prerequisites are installed including .NET and Chocolatey
 . Use Chocolatey to install Filebeat
 . Use Dev Spaces and Ansible Development Tools (ADT) to create, modify and test content
