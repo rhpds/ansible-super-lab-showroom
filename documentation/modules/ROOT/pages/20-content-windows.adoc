@@ -149,7 +149,7 @@ for role in web_server log_shipper
 ----
 +
 . Open the directory at a lower level of the file structure in order to see all of these files in VSCode by selecting the hamburger (3 dashes) menu in the top left and choosing **File** -> **Open Folder**
-. The dialogue box should contain #/projects/# then hit **OK**
+. The dialogue box should contain **/projects/** then hit **OK**
 +
 image::20-content-windows/dev_spaces_open_folder.png[Open Folder]
 +
@@ -166,12 +166,12 @@ NOTE: Choose either this section or <<ansible-creator-cli, 2.1.1 Using the Ansib
 
 Use the `ansible-creator` UI to create a collection:
 
-. Click on the `Ansible` extension icon on the left
+. Click on the **Ansible** extension icon on the left
 . Select **Collection project**
 . Fill in the following details:
-.. **Namespace**: #red_hat_one#
-.. **Collection**: #super_lab#
-.. **Init path**: #/projects/lab_collection#
+.. _Namespace_ `red_hat_one`
+.. _Collection_ `super_lab`
+.. _Init path_ `/projects/lab_collection`
 . Click **Create**
 . Lastly, select **Open Collection**
 +
@@ -181,16 +181,16 @@ image::20-content-windows/ansible_creator_collection.png[Ansible Creator - Colle
 
 Use the `ansible-creator` UI to create two new roles:
 
-. Click on the `Ansible` extension icon on the left
+. Click on the **Ansible** extension icon on the left
 . Under the **ADD** section select **Role**
 . Fill in the following details:
-.. **Collection root directory**: #/projects/lab_collection#
-.. **Role Name**: #web_server#
+.. _Collection root directory_: `/projects/lab_collection`
+.. _Role Name_: `web_server`
 . Click **Create**
 +
 image::20-content-windows/ansible_creator_role1.png[Ansible Creator - Collection]
 +
-. Without leaving this screen, create the other role by keeping the existing values the same with the exception of the **Role Name** field. Enter a new role called #log_shipper#
+. Without leaving this screen, create the other role by keeping the existing values the same with the exception of the **Role Name** field. Enter a new role called `log_shipper`
 . Click **Create**
 . Close this UI window
 . Click on the _File Explorer_ icon to return to the file structure
@@ -477,7 +477,7 @@ NOTE: For additional information see https://docs.redhat.com/en/documentation/re
 +
 . Add the following to the provided `ansible.cfg`:
 +
-[source,bash,role=execute,title="/projects/lab_playbooks/ansible.cfg"]
+[source,bash,role=execute,title="/projects/lab_playbooks/ansible.cfg",subs="verbatim,quotes"]
 ----
 [galaxy]
 server_list = hub, hub_validated, galaxy
@@ -485,18 +485,18 @@ server_list = hub, hub_validated, galaxy
 [galaxy_server.hub]
 url=https://console.redhat.com/api/automation-hub/content/published/
 auth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
-token={your_token}
+token=#{your_token}#
 
 [galaxy_server.hub_validated]
 url=https://console.redhat.com/api/automation-hub/content/validated/
 auth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
-token={your_token}
+token=#{your_token}#
 
 [galaxy_server.galaxy]
 url=https://galaxy.ansible.com
 ----
 +
-IMPORTANT: Be sure to replace `{your_token}` with the token in step 2.
+IMPORTANT: Be sure to replace #{your_token}# with the token in step 2.
 
 ==== 3.2.2: Install python libraries
 
@@ -652,6 +652,8 @@ NOTE: This is only for our lab environment, this is not needed for AAP.
         name: red_hat_one.super_lab.log_shipper
 ...
 ----
++
+NOTE: Why are we using `tasks` wth `include_role` instead of `roles` keyword? This allows us to use `tasks_from` and call the individual tasks we created in each role in addition to being a more modern and flexible way to call roles.
 
 === 3.3: Test Content
 
@@ -723,7 +725,9 @@ PLAY RECAP *********************************************************************
 windows                    : ok=19   changed=5    unreachable=0    failed=1    skipped=2    rescued=0    ignored=0   
 ----
 +
-. Run the playbook now:
+NOTE: There are several ways to address this situation, but this was included intentionally to demonstrate this scenario.
++
+. Run the full playbook now:
 +
 [source,bash,role=execute]
 ----
@@ -851,11 +855,8 @@ In this lab, you have learned how to:
 
 For additional references, refer to the following resources:
 
-. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/using_ansible_development_workspaces_for_automation_content_development/index[Using Ansible Development Workspaces for Automation Content Development]
-. https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.23/html/user_guide/getting-started-with-devspaces#authenticating-to-a-git-server-from-a-workspace[Authenticating to a Git server from a Workspace].
 . https://docs.ansible.com/projects/creator/[Ansible-Creator Documentation]
-. https://github.com/jeffcpullen/devspaces-example/[Source for the Dev Space Workspace]
 . https://docs.ansible.com/projects/ansible/latest/os_guide/intro_windows.html[Ansible Windows Guide]
-. https://console.redhat.com/ansible/automation-hub/repo/published/microsoft/iis/[microsoft.iis collection]
-. https://www.elastic.co/beats/filebeat[Filebeat collection]
+. https://console.redhat.com/ansible/automation-hub/repo/published/microsoft/iis/[microsoft.iis certified collection]
+. https://www.elastic.co/beats/filebeat[Filebeat log shipper]
 . https://chocolatey.org/[Chocolatey]
