@@ -132,7 +132,7 @@ ansible-creator init collection red_hat_one.super_lab /projects/lab_collection/
     Note: collection project created at /projects/lab_collection
 ----
 +
-. Add two new roles to manage the software the Windows server:
+. Add two new roles (`web_server` and `log_shipper`) to manage the software the Windows server:
 +
 [source,bash,role=execute]
 ----
