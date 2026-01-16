@@ -544,6 +544,10 @@ Installing collected packages: pyspnego, pypsrp
 Successfully installed pypsrp-0.8.1 pyspnego-0.12.0
 ----
 +
+NOTE: You may safely ignore the question about creating a virtual environment
++
+image::20-content-windows/dev_spaces_venv.png[Dev Spaces Virtual Environment Question]
++
 . If you want to use WinRM, install that library:
 +
 [source,bash,role=execute]
