@@ -292,8 +292,11 @@ image::21-content-dev-ee/execution-environment-confirm-sync.png[Confirm Sync Exe
 
 === 4.3: Synchronize required collections
 
-. Go to Automation Content -> Remotes
-. Edit *rh-certified*
+. Go to *Automation Content* -> *Remotes*
+. Click on the kebob (3 dots) to the right of *rh-certified* and choose the edit (pencil) icon
++
+image::21-content-dev-ee/edit-certified-remote.png[Edit RH-Certified Repository]
++
 . In the *Token* field, paste the token obtained in the previous lab for upstream Automation Hub
 . In the *Requirements file* field, paste the contents of `/projects/lab_playbooks/collections/requirements.yml`
 +
@@ -306,8 +309,12 @@ collections:
 ----
 +
 . Click *Save remote*
-. Go to Automation Content -> Repositories
-. Next to *rh-certified* click the kebob (3 dots) and select *Sync repository*
++
+image::21-content-dev-ee/edit-certified-details.png[Edit Details]
++
+. Navigate to *Automation Content* -> *Repositories*, next to *rh-certified* click the kebob (3 dots) and select *Sync repository*
++
+image::21-content-dev-ee/sync-certified-repository.png[Sync Repository]
 
 == 5: Push Collection to Repository
 
