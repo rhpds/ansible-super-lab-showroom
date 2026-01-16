@@ -554,6 +554,8 @@ image::20-content-windows/dev_spaces_venv.png[Dev Spaces Virtual Environment Que
 ----
 pip install pywinrm
 ----
++
+TIP: Add this to the script `/projects/env/config.sh`
 
 ==== 3.2.2: Configure Collections
 
@@ -604,6 +606,8 @@ chocolatey.chocolatey:1.5.3 was installed successfully
 Installing 'ansible.windows:3.3.0' to '/home/user/.ansible/collections/ansible_collections/ansible/windows'
 ansible.windows:3.3.0 was installed successfully
 ----
++
+TIP: Add this to `/projects/env/config.sh`.
 
 ==== 3.2.2: Configure Collection directory
 
@@ -876,3 +880,14 @@ For additional references, refer to the following resources:
 . https://console.redhat.com/ansible/automation-hub/repo/published/microsoft/iis/[microsoft.iis certified collection]
 . https://www.elastic.co/beats/filebeat[Filebeat log shipper]
 . https://chocolatey.org/[Chocolatey]
+
+== Appendix
+
+In case your workspace restarts, all files and directories will be preserved but this script may need to be run:
+
+[source,yaml,role=execute,title="/projects/env/config.sh"]
+----
+cd /projects/lab_playbooks/
+ansible-galaxy collection install --requirements-file collections/requirements.yml
+pip install pypsrp
+----
