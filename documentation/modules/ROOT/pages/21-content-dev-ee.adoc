@@ -68,23 +68,26 @@ NOTE: Replace #{your_api_token}# below with the personal API token you just copi
 # This is your unique token from Private Automation hub
 export PAH_API_TOKEN='#{your_api_token}#'
 
+# Set your AAP web URL used throughout the rest of the vars
+export AAP_CONTROLLER_WEB_URL='{aap_controller_web_url}'
+
 # Set the list of servers Ansible should know about
 export ANSIBLE_GALAXY_SERVER_LIST='published,certified,validated,community'
 
 # Configure the 'published' repository
-export ANSIBLE_GALAXY_SERVER_PUBLISHED_URL='{aap_controller_web_url}/pulp_ansible/galaxy/published/'
+export ANSIBLE_GALAXY_SERVER_PUBLISHED_URL='${AAP_CONTROLLER_WEB_URL}/pulp_ansible/galaxy/published/'
 export ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=${PAH_API_TOKEN}
 
 # Configure the 'certified' repository
-export ANSIBLE_GALAXY_SERVER_CERTIFIED_URL='{aap_controller_web_url}/pulp_ansible/galaxy/rh-certified/'
+export ANSIBLE_GALAXY_SERVER_CERTIFIED_URL='${AAP_CONTROLLER_WEB_URL}/pulp_ansible/galaxy/rh-certified/'
 export ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=${PAH_API_TOKEN}
 
 # Configure the 'validated' repository
-export ANSIBLE_GALAXY_SERVER_VALIDATED_URL='{aap_controller_web_url}/pulp_ansible/galaxy/validated/'
+export ANSIBLE_GALAXY_SERVER_VALIDATED_URL='${AAP_CONTROLLER_WEB_URL}/pulp_ansible/galaxy/validated/'
 export ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=${PAH_API_TOKEN}
 
 # Configure the 'community' repository
-export ANSIBLE_GALAXY_SERVER_COMMUNITY_URL='{aap_controller_web_url}/pulp_ansible/galaxy/community/'
+export ANSIBLE_GALAXY_SERVER_COMMUNITY_URL='${AAP_CONTROLLER_WEB_URL}/pulp_ansible/galaxy/community/'
 export ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=${PAH_API_TOKEN}
 
 # Show loaded variables
@@ -472,18 +475,18 @@ Login Succeeded!
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-ansible-builder build --tag my-pah-ee:1.0 --build-arg TOKEN=${PAH_API_TOKEN}
+ansible-builder build --tag my-pah-ee:1.0 --build-arg TOKEN=${PAH_API_TOKEN} --verbosity 1
 ----
 +
 NOTE: The `${PAH_API_TOKEN}` environment variable was set previously containing the value of the API Token from PAH. Set this variable once again if your terminal session has been restarted via the `/projects/env/set_pah_vars.env` file.
 +
-[source,output,subs="verbatim,quotes"]
+[source,output,subs="verbatim,quotes,callouts"]
 ----
 Running command:
-  podman build -f context/Containerfile -t my-pah-ee:1.0 --build-arg=TOKEN=*_removed_*<1> context
+  podman build -f context/Containerfile -t my-pah-ee:1.0 --build-arg=TOKEN=*_removed_* context<1>
 Complete! The build context can be found at: /projects/lab_collection/context
 ----
-<1> Token is passed from the CLI and used in the build process
+<1> Token is passed from the CLI and used in the build process, but removed in this output for security.
 +
 . Tag and push the image to your PAH registry:
 +
@@ -518,6 +521,10 @@ Copying blob 972bd7578ec1 done   |
 Copying config 2ee9809c70 done   | 
 Writing manifest to image destination
 ----
++
+. Return to the AAP controller and select *Automation Content* -> *Execution Environments*. Verify your EE is present:
++
+image::21-content-dev-ee/collection-uploaded.png[Confirm Collection Upload]
 
 == 7: Adding a Custom Filter Plugin
 
@@ -525,9 +532,9 @@ Now that we have a working EE, let's iterate by adding a custom link:https://doc
 
 === 7.1: Create the Custom Filter Plugin
 
-Create the file at `plugins/filter/cowsay_filter.py` with the following content:
+Create a file at `plugins/filter/cowsay_filter.py` with the following content:
 
-[source,python,title="plugins/filter/cowsay_filter.py",role=execute,subs="verbatim,attributes"]
+[source,python,title="/projects/lab_collection/plugins/filter/cowsay_filter.py",role=execute,subs="verbatim,attributes"]
 ----
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -562,7 +569,7 @@ class FilterModule(object):
 
 Our new plugin requires the link:https://pypi.org/project/cowsay/[cowsay Python library,window=_blank], and we need to ensure our EE is pulling the new version of our collection. Modify the `execution-environment.yml` to include both changes.
 
-[source,yaml,title="execution-environment.yml",role=execute,subs="verbatim,attributes"]
+[source,yaml,title="/projects/lab_collection/execution-environment.yml",role=execute,subs="verbatim,attributes,callouts,quotes"]
 ----
 ---
 version: 3
@@ -577,8 +584,8 @@ dependencies:
   galaxy:
     collections:
       - name: red_hat_one.super_lab
-        version: 1.0.1
-  python:
+        version: 1.0.1<1>
+  python:<2>
     - cowsay
 options:
   package_manager_path: /usr/bin/microdnf
@@ -596,43 +603,153 @@ additional_build_steps:
     - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_URL='{aap_controller_web_url}/pulp_ansible/galaxy/published/'
     - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=$TOKEN
 ----
+<1> Increment the collection version.
+<2> Add the `python` section to include the `cowsay` dependency.
 
-=== 7.3: Increment Version and Republish
+=== 7.3: Increment Collection nad Version and Republish
 
 Now, we publish a new version of the collection and a new version of the EE that includes the updated collection and dependency.
 
-First, edit `galaxy.yml` and change the version from `1.0.0` to `1.0.1`.
-
-Then, run the following commands:
-
+. First, edit `galaxy.yml` and change the version from `1.0.0` to `1.0.1`.
+. Rebuild the collection:
++
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-# Rebuild and republish the collection
 ansible-galaxy collection build
-ansible-galaxy collection publish -s {aap_controller_web_url}/api/galaxy/ red_hat_one-super_lab-1.0.1.tar.gz --token $PAH_API_TOKEN
 ----
++
+[source,output]
+----
+No config file found; using defaults
+Created collection for red_hat_one.super_lab at /projects/lab_collection/red_hat_one-super_lab-1.0.1.tar.gz
+----
++
+. Publish the new version:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+ansible-galaxy collection publish --server {aap_controller_web_url}/api/galaxy/ red_hat_one-super_lab-1.0.1.tar.gz --token ${PAH_API_TOKEN} --verbose
+----
++
+[source,output]
+----
+No config file found; using defaults
+Publishing collection artifact '/projects/lab_collection/red_hat_one-super_lab-1.0.1.tar.gz' to cmd_arg https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/api/galaxy/
+Collection has been published to the Galaxy server cmd_arg https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/api/galaxy/
+Waiting until Galaxy import task https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/api/galaxy/v3/imports/collections/019bc7a3-5699-720a-b074-40f6be11761e/ has completed
+Collection has been successfully published and imported to the Galaxy server cmd_arg https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/api/galaxy/
+----
++
+. Approve collection in the PAH web interface as described previously.
+. Verify new version in PAH:
++
+image::21-content-dev-ee/collection-verify-new-version.png[Verify New Collection Version]
 
-NOTE: Make sure to Approve collection in the PAH web interface as described previously.
+=== 7.4: Build and push new Execution Environment
 
 Finally, build and push the new EE version:
 
+. Rebuild a new execution environment version:
++
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-# Rebuild and republish the EE with a new version tag
-ansible-builder build --tag my-pah-ee:1.1 --build-arg TOKEN=$PAH_API_TOKEN
+ansible-builder build --tag my-pah-ee:1.1 --build-arg TOKEN=${PAH_API_TOKEN} --verbosity 1
+----
++
+[source,output]
+----
+File context/_build/requirements.yml had modifications and will be rewritten
+Complete! The build context can be found at: /projects/lab_collection/context
+----
++
+. The new image will be available locally:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+podman images
+----
++
+[source,output]
+----
+bash-5.1$ podman images
+REPOSITORY                                                                                             TAG         IMAGE ID      CREATED         SIZE
+localhost/my-pah-ee                                                                                    1.1         81a91a3d03da  18 minutes ago  365 MB
+<none>                                                                                                 <none>      88d70b0fdb27  20 minutes ago  367 MB
+<none>                                                                                                 <none>      162996cdd48c  20 minutes ago  365 MB
+localhost/my-pah-ee                                                                                    1.0         40aee109e507  46 minutes ago  365 MB
+<none>                                                                                                 <none>      0cd7b6b90811  47 minutes ago  367 MB
+<none>                                                                                                 <none>      749921c9ce7b  48 minutes ago  365 MB
+aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/ansible-automation-platform-26/ee-minimal-rhel9  latest      9d130a29338c  4 weeks ago     341 MB
+----
++
+. Tag the new EE:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
 podman tag localhost/my-pah-ee:1.1 aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.1
+----
++
+. You can verify by listing images again:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+podman images
+----
++
+[source,output,subs="quotes"]
+----
+REPOSITORY                                                                                             TAG         IMAGE ID      CREATED         SIZE
+#aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/my-pah-ee                                        1.1         81a91a3d03da  22 minutes ago  365 MB#
+localhost/my-pah-ee                                                                                    1.1         81a91a3d03da  22 minutes ago  365 MB
+<none>                                                                                                 <none>      88d70b0fdb27  24 minutes ago  367 MB
+<none>                                                                                                 <none>      162996cdd48c  25 minutes ago  365 MB
+localhost/my-pah-ee                                                                                    1.0         40aee109e507  50 minutes ago  365 MB
+<none>                                                                                                 <none>      0cd7b6b90811  52 minutes ago  367 MB
+<none>                                                                                                 <none>      749921c9ce7b  52 minutes ago  365 MB
+aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/ansible-automation-platform-26/ee-minimal-rhel9  latest      9d130a29338c  4 weeks ago     341 MB
+----
++
+. Publish the new EE version:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
 podman push aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.1
 ----
++
+[source,output]
+----
+Getting image source signatures
+Copying blob e9b18b42db30 done   | 
+Copying blob 3e44b8c037a4 done   | 
+Copying blob c644513b7c21 done   | 
+Copying blob 03c21ed8e101 done   | 
+Copying blob eaaedab2167d done   | 
+Copying blob e189a7d08ffb done   | 
+Copying blob aa5eefe60148 skipped: already exists  
+Copying blob 4b8fa9ef238e done   | 
+Copying blob 25e49599071c done   | 
+Copying blob 5f70bf18a086 done   | 
+Copying blob 9f1b4907d130 done   | 
+Copying blob b026c973af3b done   | 
+Copying blob 0f9da8a96a25 done   | 
+Copying config 81a91a3d03 done   | 
+----
++
+. Verify by navigating in AAP controller to *Automation Content* -> *Execution Environments* -> *my-pah-ee* -> *Images*
++
+image::21-content-dev-ee/execution-environment-versions.png[View EE Versions]
 
-== 8: Preparing the Project for Automation Controller
+== 8: Test content in Dev Spaces
 
-Now that both the collection and Execution Environment has been created and published to Private Automation hub, we'll create a playbook to use the filter contained within the `red_hat_one.super_lab` collection.
+Now that both the collection and Execution Environment have been created and published to Private Automation hub, we'll create a playbook to use the filter contained within the `red_hat_one.super_lab` collection.
 
 === 8.1: Create a Playbook
 
-Create a new directory called `playbooks` within the `my_pah_project` directory and create a new playbook in a file named `playbooks/test_pah_ee.yml`. This playbook uses the `debug` module to print a message that has been formatted by our custom cowsay filter.
+Since we already have a plabyook directory at `/projects/lab_playbooks/` we will use this.
 
-[source,yaml,title="playbooks/test_pah_ee.yml",role=execute,subs="verbatim,attributes"]
+. Create a new playbook in a file named `test_pah_ee.yml`. This playbook uses the `debug` module to print a message that has been formatted by our custom `cowsay` filter:
++
+[source,yaml,title="/projects/lab_playbooks/test_pah_ee.yml",role=execute,subs="verbatim,attributes"]
 ----
 ---
 - name: Test custom filter from Private Automation Hub
@@ -647,23 +764,238 @@ Create a new directory called `playbooks` within the `my_pah_project` directory 
 ...
 ----
 
-=== 8.2: Push Project Files to Git
+=== 8.2: Update Collections requirements
+
+Since this playbook requires the custom collection, let's add it to the requirements file:
+
+[source,yaml,title="/projects/lab_playbooks/collections/requirements.yml",role=execute,subs="verbatim,attributes"]
+----
+collections:
+  - chocolatey.chocolatey
+  - ansible.windows
+  - microsoft.iis
+  - red_hat_one.super_lab<1>
+----
+<1> Add the custom collection here. Note that due to the symlink we created earlier, this isn't required, but will be when running on AAP.
+
+=== 8.3: Run playbook
+
+. Attempt to run this locally. It will fail. Do you know why?
++
+[source,yaml,role=execute,subs="verbatim,attributes"]
+----
+cd /projects/lab_playbooks/
+ansible-playbook test_pah_ee.yml
+----
++
+[source,output]
+----
+ansible-playbook [core 2.19.3]<1>
+  config file = /projects/lab_playbooks/ansible.cfg
+  configured module search path = ['/home/user/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/local/lib/python3.11/site-packages/ansible
+  ansible collection location = /home/user/.ansible/collections:/usr/share/ansible/collections
+  executable location = /usr/local/bin/ansible-playbook
+  python version = 3.11.13 (main, Aug 21 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-11)] (/usr/bin/python3.11)
+  jinja version = 3.1.6
+  pyyaml version = 6.0.3 (with libyaml v0.2.5)
+Using /projects/lab_playbooks/ansible.cfg as config file
+[WARNING]: Found both group and host with same name: windows
+Skipping callback 'minimal', as we already have a stdout callback.
+Skipping callback 'oneline', as we already have a stdout callback.
+
+PLAY [Test custom filter from Private Automation Hub] *****************************************************************************************************************************************************
+
+TASK [Print a message using the cowsay filter] ************************************************************************************************************************************************************
+task path: /projects/lab_playbooks/test_pah_ee.yml:8
+[ERROR]: Task failed: Finalization of task args for 'ansible.builtin.debug' failed: Error while resolving value for 'msg': The filter plugin 'red_hat_one.super_lab.cowsay' failed: name 'AnsibleFilterError' is not defined
+
+Task failed.
+Origin: /projects/lab_playbooks/test_pah_ee.yml:8:7
+
+6
+7   tasks:
+8     - name: Print a message using the cowsay filter
+        ^ column 7
+
+<<< caused by >>>
+
+Finalization of task args for 'ansible.builtin.debug' failed.
+Origin: /projects/lab_playbooks/test_pah_ee.yml:9:7
+
+7   tasks:
+8     - name: Print a message using the cowsay filter
+9       ansible.builtin.debug:
+        ^ column 7
+
+<<< caused by >>>
+
+Error while resolving value for 'msg': The filter plugin 'red_hat_one.super_lab.cowsay' failed: name 'AnsibleFilterError' is not defined
+Origin: /projects/lab_playbooks/test_pah_ee.yml:10:14
+
+ 8     - name: Print a message using the cowsay filter
+ 9       ansible.builtin.debug:
+10         msg: "{{ 'Hello from my custom filter!' | red_hat_one.super_lab.cowsay }}"
+                ^ column 14
+
+fatal: [localhost]: FAILED! => {"msg": "Task failed: Finalization of task args for 'ansible.builtin.debug' failed: Error while resolving value for 'msg': The filter plugin 'red_hat_one.super_lab.cowsay' failed: name 'AnsibleFilterError' is not defined"}
+
+PLAY RECAP ************************************************************************************************************************************************************************************************
+localhost                  : ok=0    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0  
+----
+<1> Notice this version of `ansible-core` vs what is in the execution environment.
++
+IMPORTANT: Using `ansible-playbook` will merely use the local environment, not the execution environment we just created. In order to utilize it properly, we must use `ansible-navigator`.
++
+. This time use `ansible-navigator` and specify the execution environment:
++
+[source,yaml,role=execute,subs="verbatim,attributes"]
+----
+ansible-navigator --execution-environment-image aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/my-pah-ee:1.1 run test_pah_ee.yml  --mode stdout
+----
++
+[source,output]
+----
+ansible-playbook [core 2.16.14]<1>
+  config file = /projects/lab_playbooks/ansible.cfg
+  configured module search path = ['/root/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/local/lib/python3.11/site-packages/ansible
+  ansible collection location = /root/.ansible/collections:/usr/share/ansible/collections
+  executable location = /usr/local/bin/ansible-playbook
+  python version = 3.11.13 (main, Aug 21 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-11)] (/usr/bin/python3)
+  jinja version = 3.1.6
+  libyaml = True
+Using /projects/lab_playbooks/ansible.cfg as config file
+[WARNING]: Found both group and host with same name: windows
+Skipping callback 'awx_display', as we already have a stdout callback.
+Skipping callback 'default', as we already have a stdout callback.
+Skipping callback 'minimal', as we already have a stdout callback.
+Skipping callback 'oneline', as we already have a stdout callback.
+
+PLAYBOOK: test_pah_ee.yml ******************************************************
+1 plays in /projects/lab_playbooks/test_pah_ee.yml
+
+PLAY [Test custom filter from Private Automation Hub] **************************
+
+TASK [Print a message using the cowsay filter] *********************************
+task path: /projects/lab_playbooks/test_pah_ee.yml:8
+  ____________________________
+| Hello from my custom filter! |
+  ============================
+                            \
+                             \
+                               ^__^
+                               (oo)\_______
+                               (__)\       )\/\
+                                   ||----w |
+                                   ||     ||<2>
+ok: [localhost] => {
+    "msg": ""
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+----
+<1> Notice this supported version of `ansible-core`
+<2> Moo! It worked!
+
+
+== 9: Integration with Automation Controller
+
+Now that we have confirmed the execution environment and custom filter work, let's bring everything together in AAP.
+
+=== 9.1: Push Project Files to Git
 
 With the changes to incorporate the updated collection (filter plugin and version) and the Execution Environment, publish all of the changes to your git repository.
 
+. Navigate to the link:{gitea_console_url}[Gitea instance,window=_blank] and create a new repository called `lab_playbooks`
+. Copy the URL to clone this repository
+. Return to Dev Spaces adn initialize the `lab_playbooks` directory
++
+[source,bash,role=execute,subs="verbatim,attributes",title="/projects/lab_playbooks/"]
+----
+git init
+----
++
+[source,output]
+----
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: is subject to change. To configure the initial branch name to use in all
+hint: of your new repositories, which will suppress this warning, call:
+hint:
+hint:   git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint:   git branch -m <name>
+Initialized empty Git repository in /projects/lab_playbooks/.git/
+----
++
+. Change to `main` per best practices:
++
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-git add --all
-git commit -m "Uploading latest collection updates"
+git checkout -b main
+----
++
+[source,output]
+----
+Switched to a new branch 'main'
+----
++
+. Add specific relevant files (not all of the scaffold files):
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+git add site.yml test_pah_ee.yml collections/requirements.yml
+----
++
+. Next, add the new remote:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+git remote add origin {gitea_console_url}/{gitea_user}/lab_playbooks.git
+----
++
+. Finally, commit them to the new repository:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+git commit -m "Initial commit of playbook files"
+----
++
+[source,output]
+----
+[main (root-commit) 14e8a8e] Initial commit of playbook files
+ 4 files changed, 41 insertions(+)
+ create mode 100644 collections/requirements.yml
+ create mode 100644 site.yml
+ create mode 100644 test_pah_ee.yml
+----
++
+. Lastly, push commit to the new repository:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
 git push origin main
 ----
++
+[source,output]
+----
+Enumerating objects: 6, done.
+Counting objects: 100% (6/6), done.
+Delta compression using up to 16 threads
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (6/6), 795 bytes | 795.00 KiB/s, done.
+Total 6 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: . Processing 1 references
+remote: Processed 1 references in total
+To https://gitea.apps.cluster-gtjkm.dynamic.redhatworkshops.io/user1/lab_playbooks.git
+ * [new branch]      main -> main
+----
 
-
-== 9: Integrating with Automation Controller
-
-Now, let's configure Automation Controller to use our custom content.
-
-=== 9.1: Create a Credential for Hub Container Registry
+=== 9.2: Create a Credential for Hub Container Registry
 
 First, create a new credential in Automation Controller to allow it to pull the custom Execution Environment from Private Automation Hub.
 
@@ -687,7 +1019,7 @@ image::21-content-dev-ee/automation-controller-create-credential.png[Create Cred
 
 image::21-content-dev-ee/automation-controller-create-credential-dialog.png[Create Credentials Dialog]
 
-=== 9.2: Create a Credential for the Git Repository
+=== 9.3: Create a Credential for the Git Repository
 
 Next, create a new credential to retrieve the source code from the Gitea repository.
 
@@ -704,7 +1036,7 @@ image::21-content-dev-ee/automation-controller-create-credential-2.png[Create Cr
 
 image::21-content-dev-ee/automation-controller-create-credential-git-dialog.png[Create Credentials Dialog]
 
-=== 9.3: Add the Execution Environment to Controller
+=== 9.4: Add the Execution Environment to Controller
 
 Next, add the custom Execution Environment that we published previously to Automation Controller.
 
@@ -724,7 +1056,7 @@ image::21-content-dev-ee/automation-controller-create-ee.png[Create Execution En
 
 image::21-content-dev-ee/automation-controller-create-ee-dialog.png[Create Execution Environment Dialog]
 
-=== 9.4: Create a Project
+=== 9.5: Create a Project
 
 Create a new link:https://docs.ansible.com/ansible-tower/latest/html/userguide/projects.html[Project,window=_blank] in Automation Controller that points to your Git repository containing the playbook.
 
@@ -737,7 +1069,7 @@ image::21-content-dev-ee/automation-controller-projects-overview.png[Navigate to
 image::21-content-dev-ee/automation-controller-create-project.png[Create Project]
 +
 . Enter the following details on the _Create Project_ page:
-.. Name: `Custom Content Test Project`
+.. Name: `Custom Collection"
 .. Organization: `Default`
 .. Source Control Type: `Git`
 .. Source control URL: `{gitea_console_url}/{gitea_user}/red_hat_one_super_lab.git`
@@ -750,7 +1082,7 @@ Confirm that the project has been synced successfully by looking _Success_ under
 
 image::21-content-dev-ee/automation-controller-sync-project.png[Project Sync Status]
 
-=== 9.5: Create a Job Template
+=== 9.6: Create a Job Template
 
 With the Execution Environment and Project created, the final step is to create a Job Template that uses both components.
 
@@ -764,15 +1096,15 @@ image::21-content-dev-ee/automation-controller-create-job-template.png[Create Jo
 +
 . Enter the following details on the _Create job template_ page:
 .. Name: `Test Custom Cowsay Filter`
-.. Inventory: `Demo Inventory`
-.. Project: `Custom Content Test Project`
+.. Inventory: `super-lab`
+.. Project: `Lab Playbooks`
 .. Playbook: `playbooks/test_pah_ee.yml`
 .. Execution Environment: `My Custom PAH EE`
 . Click **Create job template** to create the new Job Template.
 
 image::21-content-dev-ee/automation-controller-create-job-template-dialog.png[Create Job Template Dialog]
 
-=== 9.6: Launch the Job Template and Verify
+=== 9.7: Launch the Job Template and Verify
 
 Now that the Job Template has been created, launch the _Test Custom Cowsay Filter_ and verify that the custom filter is working as expected.
 
@@ -784,11 +1116,11 @@ Monitor the status of the job until it completes successfully displaying the out
 
 image::21-content-dev-ee/automation-controller-job-template-success.png[Job Template Success]
 
-=== 9.7: Sync collections
+== 10: Collections Management
 
 The final exercise in this lab is to customize the content sources from link:https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.5/html-single/managing_automation_content/index#proc-create-remote_remote-management[Remote Automation Hub / Ansible Galaxy instances,window=_blank] into Private Automation Hub. To support lab exercises later in this bootcamp, we will specify additional collections to be synchronized.
 
-==== 9.7.1: Update Community Remote
+=== 10.1: Update Community Remote
 
 . From the navigation menu on the left, expand **Automation Content** and click on **Remotes**.
 +
@@ -809,7 +1141,7 @@ collections:
 +
 . Click **Save remote** to apply the changes.
 
-==== 9.7.2: Add Validated Remote
+=== 10.2: Add Validated Remote
 
 Create a new remote for the `validated` collections repository. A token for Red Hat Automation Hub is required to access this repository.
 
@@ -846,7 +1178,7 @@ image::21-content-dev-ee/repositories-edit-validated.png[Edit Validated Reposito
 
 image::21-content-dev-ee/repositories-update-validated.png[Updated Validated Repository]
 
-==== 9.7.3: Update RH-Certified Remote
+=== 10.3: Update RH-Certified Remote
 
 Now that you have a Red Hat Automation Hub token, update the `rh-certified` remote to use this value as well.
 
@@ -859,7 +1191,7 @@ image::21-content-dev-ee/remotes-edit-rh-certified.png[Edit RH-Certified Remote]
   
 image::21-content-dev-ee/remotes-update-rh-certified.png[Update RH-Certified Remote]
 
-==== 9.7.4: Sync Repositories
+=== 10.4: Sync Repositories
 
 Finally, synchronize the `rh-certified`, `validated`, and `community` repositories to pull in the new collections within the _Repositories_ page.
 
