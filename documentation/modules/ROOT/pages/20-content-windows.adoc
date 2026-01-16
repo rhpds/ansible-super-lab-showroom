@@ -423,11 +423,9 @@ NOTE: If you used the UI method earlier you may only have the collection open. F
 +
 image::20-content-windows/lab_playbooks_dir.png[Lab Playbooks directory]
 
-=== 3.2: Modify created directory for testing
+=== 3.2: Populate the Inventory
 
 A few steps need to be taken to modify the scaffold files to ensure they work with this lab.
-
-==== 3.2.1: Populate the Inventory
 
 . Comment or remove the two entries in `/projects/lab_playbooks/inventory/group_vars/all.yml`, specifically for `ansible_user` to ensure it doesn't interfere with our actual user, which will be provided via a secrets file later instead of announced to the world in inventory.
 +
@@ -450,7 +448,7 @@ all:
 ...
 ----
 
-==== 3.2.1: Create secrets file
+=== 3.3: Create secrets file
 
 In AAP a credential is used. We will simulate that here with a file that is NOT committed to any repositories.
 
@@ -478,7 +476,7 @@ ansible_password: {windows_password}
 +
 NOTE: You may need to do this from a terminal or open the `/projects/env/` folder in the UI.
 
-==== 3.2.1: Setup ansible.cfg
+=== 3.4: Setup ansible.cfg
 
 The scaffold file is fine the way it is, specifying the inventory file. However, Automation Hub entries need to be added to install collections. Since we have not configured Automation Hub with the collections required, in this step we will use upstream Hub. 
 
@@ -510,54 +508,7 @@ url=https://galaxy.ansible.com
 +
 IMPORTANT: Be sure to replace #{your_token}# with the token in step 2.
 
-==== 3.2.2: Install python libraries
-
-Install the required library for either WinRM or PSRP:
-
-. The lab defaults to the newest protocol using PSRP:
-+
-[source,bash,role=execute]
-----
-pip install pypsrp
-----
-+
-[source,output]
-----
-Defaulting to user installation because normal site-packages is not writeable
-Collecting pypsrp
-  Downloading pypsrp-0.8.1-py3-none-any.whl (88 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 88.4/88.4 kB 14.9 MB/s eta 0:00:00
-Requirement already satisfied: cryptography in /usr/local/lib64/python3.11/site-packages (from pypsrp) (46.0.3)
-Collecting pyspnego<1.0.0
-  Downloading pyspnego-0.12.0-py3-none-any.whl (130 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.2/130.2 kB 37.3 MB/s eta 0:00:00
-Requirement already satisfied: requests>=2.9.1 in /usr/local/lib/python3.11/site-packages (from pypsrp) (2.32.5)
-Requirement already satisfied: charset_normalizer<4,>=2 in /usr/local/lib64/python3.11/site-packages (from requests>=2.9.1->pypsrp) (3.4.4)
-Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.11/site-packages (from requests>=2.9.1->pypsrp) (3.11)
-Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.11/site-packages (from requests>=2.9.1->pypsrp) (2.3.0)
-Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.11/site-packages (from requests>=2.9.1->pypsrp) (2025.10.5)
-Requirement already satisfied: cffi>=2.0.0 in /usr/local/lib64/python3.11/site-packages (from cryptography->pypsrp) (2.0.0)
-Requirement already satisfied: pycparser in /usr/local/lib/python3.11/site-packages (from cffi>=2.0.0->cryptography->pypsrp) (2.23)
-Installing collected packages: pyspnego, pypsrp
-  WARNING: The script pyspnego-parse is installed in '/home/user/.local/bin' which is not on PATH.
-  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
-Successfully installed pypsrp-0.8.1 pyspnego-0.12.0
-----
-+
-NOTE: You may safely ignore the question about creating a virtual environment
-+
-image::20-content-windows/dev_spaces_venv.png[Dev Spaces Virtual Environment Question]
-+
-. If you want to use WinRM, install that library:
-+
-[source,bash,role=execute]
-----
-pip install pywinrm
-----
-+
-TIP: Add this to the script `/projects/env/config.sh`
-
-==== 3.2.2: Configure Collections
+=== 3.5: Configure Collections
 
 This directory will call the roles we created. We need to install these collections in Dev Spaces:
 
@@ -609,7 +560,54 @@ ansible.windows:3.3.0 was installed successfully
 +
 TIP: Add this to `/projects/env/config.sh`.
 
-==== 3.2.2: Configure Collection directory
+=== 3.6: Install python libraries
+
+TIP: Add this to the script `/projects/env/config.sh`
+
+Install the required library for either WinRM or PSRP:
+
+. The lab defaults to the newest protocol using PSRP:
++
+[source,bash,role=execute]
+----
+pip install pypsrp
+----
++
+[source,output]
+----
+Defaulting to user installation because normal site-packages is not writeable
+Collecting pypsrp
+  Downloading pypsrp-0.8.1-py3-none-any.whl (88 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 88.4/88.4 kB 14.9 MB/s eta 0:00:00
+Requirement already satisfied: cryptography in /usr/local/lib64/python3.11/site-packages (from pypsrp) (46.0.3)
+Collecting pyspnego<1.0.0
+  Downloading pyspnego-0.12.0-py3-none-any.whl (130 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.2/130.2 kB 37.3 MB/s eta 0:00:00
+Requirement already satisfied: requests>=2.9.1 in /usr/local/lib/python3.11/site-packages (from pypsrp) (2.32.5)
+Requirement already satisfied: charset_normalizer<4,>=2 in /usr/local/lib64/python3.11/site-packages (from requests>=2.9.1->pypsrp) (3.4.4)
+Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.11/site-packages (from requests>=2.9.1->pypsrp) (3.11)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.11/site-packages (from requests>=2.9.1->pypsrp) (2.3.0)
+Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.11/site-packages (from requests>=2.9.1->pypsrp) (2025.10.5)
+Requirement already satisfied: cffi>=2.0.0 in /usr/local/lib64/python3.11/site-packages (from cryptography->pypsrp) (2.0.0)
+Requirement already satisfied: pycparser in /usr/local/lib/python3.11/site-packages (from cffi>=2.0.0->cryptography->pypsrp) (2.23)
+Installing collected packages: pyspnego, pypsrp
+  WARNING: The script pyspnego-parse is installed in '/home/user/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+Successfully installed pypsrp-0.8.1 pyspnego-0.12.0
+----
++
+NOTE: You may safely ignore the question about creating a virtual environment
++
+image::20-content-windows/dev_spaces_venv.png[Dev Spaces Virtual Environment Question]
++
+. If you want to use WinRM, install that library:
++
+[source,bash,role=execute]
+----
+pip install pywinrm
+----
+
+=== 3.7: Configure Collection directory
 
 This `ansible-creator` command required a collection name when executing. The reason is it creates a sample collection and single role embedded for use by this playbook. Since we already have our own separate collection, we will remove the provided collection and link it to `/projects/lab_collection/`.
 
@@ -653,7 +651,7 @@ image::20-content-windows/playbook_dir_with_collection_link.png[Linked Collectio
 +
 NOTE: This is only for our lab environment, this is not needed for AAP.
 
-==== 3.2.2: Setup Playbook
+=== 3.8: Setup Playbook
 
 . Next, replace the contents of `site.yml` with this:
 +
@@ -675,7 +673,7 @@ NOTE: This is only for our lab environment, this is not needed for AAP.
 +
 NOTE: Why are we using `tasks` wth `include_role` instead of `roles` keyword? This allows us to use `tasks_from` and call the individual tasks we created in each role in addition to being a more modern and flexible way to call roles.
 
-=== 3.3: Test Content
+== 4: Test Content
 
 . Since an `ansible.cfg` and inventory are configured, ensure everything is executed from the `/projects/lab_playbooks/` directory:
 +
@@ -856,7 +854,7 @@ ok: [windows] => {
 ...
 ----
 
-== 3: Next Steps
+== 5: Next Steps
 
 In the next lab, we will create an Execution Environment containing this collection, build it and commit everything to a git repository.
 
@@ -890,4 +888,12 @@ In case your workspace restarts, all files and directories will be preserved but
 cd /projects/lab_playbooks/
 ansible-galaxy collection install --requirements-file collections/requirements.yml
 pip install pypsrp
+----
+
+[source,yaml,role=execute,title="/projects/env/secrets.yml"]
+----
+---
+ansible_user: {windows_user}
+ansible_password: {windows_password}
+...
 ----
