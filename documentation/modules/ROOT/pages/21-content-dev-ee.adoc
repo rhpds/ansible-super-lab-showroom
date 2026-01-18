@@ -184,7 +184,7 @@ Now that a namespace exists, we can build and publish our collection to PAH.
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-cd /project/lab_collection/
+cd /projects/lab_collection/
 ----
 +
 . Build the collection with `ansible-galaxy`:
@@ -303,7 +303,7 @@ image::21-content-dev-ee/edit-certified-remote.png[Edit RH-Certified Repository]
 . In the *Token* field, paste the token obtained in the previous lab for upstream Automation Hub
 . In the *Requirements file* field, paste the contents of `/projects/lab_playbooks/collections/requirements.yml`
 +
-[source,yaml]
+[source,yaml,role=execute]
 ----
 collections:
   - chocolatey.chocolatey
@@ -318,6 +318,10 @@ image::21-content-dev-ee/edit-certified-details.png[Edit Details]
 . Navigate to *Automation Content* -> *Repositories*, next to *rh-certified* click the kebob (3 dots) and select *Sync repository*
 +
 image::21-content-dev-ee/sync-certified-repository.png[Sync Repository]
++
+. Confirm in the final dialogue
++
+image::21-content-dev-ee/sync-repo-confirm.png[caption="Confirm Sync", role="thumb"]
 
 == 5: Push Collection to Repository
 
@@ -339,7 +343,7 @@ image::21-content-dev-ee/gitea-login.png[Gitea Login Page]
 +
 image::21-content-dev-ee/gitea-navigate-new-repository.png[Navigate to new Gitea Repository]
 +
-. On the New Repository page, enter 'red_hat_one_super_lab' in the Repository Name field.
+. On the *New Repository* page, enter `red_hat_one_super_lab` in the *Repository Name* field.
 + 
 image::21-content-dev-ee/gitea-new-repository-name.png[Gitea New Repository]
 +
@@ -371,45 +375,133 @@ After an empty repository is created on your Gitea instance, the next step is to
 
 . Navigate to the link:{gitea_console_url}/{gitea_user}/red_hat_one_super_lab[red_hat_one_super_lab,window=_blank] repository.
 . In the section _Clone this repository_, click the **Copy URL** icon on the far right to copy Gitea repository URL for the _HTTPS_ protocol option.
-. Now, from within the the terminal of your Dev Spaces instance, within the 'my_pah_project' directory, execute the following commands to initialize a new Git repository and push the content to the Gitea repository.
+. Now, from within the the terminal of your Dev Spaces instance, within the `/projects/lab_collection/` directory, execute the following commands to initialize a new Git repository and push the content to the Gitea repository.
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
+cd /projects/lab_collection/
 git init
+----
++
+[source,output]
+----
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: is subject to change. To configure the initial branch name to use in all
+hint: of your new repositories, which will suppress this warning, call:
+hint:
+hint:   git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint:   git branch -m <name>
+Initialized empty Git repository in /projects/lab_collection/.git/
+----
++
+. Change from the default of `master` to `main`:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
 git checkout -b main
+----
++
+[source,output]
+----
+Switched to a new branch 'main'
+----
++
+. Stage all the collection files
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
 git add --all
-git commit -m "Uploading collection on initial commit"
+----
++
+. Commit this to git
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+git commit -m "Initial collection"
+----
++
+[source,output]
+----
+[main (root-commit) 13c7c5d] Initial collection
+ 88 files changed, 2326 insertions(+)
+ create mode 100644 .gitignore
+ ...
+ create mode 100644 roles/log_shipper/README.md
+ create mode 100644 roles/log_shipper/defaults/main.yml
+ create mode 100644 roles/log_shipper/files/.keep
+ create mode 100644 roles/log_shipper/handlers/main.yml
+ create mode 100644 roles/log_shipper/meta/argument_specs.yml
+ create mode 100644 roles/log_shipper/meta/main.yml
+ create mode 100644 roles/log_shipper/tasks/chocolatey.yml
+ create mode 100644 roles/log_shipper/tasks/filebeat.yml
+ create mode 100644 roles/log_shipper/tasks/main.yml
+ create mode 100644 roles/log_shipper/tasks/prerequisites.yml
+ create mode 100644 roles/log_shipper/templates/.keep
+ create mode 100644 roles/log_shipper/tests/inventory
+ create mode 100644 roles/log_shipper/vars/main.yml
+ ...
+ create mode 100644 roles/web_server/README.md
+ create mode 100644 roles/web_server/defaults/main.yml
+ create mode 100644 roles/web_server/files/.keep
+ create mode 100644 roles/web_server/files/index.html.j2
+ create mode 100644 roles/web_server/handlers/main.yml
+ create mode 100644 roles/web_server/meta/argument_specs.yml
+ create mode 100644 roles/web_server/meta/main.yml
+ create mode 100644 roles/web_server/tasks/main.yml
+ create mode 100644 roles/web_server/tasks/setup.yml
+ create mode 100644 roles/web_server/tasks/validate.yml
+ create mode 100644 roles/web_server/tasks/website.yml
+ create mode 100644 roles/web_server/templates/.keep
+ create mode 100644 roles/web_server/tests/inventory
+ create mode 100644 roles/web_server/vars/main.yml
+ ...
+----
++
+TIP: Ensure the roles created earlier are included
++
+. Add the gitea remote
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
 git remote add origin {gitea_console_url}/{gitea_user}/red_hat_one_super_lab.git<1>
+----
+<1> This is the URL copied in step *2.* above.
++
+. Push the files
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
 git push -u origin main
 ----
-<1> This is the URL copied in a previous step.
-
-Since the repository requires authentication, you will be prompted to enter your Gitea username and password at the top of the Dev Spaces window.
-
++
+NOTE: Since the repository requires authentication, you will be prompted to enter your Gitea username and password at the top of the Dev Spaces window.
++
 image::21-content-dev-ee/devspaces-git-auth.png[Gitea Repository Containing Collection Content]
-
-Once the credentials have been entered, the push operation will proceed in your terminal with a result similar to the following:
-
-[source,bash,subs="verbatim,attributes"]
++
+[source,output]
 ----
-Enumerating objects: 83, done.
-Counting objects: 100% (83/83), done.
+Enumerating objects: 117, done.
+Counting objects: 100% (117/117), done.
 Delta compression using up to 16 threads
-Compressing objects: 100% (60/60), done.
-Writing objects: 100% (83/83), 31.42 KiB | 3.14 MiB/s, done.
-Total 83 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+Compressing objects: 100% (88/88), done.
+Writing objects: 100% (117/117), 35.90 KiB | 2.39 MiB/s, done.
+Total 117 (delta 8), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (8/8), done.
 remote: . Processing 1 references
 remote: Processed 1 references in total
 To {gitea_console_url}/{gitea_user}/red_hat_one_super_lab.git
  * [new branch]      main -> main
 branch 'main' set up to track 'origin/main'.
 ----
-
-Refresh the `red_hat_one_super_lab` page within the Gitea UI to confirm that the collection has been published successfully.
-
++
+. Refresh the `red_hat_one_super_lab` page within the Gitea UI to confirm that the collection has been published successfully.
++
 image::21-content-dev-ee/gitea-repository.png[Dev Spaces Git Authentication]
-
-This repository will be referenced in later labs.
+. This repository will be referenced in later labs.
 
 == 6: Building a Custom Execution Environment
 
