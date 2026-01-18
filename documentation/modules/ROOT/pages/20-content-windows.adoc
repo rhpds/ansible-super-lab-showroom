@@ -276,7 +276,7 @@ TIP: `ansible-lint` will complain unless each file ends with and empty newline, 
 - name: Test IIS locally on the Windows Server
   ansible.windows.win_uri:
     url: "http://localhost"
-    return_content: yes
+    return_content: true
   register: r_local_test
 
 - name: Debug captured result
