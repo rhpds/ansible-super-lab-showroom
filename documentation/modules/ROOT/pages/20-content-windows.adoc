@@ -526,6 +526,8 @@ collections:
 +
 . Install the collections from the base of the `lab_playbooks` directory so it can read the `ansible.cfg` file:
 +
+TIP: Add this to a script such as `/projects/env/config.sh` in case you restart your workspace it will need to be re-executed.
++
 [source,bash,role=execute]
 ----
 cd /projects/lab_playbooks/
@@ -557,8 +559,6 @@ chocolatey.chocolatey:1.5.3 was installed successfully
 Installing 'ansible.windows:3.3.0' to '/home/user/.ansible/collections/ansible_collections/ansible/windows'
 ansible.windows:3.3.0 was installed successfully
 ----
-+
-TIP: Add this to `/projects/env/config.sh`.
 
 === 3.6: Install python libraries
 
@@ -704,7 +704,7 @@ windows | SUCCESS => {
 ansible-playbook site.yml --extra-vars @/projects/env/secrets.yml --check
 ----
 +
-NOTE: This run will fail the first time you run it. The output will be reviewed in the following steps.
+IMPORTANT: This run will fail the first time you run it. The output will be reviewed in the following steps.
 +
 . The first role will succeed. Notice the tasks in `validate.yml` will run, which are specified _only_ to run in check mode. The contents on the web server are a default website:
 +
