@@ -1,4 +1,4 @@
-= Lab: Managing Ansible Content with Private Automation Hub
+= Lab: Building and Managing Content
 
 [abstract]
 We will create a custom Collection, publish it to a Private Automation Hub (PAH), build a custom Execution Environment (EE) from a Red Hat certified base image, and finally, run the automation from Ansible Automation Controller.
@@ -11,9 +11,9 @@ After completing this module, you will be able to:
 
 * Understand the role and benefits of Private Automation Hub
 * Create and publish custom Ansible Collections
-* Build custom Execution Environments
-* Integrate Collections with Automation Controller
-* Manage content lifecycle in enterprise environments
+* Build and publish custom Execution Environments
+* Create a custom filter and add it to the Execution Environment
+* Experience the lifecycle management of these assets
 
 == 1. Introduction: The Role of Private Automation Hub
 
@@ -43,11 +43,11 @@ Utilize the following steps to obtain your PAH API token:
 . Launch the link:{aap_controller_web_url}[Private Automation Hub,window=_blank] web interface and login using the credentials from the xref:environment-details.adoc[Environment Details,window=_blank] page.
 . From the navigation menu on the left, expand **Automation Content** and click on **API Token**.
 +
-image::21-content-dev-ee/api-token-overview.png[API Token Overview]
+image::21-content-build/api-token-overview.png[API Token Overview]
 +
 . On the API Token page, click the **Generate token** button. Your API token will be displayed.
 +
-image::21-content-dev-ee/api-token-generate.png[Generate an API Token]
+image::21-content-build/api-token-generate.png[Generate an API Token]
 +
 . Click the *Copy to clipboard* icon to copy it.
 +
@@ -169,12 +169,12 @@ Create a new _Namespace_ in PAH.
 . Launch the link:{aap_controller_web_url}[Private Automation Hub,window=_blank] web interface and login using the credentials from the xref:environment-details.adoc[Environment Details,window=_blank] page.
 . From the navigation menu on the left, expand **Automation Content** and click on **Namespaces**.
 +
-image::21-content-dev-ee/navigate-namespaces.png[Namespaces navigation]
+image::21-content-build/navigate-namespaces.png[Namespaces navigation]
 +
 . Click **Create Namespace** to create the namespace.
 . Enter `red_hat_one` for the name. The rest of the values can be left blank. Click *Create namespace*:
 +
-image::21-content-dev-ee/create-namespace.png[Namespace creation form]
+image::21-content-build/create-namespace.png[Namespace creation form]
 
 === 3.3: Build and Publish the Collection
 
@@ -222,21 +222,21 @@ NOTE: You can safely ignore any warnings that may be emitted during the publishi
 . Launch the link:{aap_controller_web_url}[Private Automation Hub,window=_blank] web interface and login using the credentials from the xref:environment-details.adoc[Environment Details,window=_blank] page.
 . From the navigation menu on the left, expand **Automation Content** and click on **Collection Approvals**.
 +
-image::21-content-dev-ee/collections-approvals-pending.png[Approve the Collection]
+image::21-content-build/collections-approvals-pending.png[Approve the Collection]
 +
 . The `red_hat_one.super_lab` should be listed as pending approval. Select this namespace checkbox and click the **Thumbs Up** icon all the way to the right to approve and sign the collection.
 +
-image::21-content-dev-ee/collections-approvals-selection.png[Select Collection to Approve]
+image::21-content-build/collections-approvals-selection.png[Select Collection to Approve]
 +
 . Select the _Yes, I confirm that I want to approve these 1 collections._ checkbox and click **Approve collections** button.
 +
-image::21-content-dev-ee/collections-approvals-approve-collection.png[Pending Approval Collection]
+image::21-content-build/collections-approvals-approve-collection.png[Pending Approval Collection]
 +
 . Navigate to the **Collections** page in PAH to verify that your collection is published and available.
 +
 . You should see your `red_hat_one.super_lab` collection listed and available for use.
 +
-image::21-content-dev-ee/pah-collections.png[PAH Collections]
+image::21-content-build/pah-collections.png[PAH Collections]
 
 == 4: Syncing a Base EE from the Red Hat Registry
 
@@ -249,7 +249,7 @@ Before producing our own Execution Environment (EE) in subsequent steps, we'll c
 +
 . Click the **Create remote registry** button
 +
-image::21-content-dev-ee/create-remote-registry.png[Create Remote Registry]
+image::21-content-build/create-remote-registry.png[Create Remote Registry]
 +
 . Enter the following details on the _Create Remote Registry_ page:
 .. _Name_: `redhat`
@@ -258,7 +258,7 @@ image::21-content-dev-ee/create-remote-registry.png[Create Remote Registry]
 .. _Password_: `YOUR_REDHAT_PASSWORD`
 .. Click **Create remote registry** to add the new registry.
 +
-image::21-content-dev-ee/create-remote-registry-details.png[Create Remote Registry Details]
+image::21-content-build/create-remote-registry-details.png[Create Remote Registry Details]
 +
 NOTE: You can link:https://access.redhat.com/terms-based-registry[Create Service Account Credentials,window=_blank] in the Red Hat Customer Portal to simplify the management and access to the Red Hat Container Catalog.
 
@@ -270,7 +270,7 @@ Now that details related to the Red Hat Container Registry have been added, conf
 +
 . Click the **Create execution environment** button.
 +
-image::21-content-dev-ee/create-execution-environment.png[Create Execution Environment]
+image::21-content-build/create-execution-environment.png[Create Execution Environment]
 +
 . Enter the following details on the _Create Execution Environment_ page:
 .. Name: `ansible-automation-platform-26/ee-minimal-rhel9`
@@ -279,17 +279,17 @@ image::21-content-dev-ee/create-execution-environment.png[Create Execution Envir
 .. To reduce the sync time and storage requirements, enter `latest` in the _Add tag(s) to include_ field and click **Add**
 .. Click the **Create execution environment** button to create the new EE.
 +
-image::21-content-dev-ee/create-execution-environment-form.png[Create Execution Environments Form]
+image::21-content-build/create-execution-environment-form.png[Create Execution Environments Form]
 +
 . Synchronize the Execution Environment into PAH from the Red Hat Container Registry.
 . Next to the `ansible-automation-platform-26/ee-minimal-rhel9` Execution Environment, click the kebab menu (three vertical dots) on the right hand side of the entry and select **Sync execution environment**.
 +
-image::21-content-dev-ee/execution-environment-sync.png[Sync Execution Environment]
+image::21-content-build/execution-environment-sync.png[Sync Execution Environment]
 +
 . Click the checkbox next to the _Yes, I confirm I want to sync these 1 execution environments_.  the box to confirm and click **Sync execution environment**.
 . Click the **Sync Execution Environments** button to start the synchronization process.
 +
-image::21-content-dev-ee/execution-environment-confirm-sync.png[Confirm Sync Execution Environment]
+image::21-content-build/execution-environment-confirm-sync.png[Confirm Sync Execution Environment]
 +
 . After the sync is complete, the `ee-minimal-rhel9` image will be available in your Private Automation Hub instance. Feel free to explore the details of the newly synchronized Execution Environment as you see fit.
 
@@ -298,7 +298,7 @@ image::21-content-dev-ee/execution-environment-confirm-sync.png[Confirm Sync Exe
 . Go to *Automation Content* -> *Remotes*
 . Click on the kebob (3 dots) to the right of *rh-certified* and choose the edit (pencil) icon
 +
-image::21-content-dev-ee/edit-certified-remote.png[Edit RH-Certified Repository]
+image::21-content-build/edit-certified-remote.png[Edit RH-Certified Repository]
 +
 . In the *Token* field, paste the token obtained in the previous lab for upstream Automation Hub
 . In the *Requirements file* field, paste the contents of `/projects/lab_playbooks/collections/requirements.yml`
@@ -313,15 +313,15 @@ collections:
 +
 . Click *Save remote*
 +
-image::21-content-dev-ee/edit-certified-details.png[Edit Details]
+image::21-content-build/edit-certified-details.png[Edit Details]
 +
 . Navigate to *Automation Content* -> *Repositories*, next to *rh-certified* click the kebob (3 dots) and select *Sync repository*
 +
-image::21-content-dev-ee/sync-certified-repository.png[Sync Repository]
+image::21-content-build/sync-certified-repository.png[Sync Repository]
 +
 . Confirm in the final dialogue
 +
-image::21-content-dev-ee/sync-repo-confirm.png[caption="Confirm Sync", role="thumb"]
+image::21-content-build/sync-repo-confirm.png[caption="Confirm Sync", role="thumb"]
 
 == 5: Push Collection to Repository
 
@@ -333,23 +333,23 @@ Create a new repository in your Gitea instance to hold the collection code using
 
 . Navigate to your link:{gitea_console_url}[Gitea instance,window=_blank] and click the **Sign In** button on the upper right hand corner
 + 
-image::21-content-dev-ee/gitea-homepage.png[Gitea Homepages]
+image::21-content-build/gitea-homepage.png[Gitea Homepages]
 +
 . Enter the username and password using the credentials provided from the xref:environment-details.adoc[Environment Details,window=_blank] page and click the **Sign In** button
 + 
-image::21-content-dev-ee/gitea-login.png[Gitea Login Page]
+image::21-content-build/gitea-login.png[Gitea Login Page]
 +
 . Once authenticated, in the top left of the web interface, click on the **+** symbol and select **New Repository**.
 +
-image::21-content-dev-ee/gitea-navigate-new-repository.png[Navigate to new Gitea Repository]
+image::21-content-build/gitea-navigate-new-repository.png[Navigate to new Gitea Repository]
 +
 . On the *New Repository* page, enter `red_hat_one_super_lab` in the *Repository Name* field.
 + 
-image::21-content-dev-ee/gitea-new-repository-name.png[Gitea New Repository]
+image::21-content-build/gitea-new-repository-name.png[Gitea New Repository]
 +
 . Leave everything else as default and click on the button at the bottom, **Create Repository**.
 
-image::21-content-dev-ee/gitea-create-repository.png[Gitea Create Repository]
+image::21-content-build/gitea-create-repository.png[Gitea Create Repository]
 
 
 ==== 5.2: Append to the `.gitignore` file
@@ -375,11 +375,16 @@ After an empty repository is created on your Gitea instance, the next step is to
 
 . Navigate to the link:{gitea_console_url}/{gitea_user}/red_hat_one_super_lab[red_hat_one_super_lab,window=_blank] repository.
 . In the section _Clone this repository_, click the **Copy URL** icon on the far right to copy Gitea repository URL for the _HTTPS_ protocol option.
-. Now, from within the the terminal of your Dev Spaces instance, within the `/projects/lab_collection/` directory, execute the following commands to initialize a new Git repository and push the content to the Gitea repository.
+. Ensure you complete this work from within the the terminal of your Dev Spaces instance, within the `/projects/lab_collection/` directory:
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
 cd /projects/lab_collection/
+----
+. Execute the following commands to initialize a new Git repository and push the content to the Gitea repository.
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
 git init
 ----
 +
@@ -421,7 +426,7 @@ git add --all
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-git commit -m "Initial collection"
+git commit --message "Initial collection"
 ----
 +
 [source,output]
@@ -480,7 +485,7 @@ git push -u origin main
 +
 NOTE: Since the repository requires authentication, you will be prompted to enter your Gitea username and password at the top of the Dev Spaces window.
 +
-image::21-content-dev-ee/devspaces-git-auth.png[Gitea Repository Containing Collection Content]
+image::21-content-build/devspaces-git-auth.png[Gitea Repository Containing Collection Content]
 +
 [source,output]
 ----
@@ -500,7 +505,7 @@ branch 'main' set up to track 'origin/main'.
 +
 . Refresh the `red_hat_one_super_lab` page within the Gitea UI to confirm that the collection has been published successfully.
 +
-image::21-content-dev-ee/gitea-repository.png[Dev Spaces Git Authentication]
+image::21-content-build/gitea-repository.png[Dev Spaces Git Authentication]
 . This repository will be referenced in later labs.
 
 == 6: Building a Custom Execution Environment
@@ -562,6 +567,13 @@ Password:
 Login Succeeded!
 ----
 +
+. Ensure you are in the `/projects/lab_collection/` directory for the remainder of this section:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+cd /projects/lab_collection/
+----
++
 . Build the Execution Environment. It will pull the base from PAH, then add our content:
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
@@ -615,7 +627,7 @@ Writing manifest to image destination
 +
 . Return to the AAP controller and select *Automation Content* -> *Execution Environments*. Verify your EE is present:
 +
-image::21-content-dev-ee/collection-uploaded.png[Confirm Collection Upload]
+image::21-content-build/collection-uploaded.png[Confirm Collection Upload]
 
 == 7: Adding a Custom Filter Plugin
 
@@ -686,16 +698,16 @@ additional_build_steps:
     - ARG TOKEN
     - ENV ANSIBLE_GALAXY_SERVER_LIST='published,certified,validated,community'
     - ENV ANSIBLE_GALAXY_SERVER_CERTIFIED_URL='{aap_controller_web_url}/pulp_ansible/galaxy/rh-certified/'
-    - ENV ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=$TOKEN
+    - ENV ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=${TOKEN}
     - ENV ANSIBLE_GALAXY_SERVER_VALIDATED_URL='{aap_controller_web_url}/pulp_ansible/galaxy/validated/'
-    - ENV ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=$TOKEN
+    - ENV ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=${TOKEN}
     - ENV ANSIBLE_GALAXY_SERVER_COMMUNITY_URL='{aap_controller_web_url}/pulp_ansible/galaxy/community/'
-    - ENV ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=$TOKEN
+    - ENV ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=${TOKEN}
     - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_URL='{aap_controller_web_url}/pulp_ansible/galaxy/published/'
-    - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=$TOKEN
+    - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=${TOKEN}
 ----
 <1> Increment the collection version.
-<2> Add the `python` section to include the `cowsay` dependency.
+<2> Add the `python` section to include the `cowsay` dependency. Ensure this lines up properly with `galaxy` and NOT `collections`.
 
 === 7.3: Increment Collection nad Version and Republish
 
@@ -734,7 +746,7 @@ Collection has been successfully published and imported to the Galaxy server cmd
 . Approve collection in the PAH web interface as described previously.
 . Verify new version in PAH:
 +
-image::21-content-dev-ee/collection-verify-new-version.png[Verify New Collection Version]
+image::21-content-build/collection-verify-new-version.png[Verify New Collection Version]
 
 === 7.4: Build and push new Execution Environment
 
@@ -762,7 +774,6 @@ podman images
 +
 [source,output]
 ----
-bash-5.1$ podman images
 REPOSITORY                                                                                             TAG         IMAGE ID      CREATED         SIZE
 localhost/my-pah-ee                                                                                    1.1         81a91a3d03da  18 minutes ago  365 MB
 <none>                                                                                                 <none>      88d70b0fdb27  20 minutes ago  367 MB
@@ -810,491 +821,26 @@ podman push aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.1
 [source,output]
 ----
 Getting image source signatures
-Copying blob e9b18b42db30 done   | 
-Copying blob 3e44b8c037a4 done   | 
-Copying blob c644513b7c21 done   | 
-Copying blob 03c21ed8e101 done   | 
-Copying blob eaaedab2167d done   | 
-Copying blob e189a7d08ffb done   | 
+Copying blob 8b3622468abf skipped: already exists  
+Copying blob 446e5adca0ed skipped: already exists  
+Copying blob cfe476cd6f0a skipped: already exists  
+Copying blob 0dd7080ba30c skipped: already exists  
+Copying blob 635e97f40bc2 done   | 
+Copying blob 4a5530a62f36 skipped: already exists  
 Copying blob aa5eefe60148 skipped: already exists  
-Copying blob 4b8fa9ef238e done   | 
-Copying blob 25e49599071c done   | 
-Copying blob 5f70bf18a086 done   | 
-Copying blob 9f1b4907d130 done   | 
-Copying blob b026c973af3b done   | 
-Copying blob 0f9da8a96a25 done   | 
-Copying config 81a91a3d03 done   | 
+Copying blob 444e1771b734 done   | 
+Copying blob d7c5bfb583a7 done   | 
+Copying blob ef036adaa1ae done   | 
+Copying blob a077e3cef78f done   | 
+Copying blob bd9ddc54bea9 skipped: already exists  
+Copying blob 1294811d53dd done   | 
+Copying config 3c074f28f0 done   | 
+Writing manifest to image destination
 ----
 +
 . Verify by navigating in AAP controller to *Automation Content* -> *Execution Environments* -> *my-pah-ee* -> *Images*
 +
-image::21-content-dev-ee/execution-environment-versions.png[View EE Versions]
-
-== 8: Test content in Dev Spaces
-
-Now that both the collection and Execution Environment have been created and published to Private Automation hub, we'll create a playbook to use the filter contained within the `red_hat_one.super_lab` collection.
-
-=== 8.1: Create a Playbook
-
-Since we already have a plabyook directory at `/projects/lab_playbooks/` we will use this.
-
-. Create a new playbook in a file named `test_pah_ee.yml`. This playbook uses the `debug` module to print a message that has been formatted by our custom `cowsay` filter:
-+
-[source,yaml,title="/projects/lab_playbooks/test_pah_ee.yml",role=execute,subs="verbatim,attributes"]
-----
----
-- name: Test custom filter from Private Automation Hub
-  hosts: localhost
-  connection: local
-  gather_facts: false
-
-  tasks:
-    - name: Print a message using the cowsay filter
-      ansible.builtin.debug:
-        msg: "{{ 'Hello from my custom filter!' | red_hat_one.super_lab.cowsay }}"
-...
-----
-
-=== 8.2: Update Collections requirements
-
-Since this playbook requires the custom collection, let's add it to the requirements file:
-
-[source,yaml,title="/projects/lab_playbooks/collections/requirements.yml",role=execute,subs="verbatim,attributes"]
-----
-collections:
-  - chocolatey.chocolatey
-  - ansible.windows
-  - microsoft.iis
-  - red_hat_one.super_lab<1>
-----
-<1> Add the custom collection here. Note that due to the symlink we created earlier, this isn't required, but will be when running on AAP.
-
-=== 8.3: Run playbook
-
-. Attempt to run this locally. It will fail. Do you know why?
-+
-[source,yaml,role=execute,subs="verbatim,attributes"]
-----
-cd /projects/lab_playbooks/
-ansible-playbook test_pah_ee.yml
-----
-+
-[source,output]
-----
-ansible-playbook [core 2.19.3]<1>
-  config file = /projects/lab_playbooks/ansible.cfg
-  configured module search path = ['/home/user/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
-  ansible python module location = /usr/local/lib/python3.11/site-packages/ansible
-  ansible collection location = /home/user/.ansible/collections:/usr/share/ansible/collections
-  executable location = /usr/local/bin/ansible-playbook
-  python version = 3.11.13 (main, Aug 21 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-11)] (/usr/bin/python3.11)
-  jinja version = 3.1.6
-  pyyaml version = 6.0.3 (with libyaml v0.2.5)
-Using /projects/lab_playbooks/ansible.cfg as config file
-[WARNING]: Found both group and host with same name: windows
-Skipping callback 'minimal', as we already have a stdout callback.
-Skipping callback 'oneline', as we already have a stdout callback.
-
-PLAY [Test custom filter from Private Automation Hub] *****************************************************************************************************************************************************
-
-TASK [Print a message using the cowsay filter] ************************************************************************************************************************************************************
-task path: /projects/lab_playbooks/test_pah_ee.yml:8
-[ERROR]: Task failed: Finalization of task args for 'ansible.builtin.debug' failed: Error while resolving value for 'msg': The filter plugin 'red_hat_one.super_lab.cowsay' failed: name 'AnsibleFilterError' is not defined
-
-Task failed.
-Origin: /projects/lab_playbooks/test_pah_ee.yml:8:7
-
-6
-7   tasks:
-8     - name: Print a message using the cowsay filter
-        ^ column 7
-
-<<< caused by >>>
-
-Finalization of task args for 'ansible.builtin.debug' failed.
-Origin: /projects/lab_playbooks/test_pah_ee.yml:9:7
-
-7   tasks:
-8     - name: Print a message using the cowsay filter
-9       ansible.builtin.debug:
-        ^ column 7
-
-<<< caused by >>>
-
-Error while resolving value for 'msg': The filter plugin 'red_hat_one.super_lab.cowsay' failed: name 'AnsibleFilterError' is not defined
-Origin: /projects/lab_playbooks/test_pah_ee.yml:10:14
-
- 8     - name: Print a message using the cowsay filter
- 9       ansible.builtin.debug:
-10         msg: "{{ 'Hello from my custom filter!' | red_hat_one.super_lab.cowsay }}"
-                ^ column 14
-
-fatal: [localhost]: FAILED! => {"msg": "Task failed: Finalization of task args for 'ansible.builtin.debug' failed: Error while resolving value for 'msg': The filter plugin 'red_hat_one.super_lab.cowsay' failed: name 'AnsibleFilterError' is not defined"}
-
-PLAY RECAP ************************************************************************************************************************************************************************************************
-localhost                  : ok=0    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0  
-----
-<1> Notice this version of `ansible-core` vs what is in the execution environment.
-+
-IMPORTANT: Using `ansible-playbook` will merely use the local environment, not the execution environment we just created. In order to utilize it properly, we must use `ansible-navigator`.
-+
-. This time use `ansible-navigator` and specify the execution environment:
-+
-[source,yaml,role=execute,subs="verbatim,attributes"]
-----
-ansible-navigator --execution-environment-image aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/my-pah-ee:1.1 run test_pah_ee.yml  --mode stdout
-----
-+
-[source,output]
-----
-ansible-playbook [core 2.16.14]<1>
-  config file = /projects/lab_playbooks/ansible.cfg
-  configured module search path = ['/root/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
-  ansible python module location = /usr/local/lib/python3.11/site-packages/ansible
-  ansible collection location = /root/.ansible/collections:/usr/share/ansible/collections
-  executable location = /usr/local/bin/ansible-playbook
-  python version = 3.11.13 (main, Aug 21 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-11)] (/usr/bin/python3)
-  jinja version = 3.1.6
-  libyaml = True
-Using /projects/lab_playbooks/ansible.cfg as config file
-[WARNING]: Found both group and host with same name: windows
-Skipping callback 'awx_display', as we already have a stdout callback.
-Skipping callback 'default', as we already have a stdout callback.
-Skipping callback 'minimal', as we already have a stdout callback.
-Skipping callback 'oneline', as we already have a stdout callback.
-
-PLAYBOOK: test_pah_ee.yml ******************************************************
-1 plays in /projects/lab_playbooks/test_pah_ee.yml
-
-PLAY [Test custom filter from Private Automation Hub] **************************
-
-TASK [Print a message using the cowsay filter] *********************************
-task path: /projects/lab_playbooks/test_pah_ee.yml:8
-  ____________________________
-| Hello from my custom filter! |
-  ============================
-                            \
-                             \
-                               ^__^
-                               (oo)\_______
-                               (__)\       )\/\
-                                   ||----w |
-                                   ||     ||<2>
-ok: [localhost] => {
-    "msg": ""
-}
-
-PLAY RECAP *********************************************************************
-localhost                  : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-----
-<1> Notice this supported version of `ansible-core`
-<2> Moo! It worked!
-
-
-== 9: Integration with Automation Controller
-
-Now that we have confirmed the execution environment and custom filter work, let's bring everything together in AAP.
-
-=== 9.1: Push Project Files to Git
-
-With the changes to incorporate the updated collection (filter plugin and version) and the Execution Environment, publish all of the changes to your git repository.
-
-. Navigate to the link:{gitea_console_url}[Gitea instance,window=_blank] and create a new repository called `lab_playbooks`
-. Copy the URL to clone this repository
-. Return to Dev Spaces adn initialize the `lab_playbooks` directory
-+
-[source,bash,role=execute,subs="verbatim,attributes",title="/projects/lab_playbooks/"]
-----
-git init
-----
-+
-[source,output]
-----
-hint: Using 'master' as the name for the initial branch. This default branch name
-hint: is subject to change. To configure the initial branch name to use in all
-hint: of your new repositories, which will suppress this warning, call:
-hint:
-hint:   git config --global init.defaultBranch <name>
-hint:
-hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
-hint: 'development'. The just-created branch can be renamed via this command:
-hint:
-hint:   git branch -m <name>
-Initialized empty Git repository in /projects/lab_playbooks/.git/
-----
-+
-. Change to `main` per best practices:
-+
-[source,bash,role=execute,subs="verbatim,attributes"]
-----
-git checkout -b main
-----
-+
-[source,output]
-----
-Switched to a new branch 'main'
-----
-+
-. Add specific relevant files (not all of the scaffold files):
-+
-[source,bash,role=execute,subs="verbatim,attributes"]
-----
-git add site.yml test_pah_ee.yml collections/requirements.yml
-----
-+
-. Next, add the new remote:
-+
-[source,bash,role=execute,subs="verbatim,attributes"]
-----
-git remote add origin {gitea_console_url}/{gitea_user}/lab_playbooks.git
-----
-+
-. Finally, commit them to the new repository:
-+
-[source,bash,role=execute,subs="verbatim,attributes"]
-----
-git commit -m "Initial commit of playbook files"
-----
-+
-[source,output]
-----
-[main (root-commit) 14e8a8e] Initial commit of playbook files
- 4 files changed, 41 insertions(+)
- create mode 100644 collections/requirements.yml
- create mode 100644 site.yml
- create mode 100644 test_pah_ee.yml
-----
-+
-. Lastly, push commit to the new repository:
-+
-[source,bash,role=execute,subs="verbatim,attributes"]
-----
-git push origin main
-----
-+
-[source,output]
-----
-Enumerating objects: 6, done.
-Counting objects: 100% (6/6), done.
-Delta compression using up to 16 threads
-Compressing objects: 100% (5/5), done.
-Writing objects: 100% (6/6), 795 bytes | 795.00 KiB/s, done.
-Total 6 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
-remote: . Processing 1 references
-remote: Processed 1 references in total
-To https://gitea.apps.cluster-gtjkm.dynamic.redhatworkshops.io/user1/lab_playbooks.git
- * [new branch]      main -> main
-----
-
-=== 9.2: Create a Credential for Hub Container Registry
-
-First, create a new credential in Automation Controller to allow it to pull the custom Execution Environment from Private Automation Hub.
-
-. Launch the link:{aap_controller_web_url}[Automation Controller,window=_blank] web interface and login using the credentials from the xref:environment-details.adoc[Environment Details,window=_blank] page.
-. From the navigation menu on the left, expand **Automation Execution** and expand **Infrastructure** and click on **Credentials**.
-+
-image::21-content-dev-ee/automation-controller-credentials-overview.png[Navigate to Credentials]
-+
-. Click **Create credential** to add a new credential.
-+
-image::21-content-dev-ee/automation-controller-create-credential.png[Create Credentials]
-+
-. Enter the following details on the _Create Credential_ page:
-.. Name: `Hub`
-.. Credential type: `Container Registry`
-.. Authentication URL: `aap-aap.{openshift_cluster_ingress_domain}`
-.. Username: `{aap_controller_admin_user}`
-.. Password: `{aap_controller_admin_password}`
-.. Verify SSL: Checked
-. Click **Create credential** to save the new credential.
-
-image::21-content-dev-ee/automation-controller-create-credential-dialog.png[Create Credentials Dialog]
-
-=== 9.3: Create a Credential for the Git Repository
-
-Next, create a new credential to retrieve the source code from the Gitea repository.
-
-. From the Credentials page in Automation Controller, click **Create credential** once again to add a new credential.
-+
-image::21-content-dev-ee/automation-controller-create-credential-2.png[Create Credentials]
-+
-. Enter the following details on the _Create Credential_ page:
-.. Name: `Gitea`
-.. Credential type: `Source Control`
-.. Username: `{gitea_user}`
-.. Password: `{gitea_password}`
-. Click **Create credential** to save the new credential.
-
-image::21-content-dev-ee/automation-controller-create-credential-git-dialog.png[Create Credentials Dialog]
-
-=== 9.4: Add the Execution Environment to Controller
-
-Next, add the custom Execution Environment that we published previously to Automation Controller.
-
-. From the navigation menu on the left, expand **Automation Execution** and expand **Infrastructure** and click on **Execution Environments**.
-+
-image::21-content-dev-ee/automation-controller-ee-overview.png[Navigate to Execution Environments]
-+
-. Click **Create execution environment** to add a new execution environment.
-+
-image::21-content-dev-ee/automation-controller-create-ee.png[Create Execution Environment]
-+
-. Enter the following details on the _Create Execution Environment_ page:
-.. Name: `My Custom PAH EE`
-.. Image URL: `aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.1`
-.. Registry Credential: Select the `Hub` credential created previously.
-. Click **Create execution environment** to create the new EE.
-
-image::21-content-dev-ee/automation-controller-create-ee-dialog.png[Create Execution Environment Dialog]
-
-=== 9.5: Create a Project
-
-Create a new link:https://docs.ansible.com/ansible-tower/latest/html/userguide/projects.html[Project,window=_blank] in Automation Controller that points to your Git repository containing the playbook.
-
-. From the navigation menu on the left, expand **Automation Execution** and click on **Projects**.
-+
-image::21-content-dev-ee/automation-controller-projects-overview.png[Navigate to Projects]
-+
-. Click **Create project** to add a new project.
-+
-image::21-content-dev-ee/automation-controller-create-project.png[Create Project]
-+
-. Enter the following details on the _Create Project_ page:
-.. Name: `Custom Collection"
-.. Organization: `Default`
-.. Source Control Type: `Git`
-.. Source control URL: `{gitea_console_url}/{gitea_user}/red_hat_one_super_lab.git`
-.. Source code credential: Select the `Gitea` credential created previously.
-. Click **Create project** to create the new Project.
-
-image::21-content-dev-ee/automation-controller-create-project-dialog.png[Create Project Dialog]
-
-Confirm that the project has been synced successfully by looking _Success_ underneath _Last job status_.
-
-image::21-content-dev-ee/automation-controller-sync-project.png[Project Sync Status]
-
-=== 9.6: Create a Job Template
-
-With the Execution Environment and Project created, the final step is to create a Job Template that uses both components.
-
-. From the navigation menu on the left, expand **Automation Execution** and click on **Templates**.
-+
-image::21-content-dev-ee/automation-controller-templates-overview.png[Navigate to Templates]
-+
-. Click the **Create template** dropdown and select **Create job template**.
-+
-image::21-content-dev-ee/automation-controller-create-job-template.png[Create Job Template]
-+
-. Enter the following details on the _Create job template_ page:
-.. Name: `Test Custom Cowsay Filter`
-.. Inventory: `super-lab`
-.. Project: `Lab Playbooks`
-.. Playbook: `playbooks/test_pah_ee.yml`
-.. Execution Environment: `My Custom PAH EE`
-. Click **Create job template** to create the new Job Template.
-
-image::21-content-dev-ee/automation-controller-create-job-template-dialog.png[Create Job Template Dialog]
-
-=== 9.7: Launch the Job Template and Verify
-
-Now that the Job Template has been created, launch the _Test Custom Cowsay Filter_ and verify that the custom filter is working as expected.
-
-. From the _Test Custom Cowsay Filter_ Job Template details page, click the **Launch template** button on the upper right hand side.
-
-image::21-content-dev-ee/automation-controller-launch-job-template.png[Launch Job Template]
-
-Monitor the status of the job until it completes successfully displaying the output of the cowsay filter similar to the following:
-
-image::21-content-dev-ee/automation-controller-job-template-success.png[Job Template Success]
-
-== 10: Collections Management
-
-The final exercise in this lab is to customize the content sources from link:https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.5/html-single/managing_automation_content/index#proc-create-remote_remote-management[Remote Automation Hub / Ansible Galaxy instances,window=_blank] into Private Automation Hub. To support lab exercises later in this bootcamp, we will specify additional collections to be synchronized.
-
-=== 10.1: Update Community Remote
-
-. From the navigation menu on the left, expand **Automation Content** and click on **Remotes**.
-+
-image::21-content-dev-ee/remotes-overview.png[Remotes Navigation]
-+
-. Click the pencil icon to edit the `community` remote.
-+
-image::21-content-dev-ee/remotes-edit-community.png[Edit Community Remote]
-+
-. Paste the following into the _Requirements file_ field to specify additional collections to be synced:
-+
-[source,bash,role=execute,subs="verbatim,attributes"]
-----
-collections:
-  - name: containers.podman
-  - name: community.postgresql
-----
-+
-. Click **Save remote** to apply the changes.
-
-=== 10.2: Add Validated Remote
-
-Create a new remote for the `validated` collections repository. A token for Red Hat Automation Hub is required to access this repository.
-
-. Navigate to Red Hat Automation Hub and click link:https://console.redhat.com/ansible/automation-hub/token[here,window=_blank] to generate a token
-. Click **Load token** to generate a new token and copy it to your clipboard.
-+
-image::21-content-dev-ee/load-automation-hub-token.png[Load Automation Hub Token]
-+
-. From the Remotes page in Private Automation Hub, click **Create remote**.
-+
-image::21-content-dev-ee/remotes-create-remote.png[Create Remote]
-+
-. Enter the following details on the _Create remote_ page:
-.. Name: `validated`
-.. Server URL: `https://console.redhat.com/api/automation-hub/content/validated/`
-.. SSO URL: `https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token`
-.. Token: `<The token copied previously from Red Hat Automation Hub>`
-. Click **Create remote** to create the new Remote.
-
-image::21-content-dev-ee/remotes-add-remote.png[Add Remote]
-
-Now that the `validated` remote has been created, update the _validated_ repository to reference the newly created remote.
-
-. From the navigation menu on the left, expand **Automation Content** and click on **Repositories**.
-+
-image::21-content-dev-ee/repositories-overview.png[Add Remote]
-+
-. Edit the _validated_ repository by selecting the pencil icon
-+
-image::21-content-dev-ee/repositories-edit-validated.png[Edit Validated Repository]
-+
-. Update the `Remote` field by selecting `validated` from the drop down.
-. Click **Save repository** to update the repository.
-
-image::21-content-dev-ee/repositories-update-validated.png[Updated Validated Repository]
-
-=== 10.3: Update RH-Certified Remote
-
-Now that you have a Red Hat Automation Hub token, update the `rh-certified` remote to use this value as well.
-
-. From the Remotes page in Private Automation Hub, edit the `rh-certified` remote by selecting the pencil icon.
-+
-image::21-content-dev-ee/remotes-edit-rh-certified.png[Edit RH-Certified Remote]
-+
-. Update the _Token_ field by pasting the token copied previously from Red Hat Automation Hub.
-. Click **Save remote** to apply the changes.
-  
-image::21-content-dev-ee/remotes-update-rh-certified.png[Update RH-Certified Remote]
-
-=== 10.4: Sync Repositories
-
-Finally, synchronize the `rh-certified`, `validated`, and `community` repositories to pull in the new collections within the _Repositories_ page.
-
-. From the navigation menu on the left, expand **Automation Content** and click on **Repositories**.
-+
-. Next to the `community` repository, click the kebab menu (three vertical dots) on the right hand side of the entry and select **Sync repository**.
-+
-image::21-content-dev-ee/sync-repository.png[Sync Repository]
-+
-. Repeat the above steps to sync the `rh-certified` and `validated` repositories as well.
-
-NOTE: Syncing the _rh-certified_ collections will take some time. You can monitor the progress, but it will not impact the next set of labs in this bootcamp.
+image::21-content-build/execution-environment-versions.png[View EE Versions]
 
 == Conclusion
 
@@ -1304,8 +850,6 @@ Congratulations! You have successfully mastered the complete lifecycle of managi
 * **Content Creation**: Built and published custom collections with advanced functionality (including filter plugins)
 * **Environment Management**: Created custom Execution Environments with specific toolsets and dependencies
 * **Hub Integration**: Configured Private Automation Hub for content distribution and management
-* **Controller Integration**: Connected Automation Controller with custom content and environments
-* **End-to-End Validation**: Verified the complete automation workflow from development to execution
 
 This foundation enables you to create, manage, and distribute automation content at enterprise scale while maintaining security, compliance, and governance standards. The skills learned here are essential for managing automation in large organizations where content needs to be curated, controlled, and distributed efficiently.
 
