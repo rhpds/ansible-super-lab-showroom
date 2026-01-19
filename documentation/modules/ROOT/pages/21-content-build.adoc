@@ -57,7 +57,13 @@ NOTE: Make sure to store the token securely, as it will not be displayed again.
 
 In your Dev Spaces terminal, create a file containing the following variables. These will configure `ansible-galaxy` and `ansible-builder` to use your PAH instance instead of upstream to pull and push collections and execution environments.
 
-. First, create a file in your `/projects/env/` directory with the following contents, be sure to use your PAH API token created previously:
+. First, create a new directory named `env` in the `/projects` directory to hold various scripts and variables. 
++
+[source,bash,role=execute,subs="verbatim,attributes,quotes"]
+----
+mkdir /projects/env
+----
+. Now, create a file called `set_pah_vars.env` in your `/projects/env/` directory with the following contents. Be sure to use your PAH API token created previously:
 +
 NOTE: Replace #{your_api_token}# below with the personal API token you just copied from PAH.
 +
@@ -94,7 +100,7 @@ export ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=${PAH_API_TOKEN}
 printenv | grep ANSIBLE
 ----
 +
-TIP: Also create a corresponding file to clear these variables for any troubleshooting purposes:
+TIP: Also create a corresponding file named `unset_pah_vars.env` to clear these variables for any troubleshooting purposes:
 +
 [source,bash,role=execute,title="/projects/env/unset_pah_vars.env"]
 ----
@@ -144,7 +150,7 @@ ANSIBLE_GALAXY_SERVER_CERTIFIED_URL=https://aap-aap.apps.cluster-gtjkm.dynamic.r
 
 === 3.1: Prepare collection directory
 
-This lab will prepare the `/projects/lab_collection/` directory to be published.
+This lab will prepare the `/projects/lab_collection/` directory to be published to Private Automation Hub.
 
 . Update the `galaxy.yml` file and remove `ansible.utils` from the list of `dependencies` to appear as follows:
 +
@@ -162,7 +168,7 @@ dependencies:
 
 Publishing a Collection makes it available in PAH for use in Automation Controller and other tools. To publish a collection, a _namespace_ must exist in PAH for which the collection can be built and then published.
 
-==== 3.2.1: Creating namespace for collection
+==== 3.2.1: Created a namespace for the collection
 
 Create a new _Namespace_ in PAH.
 
