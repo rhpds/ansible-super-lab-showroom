@@ -548,11 +548,10 @@ additional_build_steps:
 
 Login to your PAH container registry, build the custom Execution Environment, and push the resulting image to your PAH instance using the following commands:
 
-. Login to to PAH container registry:
+. Log in to your PAH container registry with your AAP user credentials
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-# Log in to your PAH container registry with your AAP user credentials
 podman login aap-aap.{openshift_cluster_ingress_domain}
 ----
 +
