@@ -498,12 +498,10 @@ NOTE: Syncing the _rh-certified_ collections will take some time. You can monito
 
 Congratulations! You have successfully mastered the complete lifecycle of managing Ansible content in enterprise environments:
 
-* **Environment Setup**: Configured your local environment to connect to a Private Automation Hub
-* **Content Creation**: Built and published custom collections with advanced functionality (including filter plugins)
-* **Environment Management**: Created custom Execution Environments with specific toolsets and dependencies
-* **Hub Integration**: Configured Private Automation Hub for content distribution and management
-* **Controller Integration**: Connected Automation Controller with custom content and environments
-* **End-to-End Validation**: Verified the complete automation workflow from development to execution
+* *Playbook Creation and Testing*: Created a playbook to test custom filter locally
+* *Git repository management*: Committed files to repository to make it available to Automation Controller
+* *Controller Integration*: Connected Automation Controller with custom content and environments
+* *End-to-End Validation*: Verified the complete automation workflow from development to execution
 
 This foundation enables you to create, manage, and distribute automation content at enterprise scale while maintaining security, compliance, and governance standards. The skills learned here are essential for managing automation in large organizations where content needs to be curated, controlled, and distributed efficiently.
 
@@ -513,5 +511,32 @@ For additional reference and deeper learning on managing Ansible content:
 
 . https://docs.ansible.com/ansible/latest/galaxy/user_guide.html[Ansible Galaxy User Guide]
 . https://docs.ansible.com/ansible/latest/collections_guide/index.html[Ansible Collections Guide]
-. https://ansible.readthedocs.io/projects/builder/[Ansible Builder Documentation]
 . https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.5/html/using_automation_hub/index[Private Automation Hub Documentation]
+
+== Appendix
+
+Commands used in this lab.
+
+=== Playbook files upload
+
+These are the git commands used to push the `/projects/lab_playbooks/` files:
+
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+cd /projects/lab_playbooks/
+git init
+git checkout -b main
+git add site.yml test_pah_ee.yml collections/requirements.yml
+git remote add origin {gitea_console_url}/{gitea_user}/lab_playbooks.git
+git commit --message "Initial commit of playbook files"
+git push origin main
+----
+
+=== Windows ad-hoc troubleshooting
+
+If needed, reboot Windows.
+
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+ansible --module-name ansible.builtin.win_reboot windows --extra-vars @/projects/env/secrets.yml
+----
