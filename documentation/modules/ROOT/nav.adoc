@@ -16,7 +16,7 @@
 *** xref:23-content-pipeline.adoc[2.4. Content - Pipeline for collections]
 *** xref:24-content-config-as-code.adoc[2.5. Content - Config as Code]
 ** Module 3: Events 
-*** xref:30-events-rulebooks.adoc[3.1. Events - EDA Overview and Rulebook creation]
+*** xref:30-events-health-probe.adoc[3.1. Events - EDA Overview and Rulebook creation]
 *** xref:31-events-dev-de.adoc[3.2. Events - Develop and publish Decision Environment]
 *** xref:32-events-scenario.adoc[3.3. Events - Execute a full EDA Scenario]
 ** Module 4: AI 

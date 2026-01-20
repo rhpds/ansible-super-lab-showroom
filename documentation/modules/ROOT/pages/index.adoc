@@ -47,7 +47,7 @@ The following modules are included in this superlab:
 .. xref:24-content-config-as-code.adoc[Config as Code]
 . Events
 [arabic]
-.. xref:30-events-rulebooks.adoc[EDA Overview and Rulebook creation]
+.. xref:30-events-health-probe.adoc[EDA Overview and Rulebook creation]
 .. xref:31-events-dev-de.adoc[Develop and publish Decision Environment]
 .. xref:32-events-scenario.adoc[Execute a full EDA Scenario]
 . AI

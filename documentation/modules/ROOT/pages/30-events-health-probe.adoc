@@ -1,0 +1,399 @@
+= Lab: Even-Driven Ansible IIS Remediation
+
+[abstract]
+This lab demonstrates an agentless, "outside-in" monitoring and remediation architecture using the Event-Driven Ansible (EDA) `url_check`` source plugin to maintain the availability of a Windows IIS web server. By proactively polling the web endpoint rather than relying on internal agents like Filebeat, the EDA Controller detects service outages in real-time and automatically triggers an Ansible Automation Controller remediation playbook to restore the IIS service. This workflow illustrates the power of self-healing infrastructure, where manual intervention is replaced by automated logic that ensures the application is not only running but actively responding to user requests.
+
+== Learning Objectives
+
+After completing this module, you will be able to:
+
+* Configure Event-Driven Ansible to communicate with Automation Controller
+* Create a Rulebook and configure an activation to watch the IIS web server
+* Configure the Rulebook to react to both up and down status
+
+== Introduction
+
+In this lab, you will implement an agentless monitoring solution using **Event-Driven Ansible (EDA)**. Instead of relying on logs being pushed from the target, you will configure EDA to actively poll the IIS web server. 
+
+When the `url_check` source plugin detects that the website is unreachable, it will automatically trigger a remediation job in **Automation Controller** to restart the IIS service.
+
+== Prerequisites
+
+* Access to **Ansible Automation Platform (AAP)** and **EDA Controller**.
+* An existing Job Template to setup and configure IIS
+* The Windows IIS server is reachable via the internal URI: `http://windows.aap.svc.cluster.local`.
+
+== 1: Create and setup assets for EDA
+
+=== 1.1: Create remediation playbook
+
+To make this lab self-contained, we will create a one-off remediation playbook. However, you could just as easily simply call `site.yml` to do a full configuration. This targeted playbook will focus only on the IIS service.
+
+. Create the following playbook:
++
+[source,yaml,title="/projects/lab_playbooks/iis_start.yml",role=execute,subs="verbatim,attributes"]
+----
+---
+- name: Ensure IIS Service is Running
+  hosts: windows
+  gather_facts: false
+  tasks:
+    - name: Ensure W3SVC (IIS) is started
+      ansible.windows.win_service:
+        name: W3SVC
+        state: started
+
+    - name: Verify service is responsive
+      ansible.windows.win_uri:
+        url: http://localhost
+        return_content: false
+      register: web_check
+      until: web_check.status_code == 200
+      retries: 3
+      delay: 5
+
+    - name: Log remediation action
+      ansible.builtin.debug:
+        msg: "IIS Service is running."
+...
+----
+
+=== 1.2: Create the EDA Rulebook
+
+The rulebook uses the `ansible.eda.url_check` source to monitor the health of the web application every 10 seconds.
+
+. EDA looks for rulebooks in a specific directory. Create one in `/projects/lab_playbooks/`
++
+[source,yaml,role=execute,subs="verbatim,attributes"]
+----
+mkdir /projects/lab_playbooks/rulebooks/
+----
++
+. Create a rulebook named `check_website.yml`:
++
+[source,yaml,title="/projects/lab_playbooks/rulebooks/check_website.yml",role=execute,subs="verbatim,attributes"]
+----
+---
+- name: Monitor IIS via URL Check
+  hosts: all
+  sources:
+    - ansible.eda.url_check:
+        urls:
+          - http://windows.aap.svc.cluster.local
+        delay: 10
+
+  rules:
+    - name: Web site is down
+      condition: event.url_check.status == "down"
+      action:
+        run_job_template:
+          name: "Start IIS"
+          organization: Default
+
+    - name: Web site is up
+      condition: event.url_check.status == "up"
+      action:
+        debug:
+          msg: "IIS is healthy."
+...
+----
+
+=== 1.3: Push files to git
+
+. Ensure your working directory is the `lab_playbooks`:
++
+[source,yaml,role=execute,subs="verbatim,attributes"]
+----
+cd /projects/lab_playbooks/
+----
++
+. Add and commit these two files
++
+[source,yaml,role=execute,subs="verbatim,attributes"]
+----
+git add iis_start.yml rulebooks/check_website.yml 
+git commit --message "Add rulebook and remediation playbook"
+git push origin main
+----
++
+. Return to link:{aap_controller_web_url}[Automation Controller,window=_blank] web interface go to *Automation Execution* -> *Projects* and sync *Lab Playbooks* to ensure AAP has the new assets
+. Go to *Automation Execution* -> *Templates* and add a new job template using the newly created and synchronized `iis_start.yml`:
+.. *Name*: `Start IIS`
+.. *Organization*: `Default`
+.. *Inventory*: `super-lab`
+.. *Project*: `Lab playbooks`
+.. *Execution Environment*: `My Custom PAH EE`
+.. *Playbook*: `iis_start.yml`
+.. *Credential*: `Windows`
+
+== 2: Configure EDA Controller
+
+Now that the remediation playbook is created and available as a job template, it's time to configure the remaining components.
+
+=== 2.1: Setup EDA Credentials
+
+EDA Controller needs access to Automation Controller as well as the project files. Even though these are already configured in Automation Controller, we still have to create a few components for EDA.
+
+==== 2.1.1: AAP Credential
+
+This credential specifies the Automation Controller hostname and authentication details.
+
+. Navigate to *Automation Decisions* then *Infrastructure* and finally *Credentials*
+. Select *Create credential*
+. Create a new credential with the following details:
+.. *Name*: `aap`
+.. *Organization*: `Default`
+.. *Credential type*: In the drop-down start to type `Red Hat` which should search and find `Red Hat Ansible Automation Platform`
+.. *Red Hat Ansible Automation Platform*: `{aap_controller_web_url}/api/controller/`
+.. *Username*: `{aap_controller_admin_user}`
+.. *Password*: `{aap_controller_admin_password}`
+
+==== 2.1.2: Container Registry Credential
+
+Create a credential for EDA Controller to access Decision Environments.
+
+. Navigate to *Automation Decisions* -> *Infrastructure* -> *Credentials* -> *Create credential*
+. Create a new credential with the following details:
+.. *Name*: `redhat`
+.. *Organization*: `Default`
+.. *Credential type*: `Container Registry`
+.. *Username*: #<your_redhat_username>#
+.. *Password*: #<your_redhat_password>#
+
+==== 2.1.3: Gitea Credential
+
+Create a credential for EDA Controller to access gitea:
+
+. Navigate to *Automation Decisions* -> *Infrastructure* -> *Credentials* -> *Create credential*
+. Create a new credential with the following details:
+.. *Name*: `redhat`
+.. *Organization*: `Default`
+.. *Credential type*: In the drop-down start to type `Source` which should search and find `Source Control`
+.. *Username*: `{gitea_user}`
+.. *Password*: `{gitea_password}`
+
+=== 2.2: Setup EDA Project
+
+Create a project for `lab_playbooks` which contains the playbook and rulebook:
+
+. Navigate to *Automation Decisions* -> *Projects* -> *Create project*
+. Create a new project with the following details:
+.. *Name*: `Lab playbooks`
+.. *Organization*: `Default`
+.. *Source control URL*: `{gitea_console_url}/{gitea_user}/lab_playbooks.git`
+.. *Source control credential*: Select the previously created `gitea` credential
+. Ensure the project syncs properly
++
+image::30-events-health-probe/project-sync.png[Project Sync]
+
+=== 2.3: Setup Decision Environment
+
+A decision environment is conceptually similar to an Execution Environment, but used to run Rulebooks. Configure one now:
+
+. Navigate to *Automation Decisions* -> *Decision Environments* -> *Create new Decision Environment*
+. Create a new Decision Environment with the following details:
+.. *Name*: `de-minimal`
+.. *Organization*: `Default`
+.. *Image*: `registry.redhat.io/ansible-automation-platform-26/de-minimal-rhel9:latest`
+.. *Credential*: `redhat`
+
+=== 2.4: Setup Rulebook Activation
+
+The final step is to configure EDA Controller to execute and monitor according to your Rulebook:
+
+. Navigate to *Automation Decisions* -> *Rulebook Activations* -> *Create rulebook activation*
+. Create a new *Rulebook Activation with the following details:
+.. *Name*: `check_website`
+.. *Organization*: `Default`
+.. *Project*: `Lab playbooks`
+.. *Rulebook*: In the drop-down select `check_website.yml`
+.. *Decision Environment*: `de-minimal`
+.. *Log level*: `Info`
+. Click **Save** and the Rulebook will begin to activate
+. You can now click on *check_website* to view details
++
+image::30-events-health-probe/rulebook-running.png[Rulebook Running]
++
+. To view more detail, select *History* to watch activity. Review this tab until it is in *Running* state
++
+image::30-events-health-probe/rulebook-running-history.png[Rulebook History]
+
+== 3: Experience Remediation Self-Healing
+
+=== 3.1: Simulate IIS Failure
+
+Now we will simulate a failure by stopping the IIS service manually.
+
+. In one windows continue to monitor the Rulebook activation. As long as IIS is healthy, you should see this in the *History* tab:
++
+[source,output]
+----
+ansible_rulebook.rule_set_runner - INFO - Waiting for actions on events from Listen for events on a webhook
+ansible_rulebook.rule_set_runner - INFO - Waiting for events, ruleset: Listen for events on a webhook
+ansible_rulebook.websocket - INFO - feedback websocket connected
+[debug] ******************************************
+IIS is healthy.
+********************************************************************************
+[debug] ******************************************
+IIS is healthy.
+********************************************************************************
+[debug] ******************************************
+IIS is healthy.
+********************************************************************************
+...
+----
++
+. From your Dev Spaces terminal, run the following command to stop the IIS service:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+ansible --module-name ansible.windows.win_service windows \
+--args "name=W3SVC state=stopped" \
+--extra-vars @/projects/env/secrets.yml
+----
++
+[source,output]
+----
+ansible [core 2.19.3]
+  config file = /projects/lab_playbooks/ansible.cfg
+  configured module search path = ['/home/user/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/local/lib/python3.11/site-packages/ansible
+  ansible collection location = /home/user/.ansible/collections:/usr/share/ansible/collections
+  executable location = /usr/local/bin/ansible
+  python version = 3.11.13 (main, Aug 21 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-11)] (/usr/bin/python3.11)
+  jinja version = 3.1.6
+  pyyaml version = 6.0.3 (with libyaml v0.2.5)
+Using /projects/lab_playbooks/ansible.cfg as config file
+[WARNING]: Found both group and host with same name: windows
+Skipping callback 'default', as we already have a stdout callback.
+Skipping callback 'oneline', as we already have a stdout callback.
+windows | CHANGED => {
+    "can_pause_and_continue": false,
+    "changed": true,
+    "depended_by": [],
+    "dependencies": [
+        "WAS",
+        "HTTP"
+    ],
+    "description": "Provides Web connectivity and administration through the Internet Information Services Manager",
+    "desktop_interact": false,
+    "display_name": "World Wide Web Publishing Service",
+    "exists": true,
+    "name": "W3SVC",
+    "path": "C:\\Windows\\system32\\svchost.exe -k iissvcs",
+    "start_mode": "auto",
+    "state": "stopped",
+    "username": "LocalSystem"
+}
+----
++
+. Verify the website is down with `curl`:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+curl http://windows.aap.svc.cluster.local
+----
++
+[source,output]
+----
+curl: (7) Failed to connect to windows.aap.svc.cluster.local port 80: Connection refused
+----
+
+=== 3.2: View Rulebook Activation
+
+Return to *EDA Controller* on the *History* tab for *check_website*:
+
+. The URL check runs every 10 seconds. You should quickly see this in the *History* page:
++
+[source,output]
+----
+ansible_rulebook.action.run_job_template - INFO - running job template: Fix IIS Service, organization: Default
+ansible_rulebook.action.run_job_template - INFO - job results url: https://aap-aap.apps.cluster-866kv.dyn.redhatworkshops.io/#/jobs/43/details
+ansible_rulebook.action.run_job_template - INFO - controller job id: 43
+[debug] ******************************************
+IIS is healthy.
+********************************************************************************
+[debug] ******************************************
+IIS is healthy.
+********************************************************************************
+...
+----
+
+=== 3.3: Validate
+
+Return to the Dev Spaces terminal and double-check everything is once again running:
+
+. Use `curl` again to verify:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+curl http://windows.aap.svc.cluster.local
+----
++
+[source,output]
+----
+Welcome to Super Lab IIS Server
+Machine ID S-1-5-21-2979851890-3482578088-4054385452
+Hostname windows.lab.sandbox-866kv-ocp4-cluster.svc.cluster.local
+Deployed on 2026-01-19 at 18:38:43
+----
++
+. Confirm with `ansible`:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+ansible --module-name ansible.windows.win_service windows \
+--args "name=W3SVC" \
+--extra-vars @/projects/env/secrets.yml
+----
++
+[source,output]
+----
+ansible [core 2.19.3]
+  config file = /projects/lab_playbooks/ansible.cfg
+  configured module search path = ['/home/user/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/local/lib/python3.11/site-packages/ansible
+  ansible collection location = /home/user/.ansible/collections:/usr/share/ansible/collections
+  executable location = /usr/local/bin/ansible
+  python version = 3.11.13 (main, Aug 21 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-11)] (/usr/bin/python3.11)
+  jinja version = 3.1.6
+  pyyaml version = 6.0.3 (with libyaml v0.2.5)
+Using /projects/lab_playbooks/ansible.cfg as config file
+[WARNING]: Found both group and host with same name: windows
+Skipping callback 'default', as we already have a stdout callback.
+Skipping callback 'oneline', as we already have a stdout callback.
+windows | SUCCESS => {
+    "can_pause_and_continue": false,
+    "changed": false,
+    "depended_by": [],
+    "dependencies": [
+        "WAS",
+        "HTTP"
+    ],
+    "description": "Provides Web connectivity and administration through the Internet Information Services Manager",
+    "desktop_interact": false,
+    "display_name": "World Wide Web Publishing Service",
+    "exists": true,
+    "name": "W3SVC",
+    "path": "C:\\Windows\\system32\\svchost.exe -k iissvcs",
+    "start_mode": "auto",
+    "state": "running",
+    "username": "LocalSystem"
+}
+----
+
+=== 3.2: Verify the Automation Controller Execution
+
+. Navigate to **Automation Controller** -> **Jobs**.
+. Confirm that a new job for `IIS Start` has been triggered by the `eda` user.
+. The job ID should match what was shown in the *EDA Controller* Rulebook Activation for *check_website*
+
+== Summary
+You have successfully implemented an agentless monitoring and remediation workflow. By using `url_check`, you ensured that the application is monitored from the "outside-in," verifying not just that the service is running, but that the web server is actually responding to HTTP requests.
+
+
+== Helpful Links
+
+For additional reference and deeper learning on managing EDA Controller:
+
+. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/using_automation_decisions/index[Using Automation Decisions]
