@@ -47,9 +47,9 @@ The following modules are included in this superlab:
 .. xref:24-content-config-as-code.adoc[Config as Code]
 . Events
 [arabic]
-.. xref:30-events-health-probe.adoc[EDA Overview and Rulebook creation]
-.. xref:31-events-dev-de.adoc[Develop and publish Decision Environment]
-.. xref:32-events-scenario.adoc[Execute a full EDA Scenario]
+.. xref:30-events-health-probe.adoc[EDA Overview and Rulebook for health monitoring]
+.. xref:31-events-log-streaming.adoc[EDA Log streaming with Filebeat and Kafka]
+.. xref:32-events-troubleshooting.adoc[EDA Troubleshooting]
 . AI
 [arabic]
 .. xref:40-ai-lightspeed-int-assistant.adoc[Ansible Lightspeed Intelligent Assistant]

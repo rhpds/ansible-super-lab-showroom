@@ -1,0 +1,134 @@
+= Lab: Resilient IIS Monitoring with Filebeat, Kafka, and EDA
+
+== Introduction
+
+In this lab, you will implement a production-grade automation pipeline. You will use an Ansible Playbook to configure **Filebeat** (installed via Chocolatey) to monitor IIS. These events will be published to a **Kafka** broker, where **Event-Driven Ansible (EDA)** will consume them to trigger self-healing playbooks.
+
+== Prerequisites
+
+* Chocolatey and Filebeat installed
+* IIS running
+* *Automation Controller* and *EDA Controller*
+
+== 1: Create the Configuration Playbook
+
+In the previous module we built and ran a automation that installed `Chocolatey` and `Filebeat`. In this lab we will add additional configuration and start Filebeat.
+
+NOTE: We are testing this in a single playbook first, then plan to migrate this into the role `log_shipper` created in Module 2 after we test and confirm.
+
+. In your Git repository, create `setup_monitoring.yml`:
++
+[source,yaml,role=execute,title="/projects/lab_playbooks/setup_monitoring.yml",subs="verbatim,attributes"]
+----
+---
+- name: Configure Filebeat with Kafka Output
+  hosts: windows
+  vars:
+    filebeat_dir: 'C:\ProgramData\chocolatey\lib\filebeat\tools'
+    filebeat_conf: 'C:\ProgramData\chocolatey\lib\filebeat\tools\filebeat.yml'
+  
+  tasks:
+    - name: Deploy Filebeat Kafka Configuration
+      ansible.windows.win_copy:
+        dest: "{{ filebeat_conf }}"
+        content: |
+          filebeat.config.modules:
+            path: ${path.config}/modules.d/*.yml
+            reload.enabled: false
+
+          filebeat.inputs:
+            - type: winlog
+              name: System
+              event_id: 7036
+              processors:
+                - add_fields:
+                    target: ""
+                    fields:
+                      service_name: "W3SVC"
+
+          output.kafka:
+            hosts: ["cluster-kafka-bootstrap-kafka.apps.cluster-866kv.dyn.redhatworkshops.io:443"]
+            topic: "eda-windows-iis-events"
+            ssl.enabled: true
+            ssl.verification_mode: none
+
+    - name: Enable Filebeat IIS Module
+      ansible.windows.win_shell: |
+        .\filebeat.exe modules enable iis --path.home "{{ filebeat_dir }}" --path.config "{{ filebeat_dir }}"
+      args:
+        chdir: "{{ filebeat_dir }}"
+      register: module_enable
+      failed_when:
+        - module_enable.rc != 0
+        - "'already enabled' not in module_enable.stderr"
+
+    - name: Restart Filebeat service
+      ansible.windows.win_service:
+        name: filebeat
+        state: restarted
+...
+----
++
+. Run the playbook
+. Add and commit the files to the `lab_playbooks` git repo
+
+== 2: Create the EDA Rulebook
+
+The EDA Rulebook must match the structure of the Kafka event:
+
+. In your Git repository, create `check_kafka.yml`:
++
+[source,yaml,role=execute,title="/projects/lab_playbooks/rulebooks/check_kafka.yml",subs="verbatim,attributes"]
+----
+---
+- name: Listen for Kafka Events
+  hosts: windows
+  sources:
+    - ansible.eda.kafka:
+        host: cluster-kafka-bootstrap-kafka.apps.cluster-866kv.dyn.redhatworkshops.io
+        port: 443
+        topic: eda-windows-iis-events
+        group_id: eda-iis-monitor
+  rules:
+    - name: Restart IIS on Service Stop
+      condition: >
+        event.winlog.event_data.param1 == "World Wide Web Publishing Service" and
+        event.winlog.event_data.param2 == "stopped"
+      action:
+        run_job_template:
+          name: "Fix IIS Service"
+          organization: "Default"
+...
+----
++
+. Add and commit this rulebook tot he `lab_playbooks` git repo
+. Navigate to *Automation Decisions* -> *Rulebook Activations* -> *Create rulebook activation*
+. Create a new *Rulebook Activation with the following details:
+.. *Name*: `check_kafka`
+.. *Organization*: `Default`
+.. *Project*: `Lab playbooks`
+.. *Rulebook*: In the drop-down select `check_kafka.yml`
+.. *Decision Environment*: `de-minimal`
+.. *Log level*: `Info`
+. Click **Save** and the Rulebook will begin to activate
+
+== 3: Simulate Failure via Ad-Hoc
+
+Break the service to verify the end-to-end flow.
+
+[source,bash]
+----
+ansible --module-name ansible.windows.win_service windows \
+--args "name=W3SVC state=stopped" \
+--extra-vars @/projects/env/secrets.yml
+----
+
+== 5: Verify Remediation
+
+. Check the **EDA Controller** Rulebook Activation logs for the Kafka event.
+. Confirm the `Fix IIS Service"` was triggered in **Automation Controller**.
+. Run a final ad-hoc check to ensure the service is `started`.
+
+== Summary
+
+You have learned how to configure Filebeat to send Windows IIS event logs to Kafka and configure EDA to monitor the Kafka topic for service outages and fire off the playbook to start IIS when it is detected down.

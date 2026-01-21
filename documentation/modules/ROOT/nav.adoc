@@ -16,9 +16,9 @@
 *** xref:23-content-pipeline.adoc[2.4. Content - Pipeline for collections]
 *** xref:24-content-config-as-code.adoc[2.5. Content - Config as Code]
 ** Module 3: Events 
-*** xref:30-events-health-probe.adoc[3.1. Events - EDA Overview and Rulebook creation]
-*** xref:31-events-dev-de.adoc[3.2. Events - Develop and publish Decision Environment]
-*** xref:32-events-scenario.adoc[3.3. Events - Execute a full EDA Scenario]
+*** xref:30-events-health-probe.adoc[3.1. Events - EDA Overview and Rulebook for health monitoring]
+*** xref:31-events-log-streaming.adoc[3.2. Events - EDA Log streaming with Filebeat and Kafka]
+*** xref:32-events-troubleshooting.adoc[3.3. Events - EDA Troubleshooting]
 ** Module 4: AI 
 *** xref:40-ai-lightspeed-int-assistant.adoc[4.1. AI - Ansible Lightspeed Intelligent Assistant]
 *** xref:41-ai-lightspeed-mcp.adoc[4.2. AI - Ansible MCP Server]

@@ -1,0 +1,51 @@
+== Troubleshooting Connectivity and EDA Logic
+
+When running an agentless `url_check` lab, the most common issues arise from network visibility or rulebook syntax. Use the following steps to debug the environment using Ansible ad-hoc commands and platform logs.
+
+=== 1. Verify Network Reachability
+
+If the EDA Rulebook never reports a "down" or "up" status, the EDA Controller container may be unable to reach the Windows host. Use an ad-hoc command to test connectivity from the automation environment.
+
+[source,bash]
+----
+ansible --module-name ansible.windows.win_shell windows \
+-a "Get-NetTCPConnection -LocalPort 80" \
+--extra-vars @/projects/env/secrets.yml
+----
+
+=== 2. Inspect EDA Activation Logs
+
+The Rulebook Activation logs provide a real-time stream of the polling attempts.
+
+. In **EDA Controller**, navigate to **Rulebook Activations**.
+. Select your running activation and click the **History** tab.
+. Look for the `url_check` output. A successful poll will look like this:
++
+[source,json]
+----
+{
+  "url_check": {
+    "url": "http://windows.aap.svc.cluster.local",
+    "status": "up",
+    "status_code": 200
+  }
+}
+----
++
+TIP: Edit the Rulebook Activation and change the *Log level* to `Debug` and restart the Rulebook Activation
+
+=== 3. Validate Service State via Ad-Hoc
+If the remediation job runs but the site remains "down," use an ad-hoc command to check if the IIS service is actually in a `Running` state or if it is stuck in `StartPending`.
+
+[source,bash]
+----
+ansible --module-name ansible.windows.win_service windows \
+-a "name=W3SVC" \
+--extra-vars @/projects/env/secrets.yml
+----
+
+=== 4. Common Resolution Steps
+
+* **EDA Activation is stuck:** Restart the Rulebook Activation to clear the internal event queue.
+* **Remediation Job Fails:** Check the **Jobs** tab in Automation Controller. Ensure the `Windows Admin Credential` hasn't expired.
+* **URL Check doesn't trigger "down":** Ensure the `delay` in the rulebook isn't set too high (e.g., 60 seconds), which might cause a lag in detection.
