@@ -76,7 +76,7 @@ NOTE: We are testing this in a single playbook first, then plan to migrate this 
 
 The EDA Rulebook must match the structure of the Kafka event:
 
-. In your Git repository, create `check_kafka.yml`:
+. In your `lab_playbooks_ repository, create the `check_kafka.yml` rulebook:
 +
 [source,yaml,role=execute,title="/projects/lab_playbooks/rulebooks/check_kafka.yml",subs="verbatim,attributes"]
 ----
