@@ -47,5 +47,5 @@ ansible --module-name ansible.windows.win_service windows \
 === 4. Common Resolution Steps
 
 * **EDA Activation is stuck:** Restart the Rulebook Activation to clear the internal event queue.
-* **Remediation Job Fails:** Check the **Jobs** tab in Automation Controller. Ensure the `Windows Admin Credential` hasn't expired.
+* **Remediation Job Fails:** Check the **Jobs** tab in Automation Controller. Ensure the `Windows Admin Credential` has not expired.
 * **URL Check doesn't trigger "down":** Ensure the `delay` in the rulebook isn't set too high (e.g., 60 seconds), which might cause a lag in detection.
