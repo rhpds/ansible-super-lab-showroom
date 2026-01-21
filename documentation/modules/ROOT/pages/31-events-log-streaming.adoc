@@ -126,7 +126,7 @@ ansible --module-name ansible.windows.win_service windows \
 == 5: Verify Remediation
 
 . Check the **EDA Controller** Rulebook Activation logs for the Kafka event.
-. Confirm the `Fix IIS Service"` was triggered in **Automation Controller**.
+. Confirm the `Fix IIS Service` was triggered in **Automation Controller**.
 . Run a final ad-hoc check to ensure the service is `started`.
 
 == Summary
