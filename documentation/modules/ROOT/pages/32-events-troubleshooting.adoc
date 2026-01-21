@@ -35,7 +35,7 @@ The Rulebook Activation logs provide a real-time stream of the polling attempts.
 TIP: Edit the Rulebook Activation and change the *Log level* to `Debug` and restart the Rulebook Activation
 
 === 3. Validate Service State via Ad-Hoc
-If the remediation job runs but the site remains "down," use an ad-hoc command to check if the IIS service is actually in a `Running` state or if it is stuck in `StartPending`.
+If the remediation job runs but the site remains "down", use an ad-hoc command to check if the IIS service is actually in a `Running` state or if it is stuck in `StartPending`.
 
 [source,bash]
 ----
