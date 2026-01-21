@@ -60,7 +60,7 @@ To make this lab self-contained, we will create a one-off remediation playbook. 
 
 === 1.2: Create the EDA Rulebook
 
-The rulebook uses the `ansible.eda.url_check` source to monitor the health of the web application every 10 seconds.
+The rulebook will use the `ansible.eda.url_check` source to monitor the health of the web application every 10 seconds.
 
 . EDA looks for rulebooks in a specific directory. Create one in `/projects/lab_playbooks/`
 +
