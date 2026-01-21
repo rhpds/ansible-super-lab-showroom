@@ -27,7 +27,7 @@ When the `url_check` source plugin detects that the website is unreachable, it w
 
 === 1.1: Create remediation playbook
 
-To make this lab self-contained, we will create a one-off remediation playbook. However, you could just as easily simply call `site.yml` to do a full configuration. This targeted playbook will focus only on the IIS service.
+To make this lab self-contained, we will create a one-off remediation playbook. However, you could just as easily simply call `site.yml` to perform the full configuration. This targeted playbook will focus only on the IIS service.
 
 . Create the following playbook:
 +
