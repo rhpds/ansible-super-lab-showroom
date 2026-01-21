@@ -1,15 +1,5 @@
 ---
 type: showroom
-tabs:
- - name: Terminal 1
-   secondary_name: Terminal 2
-   type: 'double-terminal'
- - name: Codeserver
-   type: 'codeserver'
- - name: Jupyter Lab
-   port: '9443'
-   path: '/'
- - name: Llamastack Docs
-   url: 'https://llama-stack.readthedocs.io/en/latest/'
- - name: Cats
-   url: 'https://cats.com'
+
+# Persist the URL state so browser refresh doesn't reset the UI
+persist_url_state: true
