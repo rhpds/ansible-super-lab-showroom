@@ -103,7 +103,7 @@ The EDA Rulebook must match the structure of the Kafka event:
 +
 . Add and commit this rulebook tot he `lab_playbooks` git repo
 . Navigate to *Automation Decisions* -> *Rulebook Activations* -> *Create rulebook activation*
-. Create a new *Rulebook Activation with the following details:
+. Create a new *Rulebook Activation* with the following details:
 .. *Name*: `check_kafka`
 .. *Organization*: `Default`
 .. *Project*: `Lab playbooks`
