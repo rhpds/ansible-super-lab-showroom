@@ -17,7 +17,7 @@ In the previous module we built and ran a automation that installed `Chocolatey`
 
 NOTE: We are testing this in a single playbook first, then plan to migrate this into the role `log_shipper` created in Module 2 after we test and confirm.
 
-. In your Git repository, create `setup_monitoring.yml`:
+. In your `lab_playbooks` repository, create `setup_monitoring.yml`:
 +
 [source,yaml,role=execute,title="/projects/lab_playbooks/setup_monitoring.yml",subs="verbatim,attributes,callouts"]
 ----
