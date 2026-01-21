@@ -9,7 +9,7 @@ After completing this module, you will be able to:
 
 * Configure Event-Driven Ansible to communicate with Automation Controller
 * Create a Rulebook and configure an activation to watch the IIS web server
-* Configure the Rulebook to react to both up and down status
+* Configure the Rulebook to react to both up and down status events
 
 == Introduction
 
