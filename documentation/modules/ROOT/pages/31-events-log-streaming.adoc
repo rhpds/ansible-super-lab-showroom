@@ -6,9 +6,10 @@ In this lab, you will implement a production-grade automation pipeline. You will
 
 == Prerequisites
 
-* Chocolatey and Filebeat installed
-* IIS running
-* *Automation Controller* and *EDA Controller*
+* Chocolatey and Filebeat installed on Windows
+* IIS installed and running on Windows reachable via the internal URI: `http://windows.aap.svc.cluster.local`
+* Access to **Ansible Automation Platform (AAP)** and **EDA Controller**
+* An existing Job Template to setup and configure IIS
 
 == 1: Create the Configuration Playbook
 
@@ -18,59 +19,69 @@ NOTE: We are testing this in a single playbook first, then plan to migrate this 
 
 . In your Git repository, create `setup_monitoring.yml`:
 +
-[source,yaml,role=execute,title="/projects/lab_playbooks/setup_monitoring.yml",subs="verbatim,attributes"]
+[source,yaml,role=execute,title="/projects/lab_playbooks/setup_monitoring.yml",subs="verbatim,attributes,callouts"]
 ----
----
-- name: Configure Filebeat with Kafka Output
+- name: Configure Filebeat on Windows
   hosts: windows
-  vars:
-    filebeat_dir: 'C:\ProgramData\chocolatey\lib\filebeat\tools'
-    filebeat_conf: 'C:\ProgramData\chocolatey\lib\filebeat\tools\filebeat.yml'
-  
   tasks:
-    - name: Deploy Filebeat Kafka Configuration
+    - name: Update Filebeat configuration
       ansible.windows.win_copy:
-        dest: "{{ filebeat_conf }}"
+        dest: 'C:\ProgramData\chocolatey\lib\filebeat\tools\filebeat.yml'
         content: |
-          filebeat.config.modules:
-            path: ${path.config}/modules.d/*.yml
-            reload.enabled: false
-
           filebeat.inputs:
-            - type: winlog
-              name: System
-              event_id: 7036
-              processors:
-                - add_fields:
-                    target: ""
-                    fields:
-                      service_name: "W3SVC"
+          - type: winlog
+            name: System
+            event_id: 7036
+          processors:
+            - add_host_metadata:
+                when.not.contains.tags: forwarded
+            - add_cloud_metadata: ~
+            - add_docker_metadata: ~
+            - add_kubernetes_metadata: ~
+
+          filebeat.modules:
+          - module: iis
+            access:
+              enabled: true
+            error:
+              enabled: true
 
           output.kafka:
-            hosts: ["cluster-kafka-bootstrap-kafka.apps.cluster-866kv.dyn.redhatworkshops.io:443"]
+            hosts: ["cluster-kafka-bootstrap-kafka.{openshift_cluster_ingress_domain}:443"]
             topic: "eda-windows-iis-events"
             ssl.enabled: true
             ssl.verification_mode: none
+            codec.json:
+              pretty: false<1>
+          filebeat.registry.path: /var/lib/filebeat
+      notify: Restart Filebeat
 
-    - name: Enable Filebeat IIS Module
-      ansible.windows.win_shell: |
-        .\filebeat.exe modules enable iis --path.home "{{ filebeat_dir }}" --path.config "{{ filebeat_dir }}"
-      args:
-        chdir: "{{ filebeat_dir }}"
-      register: module_enable
-      failed_when:
-        - module_enable.rc != 0
-        - "'already enabled' not in module_enable.stderr"
-
-    - name: Restart Filebeat service
+  handlers:
+    - name: Restart Filebeat
       ansible.windows.win_service:
         name: filebeat
         state: restarted
 ...
 ----
+<1> For debugging this can be set to `true` for much easier to read logs.
 +
-. Run the playbook
+. Run the playbook from Dev Spaces:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+ansible-playbook \
+  --extra-vars @/projects/env/secrets.yml \
+  setup_monitoring.yml
+----
++
 . Add and commit the files to the `lab_playbooks` git repo
++
+[source,yaml,role=execute,subs="verbatim,attributes"]
+----
+git add setup_monitoring.yml
+git commit --message "Add filebeat configuration playbook"
+git push origin main
+----
 
 == 2: Create the EDA Rulebook
 
@@ -85,15 +96,15 @@ The EDA Rulebook must match the structure of the Kafka event:
   hosts: windows
   sources:
     - ansible.eda.kafka:
-        host: cluster-kafka-bootstrap-kafka.apps.cluster-866kv.dyn.redhatworkshops.io
+        host: cluster-kafka-bootstrap-kafka.{openshift_cluster_ingress_domain}
         port: 443
         topic: eda-windows-iis-events
         group_id: eda-iis-monitor
   rules:
-    - name: Restart IIS on Service Stop
+    - name: Trigger Fix if IIS Service Stops
       condition: >
-        event.winlog.event_data.param1 == "World Wide Web Publishing Service" and
-        event.winlog.event_data.param2 == "stopped"
+        event.body.winlog.event_data.param1 == "World Wide Web Publishing Service" and
+        event.body.winlog.event_data.param2 == "stopped"
       action:
         run_job_template:
           name: "Fix IIS Service"
@@ -101,7 +112,16 @@ The EDA Rulebook must match the structure of the Kafka event:
 ...
 ----
 +
-. Add and commit this rulebook tot he `lab_playbooks` git repo
+. Add and commit this rulebook to the `lab_playbooks` git repo
++
+[source,yaml,role=execute,subs="verbatim,attributes"]
+----
+git add rulebooks/check_kafka.yml
+git commit --message "Add kafka rulebook"
+git push origin main
+----
++
+. Navigate to *Automation Decisions* -> *Projects* -> Sync the `Lab Playbooks` projects to retrieve the new rulebook
 . Navigate to *Automation Decisions* -> *Rulebook Activations* -> *Create rulebook activation*
 . Create a new *Rulebook Activation* with the following details:
 .. *Name*: `check_kafka`
@@ -112,22 +132,164 @@ The EDA Rulebook must match the structure of the Kafka event:
 .. *Log level*: `Info`
 . Click **Save** and the Rulebook will begin to activate
 
-== 3: Simulate Failure via Ad-Hoc
+== 3: Simulate Failure
 
-Break the service to verify the end-to-end flow.
+Return to Dev Spaces and intentionally stop the service to verify the end-to-end flow.
 
-[source,bash]
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
 ansible --module-name ansible.windows.win_service windows \
---args "name=W3SVC state=stopped" \
---extra-vars @/projects/env/secrets.yml
+  --args "name=W3SVC state=stopped" \
+  --extra-vars @/projects/env/secrets.yml
+curl http://windows.aap.svc.cluster.local
+----
+
+[source,output]
+----
+ansible [core 2.19.3]
+  config file = /projects/lab_playbooks/ansible.cfg
+  configured module search path = ['/home/user/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/local/lib/python3.11/site-packages/ansible
+  ansible collection location = /home/user/.ansible/collections:/usr/share/ansible/collections
+  executable location = /usr/local/bin/ansible
+  python version = 3.11.13 (main, Aug 21 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-11)] (/usr/bin/python3.11)
+  jinja version = 3.1.6
+  pyyaml version = 6.0.3 (with libyaml v0.2.5)
+Using /projects/lab_playbooks/ansible.cfg as config file
+[WARNING]: Found both group and host with same name: windows
+Skipping callback 'default', as we already have a stdout callback.
+Skipping callback 'oneline', as we already have a stdout callback.
+windows | CHANGED => {
+    "can_pause_and_continue": false,
+    "changed": true,
+    "depended_by": [],
+    "dependencies": [
+        "WAS",
+        "HTTP"
+    ],
+    "description": "Provides Web connectivity and administration through the Internet Information Services Manager",
+    "desktop_interact": false,
+    "display_name": "World Wide Web Publishing Service",
+    "exists": true,
+    "name": "W3SVC",
+    "path": "C:\\Windows\\system32\\svchost.exe -k iissvcs",
+    "start_mode": "auto",
+    "state": "stopped",
+    "username": "LocalSystem"
+}
+curl: (7) Failed to connect to windows.aap.svc.cluster.local port 80: Connection refused
 ----
 
 == 5: Verify Remediation
 
 . Check the **EDA Controller** Rulebook Activation logs for the Kafka event.
 . Confirm the `Fix IIS Service` was triggered in **Automation Controller**.
++
+[source,output]
+----
+ansible_rulebook.engine - INFO - load source ansible.eda.kafka
+ansible_rulebook.engine - INFO - loading source filter eda.builtin.insert_meta_info
+aiokafka.consumer.subscription_state - INFO - Updating subscribed topics to: frozenset({'eda-windows-iis-events'})
+aiokafka.consumer.consumer - INFO - Subscribed to topic(s): {'eda-windows-iis-events'}
+ansible_rulebook.websocket - INFO - websocket ws://aap-eda-daphne:8001/api/eda/ws/ansible-rulebook
+ansible_rulebook.websocket - INFO - attempt websocket connection
+ansible_rulebook.engine - INFO - Waiting for all ruleset tasks to end
+[drools-async-evaluator-thread] INFO org.drools.ansible.rulebook.integration.api.io.RuleExecutorChannel - Async channel connected
+ansible_rulebook.rule_set_runner - INFO - Waiting for actions on events from Listen for Kafka Events
+ansible_rulebook.rule_set_runner - INFO - Waiting for events, ruleset: Listen for Kafka Events
+ansible_rulebook.websocket - INFO - feedback websocket connected
+aiokafka.consumer.group_coordinator - INFO - Metadata for topic has changed from {} to {'eda-windows-iis-events': 1}.
+ansible_rulebook.action.run_job_template - INFO - running job template: Fix IIS Service, organization: Default
+ansible_rulebook.action.run_job_template - INFO - job results url: https://aap-aap.apps.cluster-866kv.dyn.redhatworkshops.io/#/jobs/75/details
+ansible_rulebook.action.run_job_template - INFO - controller job id: 75
+----
++
+. If you enable `debug` logging you will see the event as well:
++
+[source,output]
+----
+Ruleset: Listen for Kafka Events
+Event:
+{'body': {'@metadata': {'beat': 'filebeat',
+'type': '_doc',
+'version': '7.15.1'},
+'@timestamp': '2026-01-21T18:41:46.151Z',
+'agent': {'ephemeral_id': '4d8b5562-a452-49a2-a9ae-361335d13ab9',
+'hostname': 'windows',
+'id': '8bd7436b-2fff-47f4-a2ef-07dcb2998d50',
+'name': 'windows',
+'type': 'filebeat',
+'version': '7.15.1'},
+'ecs': {'version': '1.11.0'},
+'event': {'code': '7036',
+'created': '2026-01-21T18:41:48.221Z',
+'kind': 'event',
+'provider': 'Service Control Manager'},
+'host': {'architecture': 'x86_64',
+'hostname': 'windows',
+'id': 'd6705081-8c1d-4aa2-9817-7c4eab135d7b',
+'ip': ['fe80::e4d7:1546:2ce4:93fc', '10.0.2.2'],
+'mac': ['0a:58:0a:82:2b:cb'],
+'name': 'windows',
+'os': {'build': '17763.3650',
+'family': 'windows',
+'kernel': '10.0.17763.3650 (WinBuild.160101.0800)',
+'name': 'Windows Server 2019 Datacenter Evaluation',
+'platform': 'windows',
+'type': 'windows',
+'version': '10.0'}},
+'input': {'type': 'winlog'},
+'log': {'level': 'information'},
+'message': 'The World Wide Web Publishing Service service entered '
+'the stopped state.',
+'winlog': {'api': 'wineventlog',
+'channel': 'System',
+'computer_name': 'windows',
+'event_data': {'Binary': '570033005300560043002F0031000000',
+'param1': 'World Wide Web Publishing '
+'Service',
+'param2': 'stopped'},
+'event_id': '7036',
+'keywords': ['Classic'],
+'process': {'pid': 640, 'thread': {'id': 4984}},
+'provider_guid': '{555908d1-a6d7-4695-8e1e-26931d2012f4}',
+'provider_name': 'Service Control Manager',
+'record_id': 14099}},
+'meta': {'headers': {},
+'received_at': '2026-01-21T18:42:31.078451Z',
+'source': {'name': 'ansible.eda.kafka', 'type': 'ansible.eda.kafka'},
+'uuid': 'a61ce8f1-fbde-4166-8aba-ce044052c6fc'}}
+********************************************************************************
+ansible_rulebook.rule_set_runner - DEBUG - Posting data to ruleset Listen for Kafka Events => {'meta': {'headers': {}, 'source': {'name': 'ansible.eda.kafka', 'type': 'ansible.eda.kafka'}, 'received_at': '2026-01-21T18:42:31.078451Z', 'uuid': 'a61ce8f1-fbde-4166-8aba-ce044052c6fc'}, 'body': {'@timestamp': '2026-01-21T18:41:46.151Z', '@metadata': {'beat': 'filebeat', 'type': '_doc', 'version': '7.15.1'}, 'ecs': {'version': '1.11.0'}, 'winlog': {'record_id': 14099, 'channel': 'System', 'computer_name': 'windows', 'event_data': {'Binary': '570033005300560043002F0031000000', 'param1': 'World Wide Web Publishing Service', 'param2': 'stopped'}, 'provider_guid': '{555908d1-a6d7-4695-8e1e-26931d2012f4}', 'api': 'wineventlog', 'process': {'pid': 640, 'thread': {'id': 4984}}, 'provider_name': 'Service Control Manager', 'keywords': ['Classic'], 'event_id': '7036'}, 'event': {'created': '2026-01-21T18:41:48.221Z', 'code': '7036', 'kind': 'event', 'provider': 'Service Control Manager'}, 'log': {'level': 'information'}, 'message': 'The World Wide Web Publishing Service service entered the stopped state.', 'host': {'mac': ['0a:58:0a:82:2b:cb'], 'hostname': 'windows', 'architecture': 'x86_64', 'os': {'name': 'Windows Server 2019 Datacenter Evaluation', 'kernel': '10.0.17763.3650 (WinBuild.160101.0800)', 'build': '17763.3650', 'type': 'windows', 'platform': 'windows', 'version': '10.0', 'family': 'windows'}, 'id': 'd6705081-8c1d-4aa2-9817-7c4eab135d7b', 'name': 'windows', 'ip': ['fe80::e4d7:1546:2ce4:93fc', '10.0.2.2']}, 'input': {'type': 'winlog'}, 'agent': {'type': 'filebeat', 'version': '7.15.1', 'hostname': 'windows', 'ephemeral_id': '4d8b5562-a452-49a2-a9ae-361335d13ab9', 'id': '8bd7436b-2fff-47f4-a2ef-07dcb2998d50', 'name': 'windows'}}}
+[main] DEBUG org.drools.ansible.rulebook.integration.api.rulesengine.RegisterOnlyAgendaFilter - Activation of effective rule "Trigger Fix if IIS Service Stops" with facts: {m={meta={headers={}, source={name=ansible.eda.kafka, type=ansible.eda.kafka}, received_at=2026-01-21T18:42:31.078451Z, uuid=a61ce8f1-fbde-4166-8aba-ce044052c6fc}, body={@timestamp=2026-01-21T18:41:46.151Z, @metadata={beat=filebeat, type=_doc, version=7.15.1}, ecs={version=1.11.0}, winlog={record_id=14099, channel=System, computer_name=windows, event_data={Binary=570033005300560043002F0031000000, param1=World Wide Web Publishing Service, param2=stopped}, provider_guid={555908d1-a6d7-4695-8e1e-26931d2012f4}, api=wineventlog, process={pid=640, thread={id=4984}}, provider_name=Service Control Manager, keywords=[Classic], event_id=7036}, event={created=2026-01-21T18:41:48.221Z, code=7036, kind=event, provider=Service Control Manager}, log={level=information}, message=The World Wide Web Publishing Service service entered the stopped state., host={mac=[0a:58:0a:82:2b:cb], hostname=windows, architecture=x86_64, os={name=Windows Server 2019 Datacenter Evaluation, kernel=10.0.17763.3650 (WinBuild.160101.0800), build=17763.3650, type=windows, platform=windows, version=10.0, family=windows}, id=d6705081-8c1d-4aa2-9817-7c4eab135d7b, name=windows, ip=[fe80::e4d7:1546:2ce4:93fc, 10.0.2.2]}, input={type=winlog}, agent={type=filebeat, version=7.15.1, hostname=windows, ephemeral_id=4d8b5562-a452-49a2-a9ae-361335d13ab9, id=8bd7436b-2fff-47f4-a2ef-07dcb2998d50, name=windows}}}}
+drools.ruleset - DEBUG - Calling rule : Trigger Fix if IIS Service Stops in session: 1
+ansible_rulebook.rule_generator - DEBUG - callback calling Trigger Fix if IIS Service Stops
+ansible_rulebook.rule_set_runner - DEBUG - None
+ansible_rulebook.rule_set_runner - DEBUG - Creating action task action::run_job_template::Listen for Kafka Events::Trigger Fix if IIS Service Stops
+ansible_rulebook.websocket - DEBUG - Event received, {'type': 'SessionStats', 'activation_id': '619', 'activation_instance_id': '619', 'stats': {'start': '2026-01-21T18:41:01.998915284Z', 'lastClockTime': '2026-01-21T18:42:31.023Z', 'clockAdvanceCount': 890, 'numberOfRules': 2, 'numberOfDisabledRules': 0, 'rulesTriggered': 1, 'eventsProcessed': 1, 'eventsMatched': 1, 'eventsSuppressed': 0, 'permanentStorageCount': 0, 'permanentStorageSize': 0, 'asyncResponses': 0, 'bytesSentOnAsync': 0, 'sessionId': 1, 'ruleSetName': 'Listen for Kafka Events', 'lastRuleFired': 'Trigger Fix if IIS Service Stops', 'lastRuleFiredAt': '2026-01-21T18:42:31.023Z', 'lastEventReceivedAt': '2026-01-21T18:42:31.023Z', 'baseLevelMemory': 5210392, 'peakMemory': 9408056, 'usedMemory': 9408056, 'maxAvailableMemory': 536870912}, 'reported_at': '2026-01-21T18:42:31.120155Z'}
+ansible_rulebook.websocket - DEBUG - Event received, {'type': 'Job', 'action': 'run_job_template', 'action_uuid': '47c24dab-052a-48da-a923-2747218f7cca', 'ruleset': 'Listen for Kafka Events', 'ruleset_uuid': '4384618c-d250-41de-a992-d39e6e67e45b', 'rule': 'Trigger Fix if IIS Service Stops', 'rule_uuid': 'c5cb00ef-c603-4512-8aae-f4b042ef54eb', 'rule_run_at': '2026-01-21T18:42:31.119344Z', 'activation_id': '619', 'activation_instance_id': '619', 'run_at': '2026-01-21T18:42:31.121197Z', 'matching_events': {'m': {'meta': {'headers': {}, 'source': {'name': 'ansible.eda.kafka', 'type': 'ansible.eda.kafka'}, 'received_at': '2026-01-21T18:42:31.078451Z', 'uuid': 'a61ce8f1-fbde-4166-8aba-ce044052c6fc'}, 'body': {'@timestamp': '2026-01-21T18:41:46.151Z', '@metadata': {'beat': 'filebeat', 'type': '_doc', 'version': '7.15.1'}, 'ecs': {'version': '1.11.0'}, 'winlog': {'record_id': 14099, 'channel': 'System', 'computer_name': 'windows', 'event_data': {'Binary': '570033005300560043002F0031000000', 'param1': 'World Wide Web Publishing Service', 'param2': 'stopped'}, 'provider_guid': '{555908d1-a6d7-4695-8e1e-26931d2012f4}', 'api': 'wineventlog', 'process': {'pid': 640, 'thread': {'id': 4984}}, 'provider_name': 'Service Control Manager', 'keywords': ['Classic'], 'event_id': '7036'}, 'event': {'created': '2026-01-21T18:41:48.221Z', 'code': '7036', 'kind': 'event', 'provider': 'Service Control Manager'}, 'log': {'level': 'information'}, 'message': 'The World Wide Web Publishing Service service entered the stopped state.', 'host': {'mac': ['0a:58:0a:82:2b:cb'], 'hostname': 'windows', 'architecture': 'x86_64', 'os': {'name': 'Windows Server 2019 Datacenter Evaluation', 'kernel': '10.0.17763.3650 (WinBuild.160101.0800)', 'build': '17763.3650', 'type': 'windows', 'platform': 'windows', 'version': '10.0', 'family': 'windows'}, 'id': 'd6705081-8c1d-4aa2-9817-7c4eab135d7b', 'name': 'windows', 'ip': ['fe80::e4d7:1546:2ce4:93fc', '10.0.2.2']}, 'input': {'type': 'winlog'}, 'agent': {'type': 'filebeat', 'version': '7.15.1', 'hostname': 'windows', 'ephemeral_id': '4d8b5562-a452-49a2-a9ae-361335d13ab9', 'id': '8bd7436b-2fff-47f4-a2ef-07dcb2998d50', 'name': 'windows'}}}}, 'hosts': 'windows', 'name': 'Fix IIS Service', 'job_id': 'ed9e8999-886b-466c-a0e7-38a2fa9bb977', 'ansible_rulebook_id': '619'}
+ansible_rulebook.action.run_job_template - INFO - job results url: https://aap-aap.apps.cluster-866kv.dyn.redhatworkshops.io/#/jobs/77/details
+ansible_rulebook.action.run_job_template - INFO - controller job id: 77
+ansible_rulebook.websocket - DEBUG - Event received, {'type': 'Action', 'action': 'run_job_template', 'action_uuid': '47c24dab-052a-48da-a923-2747218f7cca', 'ruleset': 'Listen for Kafka Events', 'ruleset_uuid': '4384618c-d250-41de-a992-d39e6e67e45b', 'rule': 'Trigger Fix if IIS Service Stops', 'rule_uuid': 'c5cb00ef-c603-4512-8aae-f4b042ef54eb', 'rule_run_at': '2026-01-21T18:42:31.119344Z', 'activation_id': '619', 'activation_instance_id': '619', 'job_template_name': 'Fix IIS Service', 'organization': 'Default', 'job_id': 'ed9e8999-886b-466c-a0e7-38a2fa9bb977', 'status': 'successful', 'run_at': '2026-01-21T18:42:31.627882Z', 'url': 'https://aap-aap.apps.cluster-866kv.dyn.redhatworkshops.io/#/jobs/77/details', 'matching_events': {'m': {'meta': {'headers': {}, 'source': {'name': 'ansible.eda.kafka', 'type': 'ansible.eda.kafka'}, 'received_at': '2026-01-21T18:42:31.078451Z', 'uuid': 'a61ce8f1-fbde-4166-8aba-ce044052c6fc'}, 'body': {'@timestamp': '2026-01-21T18:41:46.151Z', '@metadata': {'beat': 'filebeat', 'type': '_doc', 'version': '7.15.1'}, 'ecs': {'version': '1.11.0'}, 'winlog': {'record_id': 14099, 'channel': 'System', 'computer_name': 'windows', 'event_data': {'Binary': '570033005300560043002F0031000000', 'param1': 'World Wide Web Publishing Service', 'param2': 'stopped'}, 'provider_guid': '{555908d1-a6d7-4695-8e1e-26931d2012f4}', 'api': 'wineventlog', 'process': {'pid': 640, 'thread': {'id': 4984}}, 'provider_name': 'Service Control Manager', 'keywords': ['Classic'], 'event_id': '7036'}, 'event': {'created': '2026-01-21T18:41:48.221Z', 'code': '7036', 'kind': 'event', 'provider': 'Service Control Manager'}, 'log': {'level': 'information'}, 'message': 'The World Wide Web Publishing Service service entered the stopped state.', 'host': {'mac': ['0a:58:0a:82:2b:cb'], 'hostname': 'windows', 'architecture': 'x86_64', 'os': {'name': 'Windows Server 2019 Datacenter Evaluation', 'kernel': '10.0.17763.3650 (WinBuild.160101.0800)', 'build': '17763.3650', 'type': 'windows', 'platform': 'windows', 'version': '10.0', 'family': 'windows'}, 'id': 'd6705081-8c1d-4aa2-9817-7c4eab135d7b', 'name': 'windows', 'ip': ['fe80::e4d7:1546:2ce4:93fc', '10.0.2.2']}, 'input': {'type': 'winlog'}, 'agent': {'type': 'filebeat', 'version': '7.15.1', 'hostname': 'windows', 'ephemeral_id': '4d8b5562-a452-49a2-a9ae-361335d13ab9', 'id': '8bd7436b-2fff-47f4-a2ef-07dcb2998d50', 'name': 'windows'}}}}, 'controller_job_id': 77}
+ansible_rulebook.rule_set_runner - DEBUG - Task action::run_job_template::Listen for Kafka Events::Trigger Fix if IIS Service Stops finished, active actions 0
+----
++
 . Run a final ad-hoc check to ensure the service is `started`.
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+curl http://windows.aap.svc.cluster.local
+----
++
+[source,output]
+----
+Welcome to Super Lab IIS Server
+Machine ID S-1-5-21-2979851890-3482578088-4054385452
+Hostname windows.lab.sandbox-866kv-ocp4-cluster.svc.cluster.local
+Deployed on 2026-01-19 at 18:38:43
+----
++
+. Disable this Rulebook Activation before the next lab.
 
 == Summary
 

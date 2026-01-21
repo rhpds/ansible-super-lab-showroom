@@ -9,8 +9,8 @@ If the EDA Rulebook never reports a "down" or "up" status, the EDA Controller co
 [source,bash]
 ----
 ansible --module-name ansible.windows.win_shell windows \
--a "Get-NetTCPConnection -LocalPort 80" \
---extra-vars @/projects/env/secrets.yml
+  --args "Get-NetTCPConnection -LocalPort 80" \
+  --extra-vars @/projects/env/secrets.yml
 ----
 
 === 2. Inspect EDA Activation Logs
@@ -40,8 +40,8 @@ If the remediation job runs but the site remains "down", use an ad-hoc command t
 [source,bash]
 ----
 ansible --module-name ansible.windows.win_service windows \
--a "name=W3SVC" \
---extra-vars @/projects/env/secrets.yml
+  --args "name=W3SVC" \
+  --extra-vars @/projects/env/secrets.yml
 ----
 
 === 4. Common Resolution Steps

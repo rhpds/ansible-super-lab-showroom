@@ -102,14 +102,14 @@ mkdir /projects/lab_playbooks/rulebooks/
 
 . Ensure your working directory is the `lab_playbooks`:
 +
-[source,yaml,role=execute,subs="verbatim,attributes"]
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
 cd /projects/lab_playbooks/
 ----
 +
 . Add and commit these two files
 +
-[source,yaml,role=execute,subs="verbatim,attributes"]
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
 git add iis_start.yml rulebooks/check_website.yml 
 git commit --message "Add rulebook and remediation playbook"
@@ -248,8 +248,8 @@ IIS is healthy.
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
 ansible --module-name ansible.windows.win_service windows \
---args "name=W3SVC state=stopped" \
---extra-vars @/projects/env/secrets.yml
+  --args "name=W3SVC state=stopped" \
+  --extra-vars @/projects/env/secrets.yml
 ----
 +
 [source,output]
@@ -343,8 +343,8 @@ Deployed on 2026-01-19 at 18:38:43
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
 ansible --module-name ansible.windows.win_service windows \
---args "name=W3SVC" \
---extra-vars @/projects/env/secrets.yml
+  --args "name=W3SVC" \
+  --extra-vars @/projects/env/secrets.yml
 ----
 +
 [source,output]
@@ -381,6 +381,8 @@ windows | SUCCESS => {
     "username": "LocalSystem"
 }
 ----
++
+. Disable this Rulebook Activation before the next lab.
 
 === 3.2: Verify the Automation Controller Execution
 
@@ -391,9 +393,10 @@ windows | SUCCESS => {
 == Summary
 You have successfully implemented an agentless monitoring and remediation workflow. By using `url_check`, you ensured that the application is monitored from the "outside-in," verifying not just that the service is running, but that the web server is actually responding to HTTP requests.
 
-
 == Helpful Links
 
 For additional reference and deeper learning on managing EDA Controller:
 
 . https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/using_automation_decisions/index[Using Automation Decisions]
+. https://console.redhat.com/ansible/automation-hub/repo/published/ansible/eda/[ansible.eda collection]
+. https://console.redhat.com/ansible/automation-hub/repo/published/ansible/eda/content/eda%2Fplugins%2Fevent_source/url_check/[Official url_check documentation]
