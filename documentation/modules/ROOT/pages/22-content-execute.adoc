@@ -12,6 +12,13 @@ After completing this module, you will be able to:
 * Executing job templates using the collection and Execution Environment
 * Customizing components in AAP
 
+== Prerequisites
+
+* Access to link:https://devspaces.{openshift_cluster_ingress_domain}[OpenShift Dev Spaces,window=_blank]
+* *Automation Controller* and *Automation Hub*
+* *Windows* managed host
+* Custom collection and execution environment built and published to *Automation Hub*
+
 == 1: Test content in Dev Spaces
 
 Now that both the collection and Execution Environment have been created and published to Private Automation hub, we'll create a playbook to use the filter contained within the `red_hat_one.super_lab` collection.

@@ -14,6 +14,12 @@ After completing this module, you will be able to:
 . Install and configure Filebeat (a lightweight data shipper)
 . Test initial content against Windows server
 
+== Prerequisites
+
+* Access to link:https://devspaces.{openshift_cluster_ingress_domain}[OpenShift Dev Spaces,window=_blank]
+* *Automation Controller* and *Automation Hub*
+* *Windows* managed host
+
 == 1: Managing Windows Hosts
 
 Ansible can use a variety of connectivity options to connect to Windows. In this lab, a Windows 2019 Server has been configured using `psrp` to connect. See the link:https://docs.ansible.com/projects/ansible/latest/os_guide/intro_windows.html[Ansible documentation] for full details.
@@ -104,11 +110,12 @@ ansible_winrm_transport: basic|ntlm|credssp
 
 In this section we will begin building content to setup and configure our Windows server. 
 
-NOTE: The remainder of this lab takes place inside OpenShift Dev Spaces. As a quick reminder, here is how you launch it. For full details see xref:10-platform-workspace.adoc[Module 1,window=_blank] page to login to the OpenShift console
+NOTE: The remainder of this lab takes place inside link:https://devspaces.{openshift_cluster_ingress_domain}[OpenShift Dev Spaces,window=_blank]. As a quick reminder, here are the relevant steps:
 
-. Launch the link:{openshift_cluster_console_url}[OpenShift Web Console,window=_blank]
-. Select the **htpasswd_provider** button and use the credentials provided in the xref:environment-details.adoc[Environment Details,window=_blank] page to login to the OpenShift console
-. Use the 9-block icon in the upper right to launch _Red Hat OpenShift Dev Spaces_ directly from the OpenShift console header.
+. Launch link:https://devspaces.{openshift_cluster_ingress_domain}[OpenShift Dev Spaces,window=_blank]
+. Return to your Workspace or see xref:10-platform-workspace.adoc[Module 1] for more details
+. If needed, ensure a terminal is open by selecting the hamburger (3 dashes) in the top left and choosing **Terminal** -> **New Terminal**
+. See xref:environment-details.adoc[Environment Details,window=_blank] for more information.
 
 === 2.1: Build Collection and Roles
 
@@ -119,7 +126,6 @@ We will create a collection containing two roles to manage server configuration 
 
 NOTE: Choose either this section or <<ansible-creator-gui, 2.1.2 Using the Ansible Creator GUI>>, not both.
 
-. If needed, ensure a terminal is open by selecting the hamburger (3 dashes) in the top left and choosing **Terminal** -> **New Terminal**
 . Use `ansible-creator` to quickly scaffold a directory structure to contain a new collection:
 +
 [source,bash,role=execute]
@@ -492,7 +498,7 @@ The file that was automatically scaffolded is acceptable as it currently stands 
 +
 NOTE: For additional information see https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/managing_automation_content/managing-cert-valid-content#token-management-hub_cloud-sync[Managing Automation Content Documentation,window=_blank]
 +
-. Add the following to end of the provided `ansible.cfg`:
+. Add the following to the end of the provided `ansible.cfg`:
 +
 [source,bash,role=execute,title="/projects/lab_playbooks/ansible.cfg",subs="verbatim,quotes"]
 ----

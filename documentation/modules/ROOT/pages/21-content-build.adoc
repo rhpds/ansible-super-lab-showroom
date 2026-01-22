@@ -15,6 +15,13 @@ After completing this module, you will be able to:
 * Create a custom filter and add it to the Execution Environment
 * Experience the lifecycle management of these assets
 
+== Prerequisites
+
+* Access to link:https://devspaces.{openshift_cluster_ingress_domain}[OpenShift Dev Spaces,window=_blank]
+* *Automation Controller* and *Automation Hub*
+* *Windows* managed host
+* Content collection and playbook created
+
 == 1. Introduction: The Role of Private Automation Hub
 
 A link:https://www.redhat.com/en/technologies/management/ansible/automation-hub[Private Automation Hub (PAH),window=_blank] acts as a central repository containing curated and trusted automation content. It allows you to manage, share, and control access to a curated set of Execution Environments and Ansible Content Collections.
