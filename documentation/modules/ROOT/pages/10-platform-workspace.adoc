@@ -39,7 +39,9 @@ It provides, by default, a Visual Studio Code (VS Code) environment as configure
 . Select the **htpasswd_provider** button and use the credentials provided in the xref:environment-details.adoc[Environment Details,window=_blank] page to login to the OpenShift console
 . Use the 9-block icon in the upper right to launch _Red Hat OpenShift Dev Spaces_ directly from the OpenShift console header.
 +
-image::01-introduction/intro-dev_spaces_shortcut.png[OpenShift console header showing the 9-block application launcher icon for quick access to Dev Spaces]
+image::10-platform-workspace/intro-dev_spaces_shortcut.png[OpenShift console header showing the 9-block application launcher icon for quick access to Dev Spaces]
++
+TIP: Alternatively, the direct URL is in the xref:environment-details.adoc[Environment Details,window=_blank] page and is link:https://devspaces.{openshift_cluster_ingress_domain}[https://devspaces.{openshift_cluster_ingress_domain},window=_blank]
 
 == 4: Dev Spaces Workspace
 
@@ -51,17 +53,17 @@ Once you have launched the OpenShift Dev Spaces console, use the following steps
 . Select **Allow selected permissions** to authorize access and launch the console
 . Scroll down and select the workspace titled **Ansible Dev Space**
 +
-image::01-introduction/intro3.png[Dev Spaces workspace selection page showing available workspaces including Ansible Dev Space]
+image::10-platform-workspace/intro3.png[Dev Spaces workspace selection page showing available workspaces including Ansible Dev Space]
 +
 NOTE: It will take a few minutes for the Dev Spaces instance to initialize. When it has loaded, a Visual Studio Code interface will appear.
 +
-image::01-introduction/intro4.png[Dev Spaces workspace loading screen showing VS Code interface initialization]
+image::10-platform-workspace/intro4.png[Dev Spaces workspace loading screen showing VS Code interface initialization]
 +
 . Click the **Trust Publishers and Install** button to trust the extension publishers that are included within the Dev Spaces workspace
 . Click the **Yes, I trust the Authors** button to trust the workspace authors (your instructors).
 . Wait a few minutes until the additional extension icons appear for Ansible and OpenShift on the left side.
 +
-image::01-introduction/intro5.png[VS Code interface in Dev Spaces showing Ansible and OpenShift extension icons in the left sidebar]
+image::10-platform-workspace/intro5.png[VS Code interface in Dev Spaces showing Ansible and OpenShift extension icons in the left sidebar]
 
 == 5: Ansible and OpenShift Extensions
 
@@ -69,7 +71,7 @@ For this lab, we have have provided a link:https://code.visualstudio.com/docs/ed
 
 . Click on the **Ansible** extension icon to access the Ansible Development Tools extension (covered in a subsequent lab)
 +
-image::01-introduction/intro6.png[Ansible extension interface in VS Code showing available Ansible development tools]
+image::10-platform-workspace/intro6.png[Ansible extension interface in VS Code showing available Ansible development tools]
 
 == 6: User Credentials in Workspaces
 
@@ -85,29 +87,39 @@ The majority of the exercises in this lab will be performed using the Visual Stu
 
 . Open a new terminal by selecting the VS Code menu starting with the hamburger (3 horizontal lines) in the top left, then selecting **Terminal** -> **New Terminal**
 +
-image::01-introduction/intro7.png[VS Code terminal interface showing basic command line operations in the Dev Spaces environment]
+image::10-platform-workspace/intro7.png[VS Code terminal interface showing basic command line operations in the Dev Spaces environment]
 +
 . Explore the environment:
-
-[source,bash]
++
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
-$ whoami
-
+whoami
+----
++
+[source,output]
+----
 user
 ----
-
-[source,bash]
+. Check the Dev Spaces Workspace container OS release:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
 cat /etc/redhat-release`
-
+----
++
+[source,output]
+----
 Red Hat Enterprise Linux release 9.6 (Plow)
 ----
-
-
-[source,bash]
+. You have access to `ansible` and additional developer tools:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
-$ ansible --version
-
+ansible --version
+----
++
+[source,output]
+----
 ansible [core 2.16.14]
   config file = None
   configured module search path = ['/home/user/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
