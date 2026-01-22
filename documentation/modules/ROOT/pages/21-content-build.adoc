@@ -1,4 +1,4 @@
-= Lab: Building and Managing Content
+= Lab: Build a custom Collection and Execution Environment
 
 [abstract]
 We will create a custom Collection, publish it to a Private Automation Hub (PAH), build a custom Execution Environment (EE) from a Red Hat certified base image, and finally, run the automation from Ansible Automation Controller.
@@ -57,13 +57,7 @@ NOTE: Make sure to store the token securely, as it will not be displayed again.
 
 In your Dev Spaces terminal, create a file containing the following variables. These will configure `ansible-galaxy` and `ansible-builder` to use your PAH instance instead of upstream to pull and push collections and execution environments.
 
-. First, create a new directory named `env` in the `/projects` directory to hold various scripts and variables. 
-+
-[source,bash,role=execute,subs="verbatim,attributes,quotes"]
-----
-mkdir /projects/env
-----
-. Now, create a file called `set_pah_vars.env` in your `/projects/env/` directory with the following contents. Be sure to use your PAH API token created previously:
+. Create a file called `set_pah_vars.env` in your `/projects/env/` directory with the following contents. Be sure to use your PAH API token created previously:
 +
 NOTE: Replace #{your_api_token}# below with the personal API token you just copied from PAH.
 +
@@ -81,20 +75,20 @@ export AAP_CONTROLLER_WEB_URL='{aap_controller_web_url}'
 export ANSIBLE_GALAXY_SERVER_LIST='published,certified,validated,community'
 
 # Configure the 'published' repository
-export ANSIBLE_GALAXY_SERVER_PUBLISHED_URL='${AAP_CONTROLLER_WEB_URL}/pulp_ansible/galaxy/published/'
+export ANSIBLE_GALAXY_SERVER_PUBLISHED_URL='$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/published/'
 export ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=${PAH_API_TOKEN}
 
 # Configure the 'certified' repository
-export ANSIBLE_GALAXY_SERVER_CERTIFIED_URL='${AAP_CONTROLLER_WEB_URL}/pulp_ansible/galaxy/rh-certified/'
+export ANSIBLE_GALAXY_SERVER_CERTIFIED_URL='$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/rh-certified/'
 export ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=${PAH_API_TOKEN}
 
 # Configure the 'validated' repository
-export ANSIBLE_GALAXY_SERVER_VALIDATED_URL='${AAP_CONTROLLER_WEB_URL}/pulp_ansible/galaxy/validated/'
-export ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=${PAH_API_TOKEN}
+export ANSIBLE_GALAXY_SERVER_VALIDATED_URL='$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/validated/'
+export ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=$\{PAH_API_TOKEN\}
 
 # Configure the 'community' repository
-export ANSIBLE_GALAXY_SERVER_COMMUNITY_URL='${AAP_CONTROLLER_WEB_URL}/pulp_ansible/galaxy/community/'
-export ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=${PAH_API_TOKEN}
+export ANSIBLE_GALAXY_SERVER_COMMUNITY_URL='$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/community/'
+export ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=$\{PAH_API_TOKEN\}
 
 # Show loaded variables
 printenv | grep ANSIBLE
@@ -135,15 +129,15 @@ source /projects/env/set_pah_vars.env
 +
 [source,output,subs="verbatim,attributes,quotes"]
 ----
-ANSIBLE_GALAXY_SERVER_COMMUNITY_URL=https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/pulp_ansible/galaxy/community/
-ANSIBLE_GALAXY_SERVER_PUBLISHED_URL=https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/pulp_ansible/galaxy/published/
+ANSIBLE_GALAXY_SERVER_COMMUNITY_URL=$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/community/
+ANSIBLE_GALAXY_SERVER_PUBLISHED_URL=$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/published/
 ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=#{your_api_token}#
 ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=#{your_api_token}#
 ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=#{your_api_token}#
 ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=#{your_api_token}#
 ANSIBLE_GALAXY_SERVER_LIST=published,certified,validated,community
-ANSIBLE_GALAXY_SERVER_VALIDATED_URL=https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/pulp_ansible/galaxy/validated/
-ANSIBLE_GALAXY_SERVER_CERTIFIED_URL=https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/pulp_ansible/galaxy/rh-certified/
+ANSIBLE_GALAXY_SERVER_VALIDATED_URL=$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/validated/
+ANSIBLE_GALAXY_SERVER_CERTIFIED_URL=$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/rh-certified/
 ----
 
 == 3. Publishing our Custom Collection
@@ -266,7 +260,7 @@ image::21-content-build/create-remote-registry.png[Create Remote Registry]
 +
 image::21-content-build/create-remote-registry-details.png[Create Remote Registry Details]
 +
-NOTE: You can link:https://access.redhat.com/terms-based-registry[Create Service Account Credentials,window=_blank] in the Red Hat Customer Portal to simplify the management and access to the Red Hat Container Catalog.
+NOTE: You can link:https://access.redhat.com/terms-based-registry[Create Service Account Credentials,window=_blank] in the Red Hat Customer Portal to simplify the management and access to the Red Hat Container Catalog instead of specifying your username and password.
 
 Now that details related to the Red Hat Container Registry have been added, configure PAH to sync the `ee-minimal-rhel9` image 
 
@@ -302,7 +296,7 @@ image::21-content-build/execution-environment-confirm-sync.png[Confirm Sync Exec
 === 4.3: Synchronize required collections
 
 . Go to *Automation Content* -> *Remotes*
-. Click on the kebob (3 dots) to the right of *rh-certified* and choose the edit (pencil) icon
+. Click on the edit (pencil) icon next to the *rh-certified* repository
 +
 image::21-content-build/edit-certified-remote.png[Edit RH-Certified Repository]
 +
@@ -325,7 +319,7 @@ image::21-content-build/edit-certified-details.png[Edit Details]
 +
 image::21-content-build/sync-certified-repository.png[Sync Repository]
 +
-. Confirm in the final dialogue
+. In the final dialog, leave the default values and click **Sync**.
 +
 image::21-content-build/sync-repo-confirm.png[caption="Confirm Sync", role="thumb"]
 
@@ -906,13 +900,4 @@ podman images
 podman tag localhost/my-pah-ee:1.0 aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.0
 podman images
 podman push aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.0
-----
-
-=== Enhanced Script
-
-Try using something like Gemini to create a better version of these scripts for more practical use. Copy and paste both of the previous sets of commands into a prompt in Gemini with something like the following:
-
-[source,gemini,role=execute,subs="verbatim,attributes"]
-----
-Take the following bash script and add a proper shebang, pull the hard-coded filenames out and define them as variables at the top so this can be re-used. The variables should define the collection name, execution environment name and versions as separate vars. Leave ${PAH_API_TOKEN} alone.
 ----

@@ -10,9 +10,9 @@
 *** xref:11-platform-dev-tooling.adoc[1.2. Platform - Using Ansible developer tools]
 *** xref:12-platform-aap_on_openshift.adoc[1.3. Platform - AAP on OpenShift]
 ** Module 2: Content 
-*** xref:20-content-develop.adoc[2.1. Content - Creating automation for Windows]
-*** xref:21-content-build.adoc[2.2. Content - Build a custom Execution Environment and Collection]
-*** xref:22-content-execute.adoc[2.3. Content - Develop a Playbook and configure AAP to execute it all]
+*** xref:20-content-develop.adoc[2.1. Content - Creating Automation Content for Windows]
+*** xref:21-content-build.adoc[2.2. Content - Build a custom Collection and Execution Environment]
+*** xref:22-content-execute.adoc[2.3. Content - Develop a Playbook and Execute within AAP]
 *** xref:23-content-pipeline.adoc[2.4. Content - Pipeline for collections]
 *** xref:24-content-config-as-code.adoc[2.5. Content - Config as Code]
 ** Module 3: Events 

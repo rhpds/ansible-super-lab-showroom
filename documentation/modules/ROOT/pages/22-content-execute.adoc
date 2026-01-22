@@ -1,4 +1,4 @@
-= Lab: Executing Content
+= Lab: Develop a Playbook and Execute within AAP
 
 [abstract]
 In this lab we will configure AAP to execute the automation content created in previous labs. We will also learn some additional activities around collection management.
@@ -42,14 +42,14 @@ Since we already have a plabyook directory at `/projects/lab_playbooks/` we will
 . Attempt to run this in Dev Spaces.
 . First change to the `/projects/lab_playbooks/` directory:
 +
-[source,yaml,role=execute,subs="verbatim,attributes"]
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
 cd /projects/lab_playbooks/
 ----
 +
 . Execute this with `ansible-playbook`. It will fail. Do you know why?
 +
-[source,yaml,role=execute,subs="verbatim,attributes"]
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
 ansible-playbook test_pah_ee.yml
 ----
@@ -115,9 +115,9 @@ IMPORTANT: Using `ansible-playbook` will merely use the local environment, not t
 +
 . This time use `ansible-navigator` and specify the execution environment:
 +
-[source,yaml,role=execute,subs="verbatim,attributes"]
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
-ansible-navigator --execution-environment-image aap-aap.apps.{openshift_cluster_ingress_domain}/my-pah-ee:1.1 run test_pah_ee.yml  --mode stdout
+ansible-navigator --execution-environment-image aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.1 run test_pah_ee.yml  --mode stdout
 ----
 +
 [source,output]
@@ -174,7 +174,7 @@ Now that we have confirmed the execution environment and custom filter work, let
 
 With the changes to incorporate the updated collection (filter plugin and version) and the Execution Environment, publish all of the changes to your git repository.
 
-. Navigate to the link:{gitea_console_url}[Gitea instance,window=_blank] and create a new repository called `lab_playbooks`
+. Navigate to the link:{gitea_console_url}[Gitea instance,window=_blank] and create a new repository called `lab_playbooks` using the steps provided in the prior lab.
 . Copy the URL to clone this repository
 . Return to Dev Spaces and change to the `/projects/lab_playbooks/` directory
 +
@@ -274,7 +274,9 @@ image::22-content-execute/gitea-lab-playbooks.png[Lab Playbooks]
 
 === 2.2: Create a Credential for Hub Container Registry
 
-First, create a new credential in Automation Controller to allow it to pull the custom Execution Environment from Private Automation Hub.
+Now, crete a series of resources in Automation Controller to integrate with the components we have created so far.
+
+First, create a new credential to allow Automation Controller to pull the custom Execution Environment from Private Automation Hub.
 
 . Launch the link:{aap_controller_web_url}[Automation Controller,window=_blank] web interface and login using the credentials from the xref:environment-details.adoc[Environment Details,window=_blank] page.
 . From the navigation menu on the left, expand **Automation Execution** and expand **Infrastructure** and click on **Credentials**.
@@ -333,7 +335,54 @@ image::22-content-execute/automation-controller-create-ee.png[Create Execution E
 
 image::22-content-execute/automation-controller-create-ee-dialog.png[Create Execution Environment Dialog]
 
-=== 2.5: Create a Project
+=== 2.5: Create PAH Credentials
+
+In order for Automation Controller to pull collections from Private Automation Hub, we need to create a Credential for each of the repositories containing collections we wish to use in our automation.
+
+. From the Credentials page in Automation Controller, click **Create credential** once again to add a new credential.
++
+image::22-content-execute/automation-controller-create-credential-3.png[Create Credentials]
++
+. Enter the following details on the _Create Credential_ page to create a credential for the _published_ repository in Private Automation Hub. Use the API token obtained in the prior lab:
+.. *Name*: `PAH - published`
+.. *Credential type*: `Ansible Galaxy/Automation Hub API Token`
+.. *Galaxy Server URL*: `{aap_controller_web_url}/pulp_ansible/galaxy/published/`
+.. *API Token*: `#{pah_api_token}#`
+. Click **Create credential** to save the new credential.
++
+image::22-content-execute/automation-controller-create-credential-pah-dialog.png[Create Credentials Dialog]
+
+Perform the same steps to create a second credential for the _rh-certified_ repository in Private Automation Hub.
+
+. From the Credentials page in Automation Controller, click **Create credential** once again to add a new credential.
+. Enter the following details on the _Create Credential_ page to create a credential for the _published_ repository in Private Automation Hub. Use the API token obtained in the prior lab:
+.. *Name*: `PAH - rh-certified`
+.. *Credential type*: `Ansible Galaxy/Automation Hub API Token`
+.. *Galaxy Server URL*: `{aap_controller_web_url}/pulp_ansible/galaxy/rh-certified/`
+.. *API Token*: `#{pah_api_token}#`
+. Click **Create credential** to save the new credential.
+
+=== 2.6: Add Credentials to the Default Organization
+
+For the Credentials that are associated with Private Automation Hub repositories to be utilized, they must be associated with the Organization that wishes to use them. In our case, this is the _Default_ organization.
+
+. From the navigation menu on the left, expand **Access Management** and click on **Organizations**.
++
+image::22-content-execute/automation-controller-organizations-overview.png[Navigate to Organizations]
++
+. Next to the _Default_ organization, click the pencil icon to edit the organization.
++
+image::22-content-execute/automation-controller-organizations-edit.png[Edit Organization]
++
+. Click on the _Galaxy Credentials_ section and add both of the PAH credentials created previously by selecting the checkbox next to them.
+.. **PAH - published | Ansible Galaxy/Automation Hub API Token**
+.. **PAH - rh-certified | Ansible Galaxy/Automation Hub API Token**
++
+image::22-content-execute/automation-controller-organizations-add-credentials.png[Add Credentials to Organization]
++
+. Click **Next** at the bottom of the page, then **Next** and finally **Finish** to save change to the Organization.
+
+=== 2.7: Create a Project
 
 Create a new link:https://docs.ansible.com/ansible-tower/latest/html/userguide/projects.html[Project,window=_blank] in Automation Controller that points to your Git repository containing the playbook.
 
@@ -375,7 +424,7 @@ image::22-content-execute/automation-controller-create-job-template.png[Create J
 .. *Name*: `Test Custom Cowsay Filter`
 .. *Inventory*: `super-lab`
 .. *Project*: `Lab Playbooks`
-.. *Playbook*: `playbooks/test_pah_ee.yml`
+.. *Playbook*: `test_pah_ee.yml`
 .. *Execution Environment*: `My Custom PAH EE`
 . Click **Create job template** to create the new Job Template.
 +
@@ -402,7 +451,7 @@ Repeat these steps to add a *Job Template* to execute the playbook we created in
 .. *Name*: `Provision Web Node`
 .. *Inventory*: `super-lab`
 .. *Project*: `Lab Playbooks`
-.. *Playbook*: `playbooks/site.yml`
+.. *Playbook*: `site.yml`
 .. *Credential*: `Windows`
 .. *Execution Environment*: `My Custom PAH EE`
 . Click *Create job template* to create the new Job Template.
@@ -445,13 +494,8 @@ collections:
 
 === 3.2: Add Validated Remote
 
-Create a new remote for the `validated` collections repository. A token for Red Hat Automation Hub is required to access this repository.
+Create a new remote for the `validated` collections repository. The API token for upstream Red Hat Automation Hub is required to access this repository. The token retrieved in a prior lab can be used here.
 
-. Navigate to Red Hat Automation Hub and click link:https://console.redhat.com/ansible/automation-hub/token[here,window=_blank] to generate a token
-. Click **Load token** to generate a new token and copy it to your clipboard.
-+
-image::22-content-execute/load-automation-hub-token.png[Load Automation Hub Token]
-+
 . From the Remotes page in Private Automation Hub, click **Create remote**.
 +
 image::22-content-execute/remotes-create-remote.png[Create Remote]
@@ -490,6 +534,7 @@ Finally, synchronize the `validated` and `community` repositories to pull in the
 +
 image::22-content-execute/sync-repository.png[Sync Repository]
 +
+. In the _Sync Repository_ dialog, click **Sync** to start the synchronization.
 . Repeat the above steps to sync the `validated` repositories as well.
 
 NOTE: Syncing the _rh-certified_ collections will take some time. You can monitor the progress, but it will not impact the next set of labs in this bootcamp.
