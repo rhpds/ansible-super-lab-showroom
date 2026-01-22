@@ -977,3 +977,12 @@ podman tag localhost/my-pah-ee:1.0 aap-aap.{openshift_cluster_ingress_domain}/my
 podman images
 podman push aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.0
 ----
+
+=== Enhanced Script
+
+Try using something like Gemini to create a better version of these scripts for more practical use. Copy and paste both of the previous sets of commands into a prompt in Gemini with something like the following:
+
+[source,gemini,role=execute,subs="verbatim,attributes"]
+----
+Take the following bash script and add a proper shebang, pull the hard-coded filenames out and define them as variables at the top so this can be re-used. The variables should define the collection name, execution environment name and versions as separate vars. Leave ${PAH_API_TOKEN} alone.
+----
