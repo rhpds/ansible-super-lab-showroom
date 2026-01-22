@@ -1,7 +1,7 @@
 = Lab: Creating Automation Content for Windows
 
 [abstract]
-In this lab we will develop a custom Ansible collection to manage a Windows server in our lab that will represent an example enterprise environment. We will build the content a piece at a time until the full collection is ready to be deployed. The server will be configured to run a custom website, have chocolatey software manager installed, and filebeat installed and configured.
+In this lab we will develop a custom Ansible collection to manage a Windows server in our lab that will represent an example enterprise environment. We will build the content a piece at a time until the full collection is ready to be deployed. The server will be configured to run a custom website, have chocolatey software manager installed, and Filebeat installed and configured.
 
 == Learning Objectives
 
@@ -124,10 +124,10 @@ NOTE: Choose either this section or <<ansible-creator-gui, 2.1.2 Using the Ansib
 +
 [source,bash,role=execute]
 ----
-ansible-creator init collection red_hat_one.super_lab /projects/lab_collection/
+ansible-creator init collection \
+  red_hat_one.super_lab \
+  /projects/lab_collection/
 ----
-+
-Once complete, the following will be displayed.
 +
 [source,output]
 ----
@@ -140,11 +140,11 @@ Once complete, the following will be displayed.
 ----
 for role in web_server log_shipper
   do 
-    ansible-creator add resource role ${role} /projects/lab_collection/
+    ansible-creator \
+      add resource role ${role} \
+      /projects/lab_collection/
   done
 ----
-+
-After the roles were created, the following will be displayed.
 +
 [source,output]
 ----
@@ -263,7 +263,6 @@ TIP: `ansible-lint` will complain unless each file ends with and empty newline, 
     state: started
   register: r_website_status
   when: not ansible_check_mode
-
 
 - name: Display website status
   ansible.builtin.debug:
@@ -415,10 +414,10 @@ For the remainder of this lab the `ansible-creator` CLI will be used for simplic
 +
 [source,bash,role=execute]
 ----
-ansible-creator init playbook red_hat_one.super_lab /projects/lab_playbooks/
+ansible-creator init playbook \
+  red_hat_one.super_lab \
+  /projects/lab_playbooks/
 ----
-+
-The following will be displayed once the command completes:
 +
 [source,output]
 ----
@@ -462,15 +461,15 @@ In AAP, a credential is used to communicate with the remote Windows host. We wil
 +
 [source,yaml,role=execute,title="/projects/env/"]
 ----
-mkdir --verbose /projects/env/
+mkdir --parents --verbose /projects/env/
 ----
-+
-The following will be displayed
 +
 [source,output]
 ----
 mkdir: created directory '/projects/env/'
 ----
++
+NOTE: If the directory already exists from the previous module, there is no output.
 +
 . Add the following to a secrets file in the `/projects/env/` directory called `secrets.yml`:
 +
@@ -493,7 +492,7 @@ The file that was automatically scaffolded is acceptable as it currently stands 
 +
 NOTE: For additional information see https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/managing_automation_content/managing-cert-valid-content#token-management-hub_cloud-sync[Managing Automation Content Documentation,window=_blank]
 +
-. Add the following to the provided `ansible.cfg`:
+. Add the following to end of the provided `ansible.cfg`:
 +
 [source,bash,role=execute,title="/projects/lab_playbooks/ansible.cfg",subs="verbatim,quotes"]
 ----
@@ -537,8 +536,11 @@ collections:
 [source,bash,role=execute]
 ----
 cd /projects/lab_playbooks/
-ansible-galaxy collection install --requirements-file collections/requirements.yml
+ansible-galaxy collection install \
+  --requirements-file collections/requirements.yml
 ----
++
+TIP: Add these commands to `/projects/env/config.sh`
 +
 [source,output]
 ----
@@ -577,6 +579,8 @@ Install the required library for either WinRM or PSRP:
 pip install pypsrp
 ----
 +
+TIP: Add this command to `/projects/env/config.sh`
++
 [source,output]
 ----
 Defaulting to user installation because normal site-packages is not writeable
@@ -612,7 +616,8 @@ This `ansible-creator` command required a collection name when executing. The re
 +
 [source,bash,role=execute]
 ----
-rm --force --recursive --verbose /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/
+rm --force --recursive --verbose \
+  /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/
 ----
 +
 [source,output]
@@ -634,7 +639,9 @@ removed directory '/projects/lab_playbooks/collections/ansible_collections/red_h
 +
 [source,bash,role=execute]
 ----
-ln --symbolic --verbose /projects/lab_collection/ /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab
+ln --symbolic --verbose \
+  /projects/lab_collection/ \
+  /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab
 ----
 +
 [source,output]
@@ -683,7 +690,9 @@ cd /projects/lab_playbooks/
 +
 [source,bash,role=execute]
 ----
-ansible --module-name ansible.builtin.win_ping windows --extra-vars @/projects/env/secrets.yml
+ansible \
+  --module-name ansible.builtin.win_ping windows \
+  --extra-vars @/projects/env/secrets.yml
 ----
 +
 [source,output]
@@ -698,7 +707,8 @@ windows | SUCCESS => {
 +
 [source,bash,role=execute]
 ----
-ansible-playbook site.yml --extra-vars @/projects/env/secrets.yml --check
+ansible-playbook --extra-vars @/projects/env/secrets.yml \
+  site.yml --check
 ----
 +
 NOTE: This run will fail the first time you run it. The output will be reviewed in the following steps.
@@ -746,7 +756,8 @@ NOTE: There are several ways to address this situation, but this was included in
 +
 [source,bash,role=execute]
 ----
-ansible-playbook site.yml --extra-vars @/projects/env/secrets.yml
+ansible-playbook --extra-vars @/projects/env/secrets.yml \
+  site.yml
 ----
 +
 . Review the output. Notice this time the validation tasks did not run:
@@ -828,7 +839,8 @@ Hostname windows.lab.sandbox-5tt52-ocp4-cluster.svc.cluster.local
 +
 [source,bash,role=execute]
 ----
-ansible-playbook site.yml --extra-vars @/projects/env/secrets.yml --check
+ansible-playbook --extra-vars @/projects/env/secrets.yml \
+  site.yml --check
 ----
 +
 . This time the validate tasks content matches `curl`:

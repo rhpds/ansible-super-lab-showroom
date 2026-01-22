@@ -204,7 +204,11 @@ Created collection for red_hat_one.super_lab at /projects/lab_collection/red_hat
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-ansible-galaxy collection publish --server {aap_controller_web_url}/api/galaxy/ red_hat_one-super_lab-1.0.0.tar.gz --token ${PAH_API_TOKEN} --verbose
+ansible-galaxy collection publish \
+  --server {aap_controller_web_url}/api/galaxy/ \
+  red_hat_one-super_lab-1.0.0.tar.gz \
+  --token ${PAH_API_TOKEN} \
+  --verbose
 ----
 +
 [source,output]
@@ -262,9 +266,9 @@ image::21-content-build/create-remote-registry-details.png[Create Remote Registr
 +
 NOTE: You can link:https://access.redhat.com/terms-based-registry[Create Service Account Credentials,window=_blank] in the Red Hat Customer Portal to simplify the management and access to the Red Hat Container Catalog instead of specifying your username and password.
 
-Now that details related to the Red Hat Container Registry have been added, configure PAH to sync the `ee-minimal-rhel9` image 
-
 === 4.2: Synchronize base Execution Environment
+
+Now that details related to the Red Hat Container Registry have been added, configure PAH to sync the `ee-minimal-rhel9` image 
 
 . From the navigation menu on the left, expand **Automation Content** and click on **Execution Environments**. 
 +
@@ -354,10 +358,9 @@ image::21-content-build/gitea-create-repository.png[Gitea Create Repository]
 
 ==== 5.2: Append to the `.gitignore` file
 
-Return to your Dev Spaces terminal. 
-
+. Return to your Dev Spaces terminal. 
 . Update the `.gitignore` file within the `/projects/lab_collection` directory containing the collection and append the following lines to exclude files that should not be committed to the repository.
-
++
 [source,bash,role=execute,subs="verbatim,attributes",title="/projects/lab_collection/.gitignore"]
 ----
 context/
@@ -407,7 +410,7 @@ Initialized empty Git repository in /projects/lab_collection/.git/
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-git checkout -b main
+git switch --create main
 ----
 +
 [source,output]
@@ -472,20 +475,26 @@ TIP: Ensure the roles created earlier are included
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-git remote add origin {gitea_console_url}/{gitea_user}/red_hat_one_super_lab.git<1>
+git remote add origin \
+  {gitea_console_url}/{gitea_user}/red_hat_one_super_lab.git<1>
 ----
 <1> This is the URL copied in step *2.* above.
 +
-. Push the files
+. Push the files using the Gitea authentication:
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-git push -u origin main
+git push origin main
 ----
++
+* Username: `{gitea_user}`
+* Password: `{gitea_password}`
 +
 NOTE: Since the repository requires authentication, you will be prompted to enter your Gitea username and password at the top of the Dev Spaces window.
 +
 image::21-content-build/devspaces-git-auth.png[Gitea Repository Containing Collection Content]
++
+TIP: You may use the command `git config --global credential.helper store` to allow caching of these credentials. Only use this less secure option in a lab environment like this. You may also want to add this to `/projects/env/config.sh`
 +
 [source,output]
 ----
@@ -553,12 +562,16 @@ additional_build_steps:
 
 Login to your PAH container registry, build the custom Execution Environment, and push the resulting image to your PAH instance using the following commands:
 
-. Log in to your PAH container registry with your AAP user credentials
+. Log in to your PAH container registry with your AAP user credentials:
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-podman login aap-aap.{openshift_cluster_ingress_domain}
+podman login \
+  aap-aap.{openshift_cluster_ingress_domain}
 ----
++
+* Username: `{aap_controller_admin_user}`
+* Password: `{aap_controller_admin_password}`
 +
 [source,output]
 ----
@@ -574,11 +587,28 @@ Login Succeeded!
 cd /projects/lab_collection/
 ----
 +
-. Build the Execution Environment. It will pull the base from PAH, then add our content:
+. For reference, check local `podman images` before building to compare after:
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-ansible-builder build --tag my-pah-ee:1.0 --build-arg TOKEN=${PAH_API_TOKEN} --verbosity 1
+podman images
+----
++
+[source,output]
+----
+REPOSITORY  TAG         IMAGE ID    CREATED     SIZE
+----
++
+NOTE: You may have images from previous labs, those are not relevant.
++
+. Build the Execution Environment. It will pull the base from PAH, then add our content:
++
+[source,bash,role=execute,subs="verbatim,attributes,callouts"]
+----
+ansible-builder build \
+  --tag my-pah-ee:1.0 \
+  --build-arg TOKEN=${PAH_API_TOKEN} \
+  --verbosity 1
 ----
 +
 NOTE: The `${PAH_API_TOKEN}` environment variable was set previously containing the value of the API Token from PAH. Set this variable once again if your terminal session has been restarted via the `/projects/env/set_pah_vars.env` file.
@@ -591,18 +621,53 @@ Complete! The build context can be found at: /projects/lab_collection/context
 ----
 <1> Token is passed from the CLI and used in the build process, but removed in this output for security.
 +
-. Tag and push the image to your PAH registry:
+. The new image is available:
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-podman tag localhost/my-pah-ee:1.0 aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.0
+podman images
 ----
 +
-. Push the newly build Execution Environment image to PAH:
+[source,output]
+----
+REPOSITORY                                                                                             TAG         IMAGE ID      CREATED         SIZE
+localhost/my-pah-ee                                                                                    1.0         d6720adf6297  24 seconds ago  365 MB
+<none>                                                                                                 <none>      83b83a0538e8  2 minutes ago   367 MB
+<none>                                                                                                 <none>      d512d1529417  2 minutes ago   365 MB
+aap-aap.apps.cluster-bhmvb.dynamic.redhatworkshops.io/ansible-automation-platform-26/ee-minimal-rhel9  latest      9d130a29338c  5 weeks ago     341 MB
+----
++
+. Tag the image:
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-podman push aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.0
+podman tag \
+  localhost/my-pah-ee:1.0 aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.0
+----
++
+. Check for the new tag:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+podman images
+----
++
+[source,output]
+----
+REPOSITORY                                                                                             TAG         IMAGE ID      CREATED             SIZE
+aap-aap.apps.cluster-bhmvb.dynamic.redhatworkshops.io/my-pah-ee                                        1.0         d6720adf6297  About a minute ago  365 MB
+localhost/my-pah-ee                                                                                    1.0         d6720adf6297  About a minute ago  365 MB
+<none>                                                                                                 <none>      83b83a0538e8  3 minutes ago       367 MB
+<none>                                                                                                 <none>      d512d1529417  3 minutes ago       365 MB
+aap-aap.apps.cluster-bhmvb.dynamic.redhatworkshops.io/ansible-automation-platform-26/ee-minimal-rhel9  latest      9d130a29338c  5 weeks ago         341 MB
+----
++
+. Push the newly built Execution Environment image to PAH:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+podman push \
+  aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.0
 ----
 +
 [source,output]
@@ -709,7 +774,7 @@ additional_build_steps:
 <1> Increment the collection version.
 <2> Add the `python` section to include the `cowsay` dependency. Ensure this lines up properly with `galaxy` and NOT `collections`.
 
-=== 7.3: Increment Collection nad Version and Republish
+=== 7.3: Increment Collection and Version and Republish
 
 Now, we publish a new version of the collection and a new version of the EE that includes the updated collection and dependency.
 
@@ -731,7 +796,11 @@ Created collection for red_hat_one.super_lab at /projects/lab_collection/red_hat
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-ansible-galaxy collection publish --server {aap_controller_web_url}/api/galaxy/ red_hat_one-super_lab-1.0.1.tar.gz --token ${PAH_API_TOKEN} --verbose
+ansible-galaxy collection publish \
+  --server {aap_controller_web_url}/api/galaxy/ \
+  red_hat_one-super_lab-1.0.1.tar.gz \
+  --token ${PAH_API_TOKEN} \
+  --verbose
 ----
 +
 [source,output]
@@ -756,7 +825,10 @@ Finally, build and push the new EE version:
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-ansible-builder build --tag my-pah-ee:1.1 --build-arg TOKEN=${PAH_API_TOKEN} --verbosity 1
+ansible-builder build \
+  --tag my-pah-ee:1.1 \
+  --build-arg TOKEN=${PAH_API_TOKEN} \
+  --verbosity 1
 ----
 +
 [source,output]
@@ -788,7 +860,8 @@ aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/ansible-automation-platfor
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-podman tag localhost/my-pah-ee:1.1 aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.1
+podman tag \
+  localhost/my-pah-ee:1.1 aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.1
 ----
 +
 . You can verify by listing images again:
@@ -815,7 +888,8 @@ aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/ansible-automation-platfor
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-podman push aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.1
+podman push \
+  aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.1
 ----
 +
 [source,output]
@@ -872,9 +946,11 @@ This script needs to be run in Dev Spaces if your workspace restarts.
 
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-cd /projects/env/
 source /projects/env/unset_pah_vars.env
+cd /projects/lab_playbooks/
 ansible-galaxy collection install --requirements-file collections/requirements.yml
+pip install pypsrp
+git config --global credential.helper store
 ----
 
 === Script to release a new collection
