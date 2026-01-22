@@ -1,4 +1,4 @@
-= Lab: Building Automation Content for Windows
+= Lab: Creating Automation Content for Windows
 
 [abstract]
 In this lab we will develop a custom Ansible collection to manage a Windows server in our lab that will represent an example enterprise environment. We will build the content a piece at a time until the full collection is ready to be deployed. The server will be configured to run a custom website, have chocolatey software manager installed, and filebeat installed and configured.
@@ -127,6 +127,8 @@ NOTE: Choose either this section or <<ansible-creator-gui, 2.1.2 Using the Ansib
 ansible-creator init collection red_hat_one.super_lab /projects/lab_collection/
 ----
 +
+Once complete, the following will be displayed.
++
 [source,output]
 ----
     Note: collection project created at /projects/lab_collection
@@ -141,6 +143,8 @@ for role in web_server log_shipper
     ansible-creator add resource role ${role} /projects/lab_collection/
   done
 ----
++
+After the roles were created, the following will be displayed.
 +
 [source,output]
 ----
@@ -208,7 +212,7 @@ image::20-content-develop/collection_dir_tree.png[Collection Roles]
 
 ==== 2.2.1: Build Web Server Role
 
-. Navigate to the directory for the `web_server` role. 
+. Expand the directory for the `web_server` role. 
 . Create a new task file in the `tasks` directory for the tasks to setup IIS:
 +
 [source,yaml,role=execute,title="/projects/lab_collection/roles/web_server/tasks/setup.yml"]
@@ -242,7 +246,7 @@ TIP: `ansible-lint` will complain unless each file ends with and empty newline, 
 
 - name: Copy a sample index.html file to the web root
   ansible.windows.win_template:
-    src: files/index.html.j2
+    src: index.html.j2
     dest: C:\sites\superlab\index.html
     force: true
 
@@ -286,9 +290,9 @@ TIP: `ansible-lint` will complain unless each file ends with and empty newline, 
 ...
 ----
 +
-. Next, create the template file for the web server content:
+. Next, create the template file named `index.html.j2` for the web server content into the `templates` directory:
 +
-[source,bash,role=execute,title="/projects/lab_collection/roles/web_server/files/index.html.j2"]
+[source,bash,role=execute,title="/projects/lab_collection/roles/web_server/templates/index.html.j2"]
 ----
 Welcome to Super Lab IIS Server
 Machine ID {{ ansible_facts['machine_id'] }}
@@ -326,7 +330,7 @@ image::20-content-develop/web_server_role.png[Log Shipper Role]
 
 ==== 2.2.2: Build Log Shipper Role
 
-. Navigate to the `/projects/lab_collection/roles/log_shipper/` directory
+. Expand the `/projects/lab_collection/roles/log_shipper/` directory
 . Create a new task file in the `tasks` directory to handle setup requirements:
 +
 [source,yaml,role=execute,title="/projects/lab_collection/roles/log_shipper/tasks/prerequisites.yml"]
@@ -414,6 +418,8 @@ For the remainder of this lab the `ansible-creator` CLI will be used for simplic
 ansible-creator init playbook red_hat_one.super_lab /projects/lab_playbooks/
 ----
 +
+The following will be displayed once the command completes:
++
 [source,output]
 ----
     Note: playbook project created at /projects/lab_playbooks
@@ -450,7 +456,7 @@ all:
 
 === 3.3: Create secrets file
 
-In AAP a credential is used. We will simulate that here with a file that is NOT committed to any repositories.
+In AAP, a credential is used to communicate with the remote Windows host. We will simulate that here with a file containing the values found within the Credential which will NOT be committed to any repositories.
 
 . Create a directory at `/projects/env/` to hold local scripts and variables we will use but do not want to commit to any repositories:
 +
@@ -459,14 +465,16 @@ In AAP a credential is used. We will simulate that here with a file that is NOT 
 mkdir --verbose /projects/env/
 ----
 +
+The following will be displayed
++
 [source,output]
 ----
 mkdir: created directory '/projects/env/'
 ----
 +
-. Add the following to a secrets file in your home directory:
+. Add the following to a secrets file in the `/projects/env/` directory called `secrets.yml`:
 +
-[source,yaml,role=execute,title="/projects/env/secrets.yml"]
+[source,yaml,role=execute,title="/projects/env/secrets.yml",subs="verbatim,attributes"]
 ----
 ---
 ansible_user: {windows_user}
@@ -474,16 +482,16 @@ ansible_password: {windows_password}
 ...
 ----
 +
-NOTE: You may need to do this from a terminal or open the `/projects/env/` folder in the UI.
+NOTE: You may need to perform this activity  from a terminal or open the `/projects/env/` folder in the UI.
 
 === 3.4: Setup ansible.cfg
 
-The scaffold file is fine the way it is, specifying the inventory file. However, Automation Hub entries need to be added to install collections. Since we have not configured Automation Hub with the collections required, in this step we will use upstream Hub. 
+The file that was automatically scaffolded is acceptable as it currently stands as it correctly specifies the location of the inventory file. However, entries need to be added to install collections from Red Hat Automation Hub. Since we have not configured Private Automation Hub with the collections required, in this step we will use upstream Red Hat Automation Hub. 
 
-. First, obtain a token from https://console.redhat.com/ansible/automation-hub/token/[Automation Hub]
+. First, obtain a token from https://console.redhat.com/ansible/automation-hub/token/[Automation Hub,window=_blank]
 . Under **Offline Token** click **Load Token** and copy this token and store it somewhere secure as it cannot be displayed again
 +
-NOTE: For additional information see https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/managing_automation_content/managing-cert-valid-content#token-management-hub_cloud-sync[Managing Automation Content Documentation]
+NOTE: For additional information see https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/managing_automation_content/managing-cert-valid-content#token-management-hub_cloud-sync[Managing Automation Content Documentation,window=_blank]
 +
 . Add the following to the provided `ansible.cfg`:
 +
@@ -506,11 +514,11 @@ token=#{your_token}#
 url=https://galaxy.ansible.com
 ----
 +
-IMPORTANT: Be sure to replace #{your_token}# with the token in step 2.
+IMPORTANT: Be sure to replace #{your_token}# with the token from step 2.
 
 === 3.5: Configure Collections
 
-This directory will call the roles we created. We need to install these collections in Dev Spaces:
+This `lab_playbooks` directory will call the roles we created. We need to install these collections in Dev Spaces:
 
 . Modify the provided `requirements.yml` file and replace its contents:
 +
@@ -557,12 +565,8 @@ chocolatey.chocolatey:1.5.3 was installed successfully
 Installing 'ansible.windows:3.3.0' to '/home/user/.ansible/collections/ansible_collections/ansible/windows'
 ansible.windows:3.3.0 was installed successfully
 ----
-+
-TIP: Add this to `/projects/env/config.sh`.
 
 === 3.6: Install python libraries
-
-TIP: Add this to the script `/projects/env/config.sh`
 
 Install the required library for either WinRM or PSRP:
 
@@ -599,13 +603,6 @@ Successfully installed pypsrp-0.8.1 pyspnego-0.12.0
 NOTE: You may safely ignore the question about creating a virtual environment
 +
 image::20-content-develop/dev_spaces_venv.png[Dev Spaces Virtual Environment Question]
-+
-. If you want to use WinRM, install that library:
-+
-[source,bash,role=execute]
-----
-pip install pywinrm
-----
 
 === 3.7: Configure Collection directory
 
@@ -645,7 +642,7 @@ ln --symbolic --verbose /projects/lab_collection/ /projects/lab_playbooks/collec
 '/projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab' -> '/projects/lab_collection/'
 ----
 +
-. If you expand `/projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab` it show list the two roles created in `/projects/lab_collection/`
+. If you expand `/projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab`, it should list the two roles created in `/projects/lab_collection/`
 +
 image::20-content-develop/playbook_dir_with_collection_link.png[Linked Collection Directory]
 +
@@ -653,7 +650,7 @@ NOTE: This is only for our lab environment, this is not needed for AAP.
 
 === 3.8: Setup Playbook
 
-. Next, replace the contents of `site.yml` with this:
+. Next, replace the contents of `site.yml` with the following:
 +
 [source,yaml,role=execute,title="/projects/lab_playbooks/site.yml"]
 ----
@@ -675,7 +672,7 @@ NOTE: Why are we using `tasks` wth `include_role` instead of `roles` keyword? Th
 
 == 4: Test Content
 
-. Since an `ansible.cfg` and inventory are configured, ensure everything is executed from the `/projects/lab_playbooks/` directory:
+. Since an `ansible.cfg` and inventory are configured, ensure everything is executed from the `/projects/lab_playbooks/` directory by navigating to this directory:
 +
 [source,bash,role=execute]
 ----
@@ -812,7 +809,7 @@ PLAY RECAP *********************************************************************
 windows                    : ok=21   changed=9    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
 ----
 +
-. If everything worked, after a few minutes the server will be configured and running both IIS and Filebeat.
+. If everything worked, after a few minutes, the server will be configured and running both Internet Information Services (IIS), a Windows web server, and Filebeat.
 . Use `curl` to test the site remotely:
 +
 [source,bash,role=execute]
@@ -856,7 +853,7 @@ ok: [windows] => {
 
 == 5: Next Steps
 
-In the next lab, we will create an Execution Environment containing this collection, build it and commit everything to a git repository.
+In the next lab, we will create an Execution Environment containing the collection in this lab, build it, and publish the resulting image to AAP. In addition, we will also commit all of our code to a git repository.
 
 == Conclusion
 
@@ -883,14 +880,14 @@ For additional references, refer to the following resources:
 
 In case your workspace restarts, all files and directories will be preserved but this script may need to be run:
 
-[source,yaml,role=execute,title="/projects/env/config.sh"]
+[source,bash,role=execute,title="/projects/env/config.sh"]
 ----
 cd /projects/lab_playbooks/
 ansible-galaxy collection install --requirements-file collections/requirements.yml
 pip install pypsrp
 ----
 
-[source,yaml,role=execute,title="/projects/env/secrets.yml"]
+[source,yaml,role=execute,title="/projects/env/secrets.yml",subs="verbatim,attributes"]
 ----
 ---
 ansible_user: {windows_user}
