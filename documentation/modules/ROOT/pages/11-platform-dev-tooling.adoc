@@ -15,6 +15,10 @@ After completing this module, you will be able to:
 * Set up comprehensive testing frameworks for automation
 * Navigate the Ansible Development Tools ecosystem
 
+== Prerequisites
+
+. This lab takes place in link:https://devspaces.{openshift_cluster_ingress_domain}[OpenShift Dev Spaces,window=_blank]
+
 == 1: Git
 
 While a local directory can be used to manage resources related to automation development, it is generally considered best practice that version control tools be utilized. These days, when speaking of version control, we are referring to link:https://git-scm.com[Git,window=_blank]. Furthermore, to properly scale automation across an enterprise, `git` _proficiency_ is required. 
@@ -44,7 +48,12 @@ PS1='[\u \W$(__git_ps1 " (%s)")]\$ '
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-mkdir /projects/env/
+mkdir --parents --verbose /projects/env/
+----
++
+[source,output]
+----
+mkdir: created directory '/projects/env/'
 ----
 +
 . Create the following script for the purpose of executing it when your workspace restarts:
