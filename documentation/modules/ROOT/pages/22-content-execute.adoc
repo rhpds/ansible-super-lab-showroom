@@ -12,6 +12,13 @@ After completing this module, you will be able to:
 * Executing job templates using the collection and Execution Environment
 * Customizing components in AAP
 
+== Prerequisites
+
+* Access to link:https://devspaces.{openshift_cluster_ingress_domain}[OpenShift Dev Spaces,window=_blank]
+* *Automation Controller* and *Automation Hub*
+* *Windows* managed host
+* Custom collection and execution environment built and published to *Automation Hub*
+
 == 1: Test content in Dev Spaces
 
 Now that both the collection and Execution Environment have been created and published to Private Automation hub, we'll create a playbook to use the filter contained within the `red_hat_one.super_lab` collection.
@@ -444,7 +451,7 @@ image::22-content-execute/automation-controller-job-template-success.png[Job Tem
 
 === 2.8: Add Job Template for Windows Node
 
-Repeat these steps to add a *Job Template* to execute the playbook we created in xref:20-content-windows.adoc[Module 2 Lab 1,window=_blank] page.
+Repeat these steps to add a *Job Template* to execute the playbook we created in xref:20-content-develop.adoc[Module 2 Lab 1,window=_blank] page.
 
 . From the navigation menu on the left, go to *Automation Execution* -> *Templates* -> *Create template* -> *Create job template*.
 . Enter the following details on the _Create job template_ page:
@@ -536,8 +543,8 @@ image::22-content-execute/sync-repository.png[Sync Repository]
 +
 . In the _Sync Repository_ dialog, click **Sync** to start the synchronization.
 . Repeat the above steps to sync the `validated` repositories as well.
-
-NOTE: Syncing the _rh-certified_ collections will take some time. You can monitor the progress, but it will not impact the next set of labs in this bootcamp.
++
+NOTE: Syncing the collections can take some time. You can monitor the progress, but it will not impact the next set of labs.
 
 == Conclusion
 
