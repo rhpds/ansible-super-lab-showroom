@@ -337,7 +337,7 @@ image::22-content-execute/automation-controller-create-ee-dialog.png[Create Exec
 
 === 2.5: Create PAH Credentials
 
-In order for Automation Controller to pull collections from Private Automation Hub, we need to a Credential for each of the repositories containing collections we wish to use in our automation.
+In order for Automation Controller to pull collections from Private Automation Hub, we need to create a Credential for each of the repositories containing collections we wish to use in our automation.
 
 . From the Credentials page in Automation Controller, click **Create credential** once again to add a new credential.
 +
