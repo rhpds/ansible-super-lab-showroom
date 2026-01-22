@@ -291,6 +291,22 @@ Deployed on 2026-01-19 at 18:38:43
 +
 . Disable this Rulebook Activation before the next lab.
 
+== 6: Troubleshooting
+
+If needed, check the Kafka queue directly:
+
+. Go to the link:{openshift_cluster_console_url}[OpenShift console,window=_blank]
+. Make sure the namespace is set to *Kafka*
+. Go to *Workloads* -> *Pods*
+. Select one of the broker pods
+. Select *Terminal*
+. Run the following with the matching topic:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+bin/kafka-console-consumer.sh --bootstrap-server cluster-kafka-bootstrap-kafka.{openshift_cluster_ingress_domain}:443 --consumer-property security.protocol=SSL --topic eda-windows-iis-events --from-beginning
+----
+
 == Summary
 
 You have learned how to configure Filebeat to send Windows IIS event logs to Kafka and configure EDA to monitor the Kafka topic for service outages and fire off the playbook to start IIS when it is detected down.
