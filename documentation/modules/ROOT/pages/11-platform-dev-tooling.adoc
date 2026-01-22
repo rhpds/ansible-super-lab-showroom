@@ -62,7 +62,14 @@ PS1='[\u \W$(__git_ps1 " (%s)")]\$ '
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-chmod +x /projects/env/config.sh
+chmod a+x /projects/env/config.sh
+----
++
+. Now if your workspace restarts, simply execute this script into the environment:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+/projects/env/config.sh
 ----
 
 === 1.2: Set Global Settings
@@ -81,9 +88,9 @@ git config --global user.email "email@example.com"
 
 === 1.3: Branches
 
-link;https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell[Branches] should be used liberally. They can be used to test ideas and have no fear trashing a branch that didn't quite work out. It's better to leave a branch as is and start a new one based on your current working branch rather than testing a few things and reverting the commits or comment/uncomment things. Using the new `git` prompt configured previously, your prompt should update when your branch changes similar to the following:
+link:https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell[Git branches] should be used liberally. They can be used to test ideas and have no fear trashing a branch that didn't quite work out. It's better to leave a branch as is and start a new one based on your current working branch rather than testing a few things and reverting the commits or to comment/uncomment things. Using the new `git` prompt configured previously, your prompt should update when your branch changes similar to the following:
 
-. Check what branch you are in. Notice is it also dynamically displayed in your prompt:
+. Check what branch you are in. Notice it is also dynamically displayed in your prompt:
 +
 [source,role=execute,bash,subs="verbatim,attributes"]
 ----
@@ -93,18 +100,22 @@ git branch
 [source,output]
 ----
 * main
+[user devspaces-example (main)]$ 
 ----
 +
-. Create a new branch called `test`, which is a copy of `main`:
+. Create a new branch called `test`, which is a copy of `main` using `git switch`:
++
+NOTE: Historically, this was accomplished via `git checkout -b <branch_name>` but the `switch` sub-command was introduced in version `2.23` for this purpose.
 +
 [source,role=execute,bash,subs="verbatim,attributes"]
 ----
-git checkout -b test
+git switch --create test
 ----
 +
 [source,output]
 ----
 Switched to a new branch 'test'
+[user devspaces-example (test)]$ 
 ----
 +
 . Run `git branch` again:
@@ -114,33 +125,36 @@ Switched to a new branch 'test'
 git branch
 ----
 +
-[source,output]
+[source,output,subs="verbatim,attributes,callouts"]
 ----
-  main
-* test
+  main<1>
+* test<2>
+[user devspaces-example (test)]$ 
 ----
-
+<1> `main` is the name of the branch that is typically used as the default branch. Historically `master` was used in the past, however, most newer repositories make use of `main` as the default branch instead. The `git config --global init.defaultBranch` command can be used to configure your `git` client with the name of the default branch for new repositories.
+<2> The asterisk shows the currently active branch.
++
 NOTE: Since a `git` repository is used to manage an OpenShift Dev Spaces workspace, the current directory that you are operating within is already an initialized as a git repository.
-
-`main` is the name of the branch that is typically used as the default branch. `master` is also another name that was used in the past. however, most newer repositories make use of `main` as the default branch. The `git config --global init.defaultBranch` command can be used to configure your `git` client with the name of the default branch for new repositories.
-
++
 . Switch back to the `main` branch:
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-git checkout main
+git switch main
 ----
 +
 [source,output]
 ----
 Switched to branch 'main'
+Your branch is up to date with 'origin/main'.
+[user devspaces-example (main)]$ 
 ----
 +
 . Now, delete the `test` branch:
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-git branch -d test
+git branch --delete test
 ----
 +
 [source,output]
@@ -148,7 +162,7 @@ git branch -d test
 Deleted branch test (was 1234567).
 ----
 
-See how easy it was to create and delete branches in `git`!
+See how easy it was to create and delete branches in `git`? Be sure to use branches all the time. Also investigate `git stash` to learn how to quickly switch between branches before committing active work.
 
 === 1.4:Pull/Merge Requests
 
@@ -212,7 +226,7 @@ Writing manifest to image destination
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-podman run -v /projects/devspaces-example/:/scan:Z zricethezav/gitleaks:latest dir -v /scan/
+podman run -v /projects/devspaces-example/:/pwd:Z zricethezav/gitleaks:latest dir -v /pwd/
 ----
 +
 [source,output]
@@ -236,6 +250,8 @@ Fingerprint: /scan/secret:generic-api-key:1
 ----
 +
 . The default rules should detect the UUID as an API key.
++
+NOTE: If the UUID does not trigger this scan, try re-generating a new one.
 
 While this was only a brief introduction, we hope that you can see just how vital a tool such as _gitleaks_ can be to keep you and the content of your git repository free of sensitive assets.
 
@@ -253,20 +269,20 @@ pip install --user pre-commit
 [source,output]
 ----
 Collecting pre-commit
-  Downloading pre_commit-4.3.0-py2.py3-none-any.whl (220 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 221.0/221.0 kB 26.4 MB/s eta 0:00:00
+  Downloading pre_commit-4.5.1-py2.py3-none-any.whl (226 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 226.4/226.4 kB 13.8 MB/s eta 0:00:00
 Collecting cfgv>=2.0.0
-  Downloading cfgv-3.4.0-py2.py3-none-any.whl (7.2 kB)
+  Downloading cfgv-3.5.0-py2.py3-none-any.whl (7.4 kB)
 Collecting identify>=1.0.0
-  Downloading identify-2.6.15-py2.py3-none-any.whl (99 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 99.2/99.2 kB 63.9 MB/s eta 0:00:00
+  Downloading identify-2.6.16-py2.py3-none-any.whl (99 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 99.2/99.2 kB 66.7 MB/s eta 0:00:00
 Collecting nodeenv>=0.11.1
-  Downloading nodeenv-1.9.1-py2.py3-none-any.whl (22 kB)
+  Downloading nodeenv-1.10.0-py2.py3-none-any.whl (23 kB)
 Requirement already satisfied: pyyaml>=5.1 in /usr/local/lib64/python3.11/site-packages (from pre-commit) (6.0.3)
-Requirement already satisfied: virtualenv>=20.10.0 in /usr/local/lib/python3.11/site-packages (from pre-commit) (20.25.1)
-Requirement already satisfied: distlib<1,>=0.3.7 in /usr/local/lib/python3.11/site-packages (from virtualenv>=20.10.0->pre-commit) (0.3.8)
-Requirement already satisfied: filelock<4,>=3.12.2 in /usr/local/lib/python3.11/site-packages (from virtualenv>=20.10.0->pre-commit) (3.13.1)
-Requirement already satisfied: platformdirs<5,>=3.9.1 in /usr/local/lib/python3.11/site-packages (from virtualenv>=20.10.0->pre-commit) (4.2.0)
+Requirement already satisfied: virtualenv>=20.10.0 in /usr/local/lib/python3.11/site-packages (from pre-commit) (20.35.3)
+Requirement already satisfied: distlib<1,>=0.3.7 in /usr/local/lib/python3.11/site-packages (from virtualenv>=20.10.0->pre-commit) (0.4.0)
+Requirement already satisfied: filelock<4,>=3.12.2 in /usr/local/lib/python3.11/site-packages (from virtualenv>=20.10.0->pre-commit) (3.20.0)
+Requirement already satisfied: platformdirs<5,>=3.9.1 in /usr/local/lib/python3.11/site-packages (from virtualenv>=20.10.0->pre-commit) (4.5.0)
 Installing collected packages: nodeenv, identify, cfgv, pre-commit
   WARNING: The script nodeenv is installed in '/home/user/.local/bin' which is not on PATH.
   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
@@ -274,7 +290,7 @@ Installing collected packages: nodeenv, identify, cfgv, pre-commit
   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
   WARNING: The script pre-commit is installed in '/home/user/.local/bin' which is not on PATH.
   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
-Successfully installed cfgv-3.4.0 identify-2.6.15 nodeenv-1.9.1 pre-commit-4.3.0
+Successfully installed cfgv-3.5.0 identify-2.6.16 nodeenv-1.10.0 pre-commit-4.5.1
 ----
 +
 NOTE: Notice the *WARNING:* this tells you the path the binary was installed to.
@@ -373,9 +389,13 @@ In your terminal, view the installed Ansible Development Tools:
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
 adt --version
+----
+
+[source,output]
+----
 ansible-builder                          3.1.0
 ansible-core                             2.19.3
-ansible-creator                          25.9.0
+ansible-creator                          25.10.0
 ansible-dev-environment                  25.8.0
 ansible-dev-tools                        25.8.3
 ansible-lint                             25.9.2
@@ -555,7 +575,7 @@ This foundation prepares you to develop automation content that follows industry
 
 This is a handy script containing the commands used in this lab
 
-[source,bash,role=execute,subs="verbatim,attributes"]
+[source,bash,role=execute,subs="verbatim,attributes",title="/projects/env/config.sh"]
 ----
 #!/usr/bin/env bash
 

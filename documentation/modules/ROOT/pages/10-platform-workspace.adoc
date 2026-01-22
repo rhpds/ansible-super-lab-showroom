@@ -1,4 +1,4 @@
-= Lab: Ansible Development in Dev Spaces
+= Lab: Cloud-Navite Ansible Development in Dev Spaces
 
 [abstract]
 We will explore the Red Hat OpenShift Dev Spaces environment you will be working within and learn how to launch and configure development workspaces for Ansible automation development. This includes understanding the various components available in the lab environment, authenticating with git repositories, and using the Ansible Development Tools.
@@ -21,6 +21,7 @@ After completing this module, you will be able to:
 . Ansible Automation Platform
 . Red Hat OpenShift Dev Spaces
 . link:https://about.gitea.com[Gitea,window=_blank] Git Server
+. Windows 2019 managed host
 . Lab Instructions
 
 == 2: Contributing to this Lab Documentation
@@ -41,7 +42,7 @@ It provides, by default, a Visual Studio Code (VS Code) environment as configure
 +
 image::10-platform-workspace/intro-dev_spaces_shortcut.png[OpenShift console header showing the 9-block application launcher icon for quick access to Dev Spaces]
 +
-TIP: Alternatively, the direct URL is in the xref:environment-details.adoc[Environment Details,window=_blank] page and is link:https://devspaces.{openshift_cluster_ingress_domain}[https://devspaces.{openshift_cluster_ingress_domain},window=_blank]
+TIP: Alternatively, the direct URL is link:https://devspaces.{openshift_cluster_ingress_domain}[https://devspaces.{openshift_cluster_ingress_domain},window=_blank] also available in xref:environment-details.adoc[Environment Details,window=_blank].
 
 == 4: Dev Spaces Workspace
 
@@ -104,14 +105,14 @@ user
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-cat /etc/redhat-release`
+cat /etc/redhat-release
 ----
 +
 [source,output]
 ----
-Red Hat Enterprise Linux release 9.6 (Plow)
+Red Hat Enterprise Linux release 9.7 (Plow)
 ----
-. You have access to `ansible` and additional developer tools:
+. This workspacs provides access to `ansible` and additional developer tools:
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
@@ -120,15 +121,15 @@ ansible --version
 +
 [source,output]
 ----
-ansible [core 2.16.14]
+ansible [core 2.19.3]
   config file = None
   configured module search path = ['/home/user/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
   ansible python module location = /usr/local/lib/python3.11/site-packages/ansible
   ansible collection location = /home/user/.ansible/collections:/usr/share/ansible/collections
   executable location = /usr/local/bin/ansible
-  python version = 3.11.11 (main, Aug 21 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-5)] (/usr/bin/python3.11)
+  python version = 3.11.13 (main, Aug 21 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-11)] (/usr/bin/python3.11)
   jinja version = 3.1.6
-  libyaml = True
+  pyyaml version = 6.0.3 (with libyaml v0.2.5)
 ----
 
 == Conclusion
