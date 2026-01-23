@@ -2,7 +2,7 @@
 
 == Introduction
 
-In this lab, you will implement a production-grade automation pipeline. You will use an Ansible Playbook to configure **Filebeat** (installed via Chocolatey) to monitor IIS. These events will be published to a **Kafka** broker, where **Event-Driven Ansible (EDA)** will consume them to trigger self-healing playbooks.
+In this lab, you will implement a production-grade automation pipeline. You will use an Ansible Playbook to configure **Filebeat** (installed via Chocolatey) to monitor IIS. These events will be published to a **Kafka** broker, where **Event-Driven Ansible (EDA)** will consume them to trigger a self-healing playbook.
 
 == Prerequisites
 
@@ -11,13 +11,26 @@ In this lab, you will implement a production-grade automation pipeline. You will
 * Access to **Ansible Automation Platform (AAP)** and **EDA Controller**
 * An existing Job Template to setup and configure IIS
 
-== 1: Create the Configuration Playbook
+== 1. Disable check_website Rulebook Activation
 
-In the previous module we built and ran a automation that installed `Chocolatey` and `Filebeat`. In this lab we will add additional configuration and start Filebeat.
+Before starting this lab, disable the `check_website` Rulebook Activation created in the previous lab so that it does not interfere with this lab.
 
-NOTE: We are testing this in a single playbook first, then plan to migrate this into the role `log_shipper` created in Module 2 after we test and confirm.
+. Navigate to link:{aap_controller_web_url}[Automation Controller,window=_blank] web interface go to *Automation Decisions* -> *Rulebook Activations* 
++
+image::31-events-log-streaming/eda-ra-overview.png[EDA Rulebook Activations Overview]
+. Deselect the toggle for the `check_website` Rulebook Activation to disable it
++
+image::31-events-log-streaming/eda-ra-disable-url-check.png[Disabled EDA Rulebook Activation]
++
+. Select the checkbox to confirm disabling and click **Disable rulebook activations**
++
+image::31-events-log-streaming/eda-ra-disable-confirm.png[Confirm Disable EDA Rulebook Activation]
 
-. In your `lab_playbooks` repository, create `setup_monitoring.yml`:
+== 2: Create the Configuration Playbook
+
+In the previous module, we built and ran a automation that installed `Chocolatey` and `Filebeat` to the Windows host. In this lab, we will add additional configurations for Filebeat.
+
+. In your `lab_playbooks` repository, create the `setup_monitoring.yml` playbook:
 +
 [source,yaml,role=execute,title="/projects/lab_playbooks/setup_monitoring.yml",subs="verbatim,attributes,callouts"]
 ----
@@ -63,9 +76,9 @@ NOTE: We are testing this in a single playbook first, then plan to migrate this 
         state: restarted
 ...
 ----
-<1> For debugging this can be set to `true` for much easier to read logs.
+<1> For debugging, this property can be set to `true` to provide greater readability in the logs.
 +
-. Run the playbook from Dev Spaces:
+. Run the playbook from OpenShift Dev Spaces:
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
@@ -74,20 +87,20 @@ ansible-playbook \
   setup_monitoring.yml
 ----
 +
-. Add and commit the files to the `lab_playbooks` git repo
+. Add, commit and push the files to the `lab_playbooks` git repository
 +
-[source,yaml,role=execute,subs="verbatim,attributes"]
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
 git add setup_monitoring.yml
 git commit --message "Add filebeat configuration playbook"
 git push origin main
 ----
 
-== 2: Create the EDA Rulebook
+== 3: Create the EDA Rulebook
 
-The EDA Rulebook must match the structure of the Kafka event:
+The EDA Rulebook must match the structure of the Kafka event to properly trigger the remediation playbook. We are going to check for log messages that indicate the IIS service has stopped in the `condition` property of the rule:
 
-. In your `lab_playbooks_ repository, create the `check_kafka.yml` rulebook:
+. In your `lab_playbooks_ repository, create the `check_kafka.yml` rulebook in the `rulebooks` directory:
 +
 [source,yaml,role=execute,title="/projects/lab_playbooks/rulebooks/check_kafka.yml",subs="verbatim,attributes"]
 ----
@@ -112,7 +125,7 @@ The EDA Rulebook must match the structure of the Kafka event:
 ...
 ----
 +
-. Add and commit this rulebook to the `lab_playbooks` git repo
+. Add, commit and push this rulebook to the `lab_playbooks` git repository
 +
 [source,yaml,role=execute,subs="verbatim,attributes"]
 ----
@@ -120,21 +133,37 @@ git add rulebooks/check_kafka.yml
 git commit --message "Add kafka rulebook"
 git push origin main
 ----
+
+== 4: Synchronize the Project
+
+Synchronize the `Lab Playbooks` EDA project to retrieve the new rulebook.
+
+. Navigate to *Automation Decisions* -> *Projects*
+. Click the Sync button next to the `Lab Playbooks` project
 +
-. Navigate to *Automation Decisions* -> *Projects* -> Sync the `Lab Playbooks` projects to retrieve the new rulebook
+image::31-events-log-streaming/eda-projects-sync.png[Sync EDA Project]
+
+
+=== 5: Create the Rulebook Activation
+
+Create a new Rulebook Activation for the `check_kafka.yml` rulebook.
+
 . Navigate to *Automation Decisions* -> *Rulebook Activations* -> *Create rulebook activation*
 . Create a new *Rulebook Activation* with the following details:
 .. *Name*: `check_kafka`
 .. *Organization*: `Default`
 .. *Project*: `Lab playbooks`
 .. *Rulebook*: In the drop-down select `check_kafka.yml`
+.. *Credential*: `aap | Red Hat Ansible Automation Platform`
 .. *Decision Environment*: `de-minimal`
 .. *Log level*: `Info`
-. Click **Save** and the Rulebook will begin to activate
+. Click **Create rulebook activation** and the Rulebook will begin to activate
++
+image::31-events-log-streaming/eda-ra-create.png[Create Rulebook Activation]
 
-== 3: Simulate Failure
+== 6: Simulate Failure
 
-Return to Dev Spaces and intentionally stop the service to verify the end-to-end flow.
+Return to OpenShift Dev Spaces and intentionally stop the service to verify the end-to-end flow. After the service is stopped, attempt to access the IIS web server to confirm it is not responding.
 
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
@@ -180,10 +209,15 @@ windows | CHANGED => {
 curl: (7) Failed to connect to windows.aap.svc.cluster.local port 80: Connection refused
 ----
 
-== 5: Verify Remediation
+== 7: Verify Remediation
 
+With the Service stopped, EDA should consume the event from Kafka that was generated by Filebeat to trigger the remediation playbook within Automation Controller to restart the IIS service.
+
+. Navigate to *Automation Decisions* -> *Rulebook Activations*
+. Find and *click* on the `check_kafka` Rulebook Activation
+. Select the *History* tab for the `check_kafka` Rulebook Activation
 . Check the **EDA Controller** Rulebook Activation logs for the Kafka event.
-. Confirm the `Fix IIS Service` was triggered in **Automation Controller**.
+. Confirm the `Start IIS` was triggered in **Automation Controller**.
 +
 [source,output]
 ----
@@ -199,7 +233,7 @@ ansible_rulebook.rule_set_runner - INFO - Waiting for actions on events from Lis
 ansible_rulebook.rule_set_runner - INFO - Waiting for events, ruleset: Listen for Kafka Events
 ansible_rulebook.websocket - INFO - feedback websocket connected
 aiokafka.consumer.group_coordinator - INFO - Metadata for topic has changed from {} to {'eda-windows-iis-events': 1}.
-ansible_rulebook.action.run_job_template - INFO - running job template: Fix IIS Service, organization: Default
+ansible_rulebook.action.run_job_template - INFO - running job template: Start IIS, organization: Default
 ansible_rulebook.action.run_job_template - INFO - job results url: https://aap-aap.apps.cluster-866kv.dyn.redhatworkshops.io/#/jobs/75/details
 ansible_rulebook.action.run_job_template - INFO - controller job id: 75
 ----
@@ -288,12 +322,10 @@ Machine ID S-1-5-21-2979851890-3482578088-4054385452
 Hostname windows.lab.sandbox-866kv-ocp4-cluster.svc.cluster.local
 Deployed on 2026-01-19 at 18:38:43
 ----
-+
-. Disable this Rulebook Activation before the next lab.
 
 == 6: Troubleshooting
 
-If needed, check the Kafka queue directly:
+If needed, you can check the contents of the Kafka queue directly:
 
 . Go to the link:{openshift_cluster_console_url}[OpenShift console,window=_blank]
 . Make sure the namespace is set to *Kafka*
@@ -310,3 +342,11 @@ bin/kafka-console-consumer.sh --bootstrap-server cluster-kafka-bootstrap-kafka.{
 == Summary
 
 You have learned how to configure Filebeat to send Windows IIS event logs to Kafka and configure EDA to monitor the Kafka topic for service outages and fire off the playbook to start IIS when it is detected down.
+
+== Helpful Links
+
+For additional reference and deeper learning on managing EDA Controller:
+
+. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/using_automation_decisions/index[Using Automation Decisions]
+. https://console.redhat.com/ansible/automation-hub/repo/published/ansible/eda/[ansible.eda collection]
+. https://console.redhat.com/ansible/automation-hub/repo/published/ansible/eda/content/eda%2Fplugins%2Fevent_source/kafka/[Official kafka documentation]

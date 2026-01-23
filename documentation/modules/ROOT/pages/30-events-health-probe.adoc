@@ -122,7 +122,7 @@ git push origin main
 
 To ensure that Automation Controller detects the newly created playbook, synchronize the _Lab Playbooks_ project.
 
-. Navigte to link:{aap_controller_web_url}[Automation Controller,window=_blank] web interface go to *Automation Execution* -> *Projects* 
+. Navigate to link:{aap_controller_web_url}[Automation Controller,window=_blank] web interface go to *Automation Execution* -> *Projects* 
 +
 image::30-events-health-probe/automation-controller-projects-overview.png[Navigate to Projects]
 +
