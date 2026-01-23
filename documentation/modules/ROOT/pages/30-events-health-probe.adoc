@@ -68,7 +68,12 @@ The rulebook will use the `ansible.eda.url_check` source plugin to monitor the h
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-mkdir /projects/lab_playbooks/rulebooks/
+mkdir --parents --verbose /projects/lab_playbooks/rulebooks/
+----
++
+[source,output]
+----
+mkdir: created directory '/projects/lab_playbooks/rulebooks/'
 ----
 +
 . Create a rulebook named `check_website.yml` within the newly created `rulebook` directory:
@@ -289,7 +294,7 @@ image::30-events-health-probe/rulebook-running-history.png[Rulebook History]
 
 Now we will simulate a failure by stopping the IIS service manually.
 
-. In one windows continue to monitor the Rulebook activation. As long as IIS is healthy, you should see this in the *History* tab:
+. In one window, continue to monitor the Rulebook activation. As long as IIS is healthy, you should see this in the *History* tab:
 +
 [source,output]
 ----
@@ -447,7 +452,7 @@ windows | SUCCESS => {
 }
 ----
 
-=== 3.2: Verify the Automation Controller Execution
+=== 3.4: Verify the Automation Controller Execution
 
 Verify the remediation job was executed within Automation Controller:
 

@@ -112,7 +112,7 @@ The EDA Rulebook must match the structure of the Kafka event to properly trigger
         host: cluster-kafka-bootstrap-kafka.{openshift_cluster_ingress_domain}
         port: 443
         topic: eda-windows-iis-events
-        group_id: eda-iis-monitor
+        security_protocol: SSL
   rules:
     - name: Trigger Fix if IIS Service Stops
       condition: >
