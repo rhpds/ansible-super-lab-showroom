@@ -73,28 +73,28 @@ NOTE: Replace #{your_api_token}# below with the personal API token you just copi
 # This file contains configuration variables and is intended to be sourced, not executed.
 
 # This is your unique token from Private Automation hub
-export PAH_API_TOKEN='#{your_api_token}#'
+export PAH_API_TOKEN=#{your_api_token}#
 
 # Set your AAP web URL used throughout the rest of the vars
-export AAP_CONTROLLER_WEB_URL='{aap_controller_web_url}'
+export AAP_CONTROLLER_WEB_URL='{aap_controller_web_url}
 
 # Set the list of servers Ansible should know about
-export ANSIBLE_GALAXY_SERVER_LIST='published,certified,validated,community'
+export ANSIBLE_GALAXY_SERVER_LIST='published,certified,validated,community
 
 # Configure the 'published' repository
-export ANSIBLE_GALAXY_SERVER_PUBLISHED_URL='$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/published/'
-export ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=${PAH_API_TOKEN}
+export ANSIBLE_GALAXY_SERVER_PUBLISHED_URL=$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/published/
+export ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=$\{PAH_API_TOKEN\}
 
 # Configure the 'certified' repository
-export ANSIBLE_GALAXY_SERVER_CERTIFIED_URL='$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/rh-certified/'
-export ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=${PAH_API_TOKEN}
+export ANSIBLE_GALAXY_SERVER_CERTIFIED_URL=$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/rh-certified/
+export ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=$\{PAH_API_TOKEN\}
 
 # Configure the 'validated' repository
-export ANSIBLE_GALAXY_SERVER_VALIDATED_URL='$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/validated/'
+export ANSIBLE_GALAXY_SERVER_VALIDATED_URL=$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/validated/
 export ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=$\{PAH_API_TOKEN\}
 
 # Configure the 'community' repository
-export ANSIBLE_GALAXY_SERVER_COMMUNITY_URL='$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/community/'
+export ANSIBLE_GALAXY_SERVER_COMMUNITY_URL=$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/community/
 export ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=$\{PAH_API_TOKEN\}
 
 # Show loaded variables
@@ -136,15 +136,15 @@ source /projects/env/set_pah_vars.env
 +
 [source,output,subs="verbatim,attributes,quotes"]
 ----
-ANSIBLE_GALAXY_SERVER_COMMUNITY_URL=$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/community/
-ANSIBLE_GALAXY_SERVER_PUBLISHED_URL=$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/published/
+ANSIBLE_GALAXY_SERVER_COMMUNITY_URL=${AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/community/
+ANSIBLE_GALAXY_SERVER_PUBLISHED_URL=${AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/published/
 ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=#{your_api_token}#
 ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=#{your_api_token}#
 ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=#{your_api_token}#
 ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=#{your_api_token}#
 ANSIBLE_GALAXY_SERVER_LIST=published,certified,validated,community
-ANSIBLE_GALAXY_SERVER_VALIDATED_URL=$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/validated/
-ANSIBLE_GALAXY_SERVER_CERTIFIED_URL=$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/rh-certified/
+ANSIBLE_GALAXY_SERVER_VALIDATED_URL=${AAP_CONTROLLER_WEB_URL}/pulp_ansible/galaxy/validated/
+ANSIBLE_GALAXY_SERVER_CERTIFIED_URL=${AAP_CONTROLLER_WEB_URL}/pulp_ansible/galaxy/rh-certified/
 ----
 
 == 3. Publishing our Custom Collection
