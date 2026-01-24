@@ -288,7 +288,9 @@ image::30-events-health-probe/rulebook-running.png[Rulebook Running]
 +
 image::30-events-health-probe/rulebook-running-history.png[Rulebook History]
 
-== 3: Experience Remediation Self-Healing
+== 3: Verify Remediation Self-Healing
+
+In this section we will manually stop the IIS service and watch as EDA detects this and starts the service automatically.
 
 === 3.1: Simulate IIS Failure
 
@@ -389,7 +391,7 @@ IIS is healthy.
 ...
 ----
 
-=== 3.3: Validate
+=== 3.3: Validate IIS Service
 
 Return to the Dev Spaces terminal and double-check everything is once again running:
 
@@ -465,6 +467,21 @@ image::30-events-health-probe/automation-controller-jobs-overview.png[Automation
 image::30-events-health-probe/automation-controller-eda-trigger-job-check.png[Automation Controller Jobs Triggered]
 +
 . The job ID should match what was shown in the *EDA Controller* Rulebook Activation for *check_website*
+
+== 4. Disable check_website Rulebook Activation
+
+Before starting this lab, disable the `check_website` Rulebook Activation created in this lab so that it does not interfere with next lab.
+
+. Navigate to link:{aap_controller_web_url}[Automation Controller,window=_blank] web interface go to *Automation Decisions* -> *Rulebook Activations* 
++
+image::30-events-health-probe/eda-ra-overview.png[EDA Rulebook Activations Overview]
+. Deselect the toggle for the `check_website` Rulebook Activation to disable it
++
+image::30-events-health-probe/eda-ra-disable-url-check.png[Disable EDA Rulebook Activation]
++
+. Select the checkbox to confirm disabling and click **Disable rulebook activations**
++
+image::30-events-health-probe/eda-ra-disable-confirm.png[Confirm Disable EDA Rulebook Activation]
 
 == Summary
 You have successfully implemented an agentless monitoring and remediation workflow. By using the `url_check` source plugin, you ensured that the application is monitored from the "outside-in," verifying not just that the service is running, but that the web server is actually responding to HTTP requests.
