@@ -426,6 +426,16 @@ image::13-platform-aap_on_ocp_cac/installed-operators-aap.png[Installed Operator
 . Click on *aap-admin-password*
 . Scroll to the bottom and copy the password
 . Use `admin` as the username and the secret copied to login and verify
+. Feel free as a bonus to modify your playbook and deploy additional items
+
+== 6: Reset the Environment
+
+Before completing this lab, deactivate the python virtual environment:
+
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+deactivate
+----
 
 == Summary
 
