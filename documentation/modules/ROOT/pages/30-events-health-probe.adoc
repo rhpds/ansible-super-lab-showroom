@@ -198,8 +198,8 @@ Next, create a credential for EDA Controller to access Decision Environments.
 .. *Organization*: `Default`
 .. *Credential type*: `Container Registry`
 .. *Authentication URL*: `registry.redhat.io`
-.. *Username*: #<your_redhat_username>#
-.. *Password*: #<your_redhat_password>#
+.. *Username*: #YOUR_REDHAT_USERNAME#
+.. *Password*: #YOUR_REDHAT_PASSWORD#
 . Click **Create Credential**
 +
 image::30-events-health-probe/eda-credentials-de-create.png[Create Decision Environment Credential]

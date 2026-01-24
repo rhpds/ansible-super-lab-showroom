@@ -228,7 +228,7 @@ Switched to a new branch 'main'
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-git add site.yml test_pah_ee.yml collections/requirements.yml
+git add site.yml test_pah_ee.yml collections/requirements.yml inventory/hosts.yml
 ----
 +
 . Next, add the new remote:
@@ -248,7 +248,8 @@ git commit --message "Initial commit of playbook files"
 [source,output]
 ----
  [main (root-commit) f2a144b] Initial commit of playbook files
- 3 files changed, 29 insertions(+)
+ 4 files changed, 29 insertions(+)
+ create mode 100644 inventory/hosts.yml
  create mode 100644 collections/requirements.yml
  create mode 100644 site.yml
  create mode 100644 test_pah_ee.yml

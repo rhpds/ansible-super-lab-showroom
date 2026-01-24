@@ -508,18 +508,18 @@ server_list = hub, hub_validated, galaxy
 [galaxy_server.hub]
 url=https://console.redhat.com/api/automation-hub/content/published/
 auth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
-token=#{your_token}#
+token=#YOUR_TOKEN#
 
 [galaxy_server.hub_validated]
 url=https://console.redhat.com/api/automation-hub/content/validated/
 auth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
-token=#{your_token}#
+token=#YOUR_TOKEN#
 
 [galaxy_server.galaxy]
 url=https://galaxy.ansible.com
 ----
 +
-IMPORTANT: Be sure to replace #{your_token}# with the token from step 2.
+IMPORTANT: Be sure to replace #YOUR_TOKEN# with the token from step 2.
 
 === 3.5: Configure Collections
 
@@ -714,6 +714,7 @@ windows | SUCCESS => {
 [source,bash,role=execute]
 ----
 ansible-playbook --extra-vars @/projects/env/secrets.yml \
+  --inventory inventory/hosts.yml \
   site.yml --check
 ----
 +
@@ -763,6 +764,7 @@ NOTE: There are several ways to address this situation, but this was included in
 [source,bash,role=execute]
 ----
 ansible-playbook --extra-vars @/projects/env/secrets.yml \
+  --inventory inventory/hosts.yml \
   site.yml
 ----
 +
@@ -846,6 +848,7 @@ Hostname windows.lab.sandbox-5tt52-ocp4-cluster.svc.cluster.local
 [source,bash,role=execute]
 ----
 ansible-playbook --extra-vars @/projects/env/secrets.yml \
+  --inventory inventory/hosts.yml \
   site.yml --check
 ----
 +
