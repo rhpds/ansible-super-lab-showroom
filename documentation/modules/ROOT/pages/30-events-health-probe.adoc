@@ -294,7 +294,7 @@ In this section we will manually stop the IIS service and watch as EDA detects t
 
 === 3.1: Simulate IIS Failure
 
-Now we will simulate a failure by stopping the IIS service manually.
+Now, we will simulate a failure by stopping the IIS service manually.
 
 . In one window, continue to monitor the Rulebook activation. As long as IIS is healthy, you should see this in the *History* tab:
 +
