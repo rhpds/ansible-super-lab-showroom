@@ -40,16 +40,16 @@ The following modules are included in this superlab:
 .. xref:12-platform-aap_on_openshift.adoc[Platform - AAP on OpenShift]
 . Content
 [arabic]
-.. xref:20-content-windows.adoc[Creating automation for Windows]
-.. xref:21-content-dev-ee.adoc[Develop a custom Execution Environment]
-.. xref:22-content-dev-playbook.adoc[Develop a Playbook to execute it all]
+.. xref:20-content-develop.adoc[Creating automation for Windows]
+.. xref:21-content-build.adoc[Build a custom Execution Environment and Collection]
+.. xref:22-content-execute.adoc[Create a Playbook and configure AAP to execute it all]
 .. xref:23-content-pipeline.adoc[Pipeline for collections]
 .. xref:24-content-config-as-code.adoc[Config as Code]
 . Events
 [arabic]
-.. xref:30-events-rulebooks.adoc[EDA Overview and Rulebook creation]
-.. xref:31-events-dev-de.adoc[Develop and publish Decision Environment]
-.. xref:32-events-scenario.adoc[Execute a full EDA Scenario]
+.. xref:30-events-health-probe.adoc[EDA Overview and Rulebook for health monitoring]
+.. xref:31-events-log-streaming.adoc[EDA Log streaming with Filebeat and Kafka]
+.. xref:32-events-troubleshooting.adoc[EDA Troubleshooting]
 . AI
 [arabic]
 .. xref:40-ai-lightspeed-int-assistant.adoc[Ansible Lightspeed Intelligent Assistant]
