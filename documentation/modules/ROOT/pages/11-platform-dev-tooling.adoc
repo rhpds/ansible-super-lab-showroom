@@ -467,27 +467,23 @@ The curated list of tools installed as part of the Ansible automation developer 
 
 Ansible includes a Visual Studio Code (VS Code) extension to enhance the development experience. You can learn more about the features that are available in the extension at https://ansible.readthedocs.io/projects/vscode-ansible/
 
-. Open the Ansible extension on the left hand side of the Dev Spaces window
-+
-image::11-platform-dev-tooling/ansible-extension1.png[]
-+
-. For this lab, we will not be using Lightspeed, so feel free to close these panes
-+
-image::11-platform-dev-tooling/ansible-extension2.png[]
-
 === 4.2: Creating a Playbook Project
 
 Now that we have covered the basics of tools available as an automation developer, let's walk through bringing it all together. While not a command-line tool, the VS Code extension ties together functionality of Dev Spaces and Ansible Development Tools into the development Workspace you are currently using. This portion of the lab will walk through several aspects of automation development activities in this Workspace.
 
+. Open the Ansible extension on the left hand side of the Dev Spaces window
++
+image::11-platform-dev-tooling/ansible-extension1.png[]
++
 . Within the _Initialize_ section of the Ansible Development Tools, click on `Playbook project` to open a dialog to create a new project. 
 +
 Specify the following values within the playbook project creation dialog:
 +
 image::11-platform-dev-tooling/ansible-creator1.png[]
 +
-.. Destination directory: `/projects/myproject`
-.. Namespace: `mynamespace`
-.. Collection: `mycollection`
+.. *Destination directory*: `/projects/myproject`
+.. *Namespace*: `mynamespace`
+.. *Collection*: `mycollection`
 . Click **Create**
 +
 image::11-platform-dev-tooling/ansible-creator2.png[]
@@ -545,11 +541,11 @@ image::11-platform-dev-tooling/ansible-navigator3.png[]
 +
 image::11-platform-dev-tooling/ansible-navigator4.png[]
 
-==== 4.3.3: Using ansible-lint in VS Code
+=== 4.4: Using ansible-lint in VS Code
 
 The VS Code Ansible extension proactively runs `ansible-lint` on any playbook you are editing. Experiment with this tool to understand how the feature works.
 
-. Append the existing `site.yml` playbook with the following poorly written task
+. Append to the existing `site.yml` playbook with the following poorly written task:
 +
 [source,yaml,role=execute,subs="verbatim,attributes"]
 ----
@@ -582,6 +578,8 @@ image::11-platform-dev-tooling/ansible-lint5.png[]
 . `ansible-lint --fix` will automatically correct errors
 +
 image::11-platform-dev-tooling/ansible-lint6.png[]
++
+NOTE: If it it does not automatically fix these errors, try closing and reopening the file.
 +
 . Notice it did not fix every violation, such as adding a `name:` key for the _debug_ task. Feel free to fix this manually if you choose. Not every rule is enforced automatically. See `man ansible-lint` for more information.
 
