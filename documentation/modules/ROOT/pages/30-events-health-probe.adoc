@@ -395,7 +395,7 @@ IIS is healthy.
 
 Return to the Dev Spaces terminal and double-check everything is once again running:
 
-. Use `curl` again to verify:
+. Use `curl` again to verify the webpage can be accessed:
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
