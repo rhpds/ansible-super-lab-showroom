@@ -1,4 +1,4 @@
-= Lab: Automation Developer Experience
+= Lab: Cloud-Native Automation Developer Experience
 
 [abstract]
 We will explore essential software development practices applied to automation development, including git workflows, secret scanning with pre-commit hooks, and comprehensive testing. This lab covers treating automation as code with proper linting, testing, and CI/CD practices, culminating in an overview of the Ansible Development Tools suite.
