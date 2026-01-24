@@ -107,7 +107,7 @@ mkdir: created directory '/projects/lab_playbooks/rulebooks/'
 
 === 1.3: Push files to git
 
-. Ensure your working directory is the `lab_playbooks`:
+. Ensure your working directory is the `lab_playbooks` repository:
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
