@@ -37,7 +37,8 @@ The following modules are included in this superlab:
 [arabic]
 .. xref:10-platform-workspace.adoc[Introduction and exploration of Dev Spaces Workspace]
 .. xref:11-platform-dev-tooling.adoc[Using Ansible developer tools]
-.. xref:12-platform-aap_on_openshift.adoc[Platform - AAP on OpenShift]
+.. xref:12-platform-aap_on_openshift.adoc[AAP on OpenShift]
+.. xref:13-platform-aap_on_ocp_cac.adoc[AAP on OpenShift as Code]
 . Content
 [arabic]
 .. xref:20-content-develop.adoc[Creating automation for Windows]
