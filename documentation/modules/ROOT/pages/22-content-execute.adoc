@@ -124,7 +124,10 @@ IMPORTANT: Using `ansible-playbook` will merely use the local environment, not t
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-ansible-navigator --execution-environment-image aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.1 run test_pah_ee.yml  --mode stdout
+ansible-navigator \
+  --execution-environment-image aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.1 \
+  run test_pah_ee.yml  \
+  --mode stdout
 ----
 +
 [source,output]
