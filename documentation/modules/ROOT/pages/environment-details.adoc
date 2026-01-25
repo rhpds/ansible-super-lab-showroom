@@ -49,6 +49,20 @@ The following table contains the URL's and credentials for accessing resources c
 |{gitea_password}
 |===
 
+=== Windows 2019 Server
+
+[cols="1,1"]
+|===
+|Hostname (isolated, can only be reached from AAP and Dev Spaces)
+|windows.aap.svc.cluster.local
+
+|Windows Username
+|{windows_user}
+
+|Windows Password
+|{windows_password}
+|===
+
 === LiteLLM Access
 
 [cols="1,1"]
