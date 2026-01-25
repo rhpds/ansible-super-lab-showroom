@@ -89,7 +89,7 @@ NOTE: The more components installed at once, the longer it will take. Feel free 
 +
 NOTE: For additional information see https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/managing_automation_content/managing-cert-valid-content#token-management-hub_cloud-sync[Managing Automation Content Documentation,window=_blank]
 +
-[source,yaml,role=execute,subs="verbatim,attributes,callouts",title="Custom AAP Deployment",title="/projects/aap-ops/ansible.cfg"]
+[source,properties,role=execute,subs="verbatim,attributes,callouts",title="Custom AAP Deployment",title="/projects/aap-ops/ansible.cfg"]
 ----
 [galaxy]
 server_list = hub, hub_validated, galaxy
