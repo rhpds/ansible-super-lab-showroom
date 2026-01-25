@@ -145,7 +145,7 @@ First, create a `ConfigMap` resource to contain the non-sensitive configuration 
 image::41-lightspeed-mcp/openshift-overview-import-yaml.png[Import YAML option in OpenShift console]
 . Enter the following into the _Import YAML_ dialog:
 +
-[source,yaml]
+[source,yaml,subs="verbatim,attributes"]
 ----
 kind: ConfigMap
 apiVersion: v1
@@ -161,7 +161,7 @@ data:
   AAP_MCP_URL: https://aap-mcp-aap.{openshift_cluster_ingress_domain}/mcp
   LITELLM_MODEL_NAME: {litellm_available_models_list}
   LITELLM_URL: {litellm_api_base_url}
-  OPENCODE_CONFIG: /project/devspaces-example/opencode.json
+  OPENCODE_CONFIG: /projects/devspaces-example/opencode.json
 ----
 +
 NOTE: Notice the value of the `controller.devfile.io/mount-as` annotation in the snippet above is set to `env`, which means the contents of the `ConfigMap` will be mounted as environment variables in the Dev Spaces workspace.
@@ -173,7 +173,7 @@ Now, create a `Secret` resource to contain the sensitive configuration values by
 . On the top navigation bar, click on the **+** icon and select **Import YAML**
 . Enter the following into the _Import YAML_ dialog. Make sure to replace `PLACEHOLDER_REPLACE_ME` with the AAP API Token you generated in the prior section:
 +
-[source,yaml]
+[source,yaml,subs="verbatim,attributes"]
 ----
 kind: Secret
 apiVersion: v1
@@ -207,7 +207,7 @@ image::41-lightspeed-mcp/restart-devspaces-workspace.png[Restart Dev Spaces Work
 
 When the workspace has started, you can verify that the environment variables are correctly mounted by executing the following command in the terminal which will check for the presence of the environment variables as defined in the `ConfigMap` and `Secret` resources:
 
-[source,bash]
+[source,bash,role=execute]
 ----
 env | grep -E "(AAP_MCP|LITELLM)"
 ----
@@ -220,9 +220,9 @@ With the necessary environment variables now mounted into your Dev Spaces worksp
 
 You may have noticed earlier that one of the environment variables defined in the `ConfigMap` resource was the `OPENCODE_CONFIG` property, which specifies the location of the OpenCode configuration file (Hint: you run the command `env | grep OPENCODE_CONFIG` to see the value). This file does not exist yet as we will need to create it as part of this exercise. An link:https://opencode.ai/docs/config[OpenCode configuration file] contains details related to the inference service as well as any MCP servers that should be utilized. 
 
-Create a new file named `opencode.json` at the root of the `devspaces-example` workspace containing the following:
+Create a new file named `opencode.json` at the within the `/projects/devspaces-example` directory containing the following:
 
-[source,json]
+[source,json,title="/projects/devspaces-example/opencode.json",role=execute]
 ----
 {
     "$schema": "https://opencode.ai/config.json",
@@ -301,7 +301,7 @@ Now, lets start a chat session using our natural language that retrieves details
 
 Let's ask for information related to the _Job Templates_ that have been defined:
 
-[source,bash]
+[source,bash,role=execute]
 ----
 How many job templates are in AAP?
 ----
