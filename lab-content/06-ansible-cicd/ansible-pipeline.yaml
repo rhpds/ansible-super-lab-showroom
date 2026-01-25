@@ -21,7 +21,7 @@ spec:
         spec: null
         steps:
           - computeResources: {}
-            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            image: 'registry.redhat.io/ansible-automation-platform-26 /ee-supported-rhel9:latest'
             name: playbook-install
             script: |
               git clone -vvv $(params.playbook-repo)
@@ -50,7 +50,7 @@ spec:
         spec: null
         steps:
           - computeResources: {}
-            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            image: 'registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest'
             name: collection-clone
             script: |
               cd ansible_bootcamp_ci_cd_pipeline
@@ -69,7 +69,7 @@ spec:
         spec: null
         steps:
           - computeResources: {}
-            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            image: 'registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest'
             name: build-collection
             script: |
               cd ansible_bootcamp_ci_cd_pipeline
@@ -88,7 +88,7 @@ spec:
         spec: null
         steps:
           - computeResources: {}
-            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            image: 'registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest'
             name: lint-collection
             script: |
               cd collection_repo
@@ -130,7 +130,7 @@ spec:
         spec: null
         steps:
           - computeResources: {}
-            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            image: 'registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest'
             name: create-namespace
             script: |
               cd ansible_bootcamp_ci_cd_pipeline
@@ -149,7 +149,7 @@ spec:
         spec: null
         steps:
           - computeResources: {}
-            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            image: 'registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest'
             name: publish-collection
             script: |
               cd ansible_bootcamp_ci_cd_pipeline
@@ -168,7 +168,7 @@ spec:
         spec: null
         steps:
           - computeResources: {}
-            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            image: 'registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest'
             name: approve-collection
             script: |
               cd ansible_bootcamp_ci_cd_pipeline
