@@ -64,7 +64,7 @@ image::40-lightspeed-int-assistant/secrets-overview.png[Secrets Contained in the
 . For the _value_ enter the base URL for the inference service: {litellm_api_base_url}
 . Click the **Add key/value** link to add another key/value pair.
 . For the new _Key_ enter `chatbot_token`
-. For the _Value_ enter the API key: {litellm_virtual_key}
+. For the _Value_ enter the API key: `{litellm_virtual_key}`
 . Click the **Create** button.
 
 ==== 3.2: Enabling Ansible Lightspeed intelligent
