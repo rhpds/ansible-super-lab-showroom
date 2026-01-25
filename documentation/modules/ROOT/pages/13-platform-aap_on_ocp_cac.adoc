@@ -84,7 +84,7 @@ NOTE: The more components installed at once, the longer it will take. Feel free 
 
 . If you review the documentation this role specifies requirements we need to install in this environment.
 . Create a simple `ansible.cfg` to authenticate to upstream Automation Hub:
-. First, obtain a token from https://console.redhat.com/ansible/automation-hub/token/[Automation Hub,window=_blank]
+. Obtain a token from https://console.redhat.com/ansible/automation-hub/token/[Automation Hub,window=_blank]
 . Under **Offline Token** click **Load Token** and copy this token and store it somewhere secure as it cannot be displayed again
 +
 NOTE: For additional information see https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/managing_automation_content/managing-cert-valid-content#token-management-hub_cloud-sync[Managing Automation Content Documentation,window=_blank]
