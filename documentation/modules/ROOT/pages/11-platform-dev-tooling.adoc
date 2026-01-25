@@ -1,4 +1,4 @@
-= Lab: Automation Developer Experience
+= Lab: Cloud-Native Automation Developer Experience
 
 [abstract]
 We will explore essential software development practices applied to automation development, including git workflows, secret scanning with pre-commit hooks, and comprehensive testing. This lab covers treating automation as code with proper linting, testing, and CI/CD practices, culminating in an overview of the Ansible Development Tools suite.
@@ -15,6 +15,10 @@ After completing this module, you will be able to:
 * Set up comprehensive testing frameworks for automation
 * Navigate the Ansible Development Tools ecosystem
 
+== Prerequisites
+
+. This lab takes place in link:https://devspaces.{openshift_cluster_ingress_domain}[OpenShift Dev Spaces,window=_blank]
+
 == 1: Git
 
 While a local directory can be used to manage resources related to automation development, it is generally considered best practice that version control tools be utilized. These days, when speaking of version control, we are referring to link:https://git-scm.com[Git,window=_blank]. Furthermore, to properly scale automation across an enterprise, `git` _proficiency_ is required. 
@@ -23,65 +27,151 @@ NOTE: This lab covers the extreme basics of `git`. For many of you, this may be 
 
 === 1.1: CLI Completion
 
-While not required, sourcing these two files will greatly improve your CLI interactions. Note that this can also be added to the `devfile` for Dev Spaces customization or a local `.bashrc` file.
+While not required, sourcing these two files will greatly improve your CLI interactions. Note that this can also be added to the `devfile` for Dev Spaces customization or a local `.bashrc` file. For this lab just execute them live.
 
+. Source these files and watch how your prompt changes:
++
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
 source /usr/share/bash-completion/completions/git
 source /usr/share/git-core/contrib/completion/git-prompt.sh
 PS1='[\u \W$(__git_ps1 " (%s)")]\$ '
 ----
++
+[source,output]
+----
+[user devspaces-example (main)]$
+----
++
+. Notice your prompt will now display which branch you are currently operating against. Also, `git` sub commands now auto-complete with the TAB key. Feel free to customize this prompt as desired.
+. Create a directory that will survive workspace restarts:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+mkdir --parents --verbose /projects/env/
+----
++
+[source,output]
+----
+mkdir: created directory '/projects/env/'
+----
++
+. Create the following script for the purpose of executing it when your workspace restarts:
++
+[source,bash,role=execute,subs="verbatim,attributes",title="/projects/env/config.sh"]
+----
+#!/usr/bin/env bash
 
-Notice your prompt will now display which branch you are currently operating against. Also, `git` sub commands now auto-complete with the TAB key. Feel free to customize this prompt as desired.
+source /usr/share/bash-completion/completions/git
+source /usr/share/git-core/contrib/completion/git-prompt.sh
+PS1='[\u \W$(__git_ps1 " (%s)")]\$ '
+----
++
+. Make it executable:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+chmod a+x /projects/env/config.sh
+----
++
+. Now if your workspace restarts, simply execute this script into the environment:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+/projects/env/config.sh
+----
 
 === 1.2: Set Global Settings
 
 Before working with Git in your Ansible Workspace, you will need to set your global username and email. This metadata is used when committing code so that it can be associated with the user who made the change:
 
+. Set global values for git:
++
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-$ git config --global user.name "First Last"
-$git config --global user.email "email@example.com"
+git config --global user.name "First Last"
+git config --global user.email "email@example.com"
 ----
++
+. Add these commands to the `/projects/env/config.sh` script
 
 === 1.3: Branches
 
-link;https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell[Branches] should be used liberally. They can be used to test ideas and have no fear trashing a branch that didn't quite work out. It's better to leave a branch as is and start a new one based on your current working branch rather than testing a few things and reverting the commits or comment/uncomment things. Using the new `git` prompt configured previously, your prompt should update when your branch changes similar to the following:
+link:https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell[Git branches] should be used liberally. They can be used to test ideas and have no fear trashing a branch that didn't quite work out. It's better to leave a branch as is and start a new one based on your current working branch rather than testing a few things and reverting the commits or to comment/uncomment things. Using the new `git` prompt configured previously, your prompt should update when your branch changes similar to the following:
 
-[source,bash,subs="verbatim,attributes"]
+. Check what branch you are in. Notice it is also dynamically displayed in your prompt:
++
+[source,role=execute,bash,subs="verbatim,attributes"]
 ----
-[user devspaces-example (main)]$ git branch
+git branch
+----
++
+[source,output]
+----
 * main
-
-[user devspaces-example (main)]$ git checkout -b test
+[user devspaces-example (main)]$ 
+----
++
+. Create a new branch called `test`, which is a copy of `main` using `git switch`:
++
+NOTE: Historically, this was accomplished via `git checkout -b <branch_name>` but the `switch` sub-command was introduced in version `2.23` for this purpose.
++
+[source,role=execute,bash,subs="verbatim,attributes"]
+----
+git switch --create test
+----
++
+[source,output]
+----
 Switched to a new branch 'test'
-
-[user devspaces-example (test)]$ git branch
-  main
-* test
+[user devspaces-example (test)]$ 
 ----
-
++
+. Run `git branch` again:
++
+[source,role=execute,bash,subs="verbatim,attributes"]
+----
+git branch
+----
++
+[source,output,subs="verbatim,attributes,callouts"]
+----
+  main<1>
+* test<2>
+[user devspaces-example (test)]$ 
+----
+<1> `main` is the name of the branch that is typically used as the default branch. Historically `master` was used in the past, however, most newer repositories make use of `main` as the default branch instead. The `git config --global init.defaultBranch` command can be used to configure your `git` client with the name of the default branch for new repositories.
+<2> The asterisk shows the currently active branch.
++
 NOTE: Since a `git` repository is used to manage an OpenShift Dev Spaces workspace, the current directory that you are operating within is already an initialized as a git repository.
-
-`main` is the name of the branch that is typically used as the default branch. `master` is also another name that was used in the past. however, most newer repositories make use of `main` as the default branch. The `git config --global init.defaultBranch` command can be used to configure your `git` client with the name of the default branch for new repositories.
-
-Switch back to the `main` branch:
-
-[source,bash,subs="verbatim,attributes"]
++
+. Switch back to the `main` branch:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
-[user devspaces-example (test)]$ git checkout main
+git switch main
+----
++
+[source,output]
+----
 Switched to branch 'main'
+Your branch is up to date with 'origin/main'.
+[user devspaces-example (main)]$ 
 ----
-
-Now, delete the `test` branch:
-
-[source,bash,subs="verbatim,attributes"]
++
+. Now, delete the `test` branch:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
-[user devspaces-example (main)]$ git branch -d test
+git branch --delete test
+----
++
+[source,output]
+----
 Deleted branch test (was 1234567).
 ----
 
-See how easy it was to create and delete branches in `git`!
+See how easy it was to create and delete branches in `git`? Be sure to use branches all the time. Also investigate `git stash` to learn how to quickly switch between branches before committing active work.
 
 === 1.4:Pull/Merge Requests
 
@@ -107,23 +197,29 @@ While you generally should not be editing git history, there are times where thi
 
 It is absolutely vital that you never EVER commit any secrets to git. Even if you revert the commit or delete the file, it is still in history. Even if it is "just a lab server" or "only internal", a secret will trigger many security scans requiring additional work to explain if it is valid and needs rotating or not. Just don't do it. This lab will walk through using a tool like link:https://gitleaks.io[Gitleaks,window=_blank] to help keep your secrets out of git.
 
-First, create a fake API-like key. The default regex and patterns will determine a UUID-like value to be similar to an API key:
-
-[source,bash]
+. First, create a fake API-like key. The default regex and patterns will determine a UUID-like value to be similar to an API key:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
-$ cd /projects/devspaces-example/
-$ echo key=$(uuidgen) > secret
-$ cat secret
+cd /projects/devspaces-example/
+echo key=$(uuidgen) > secret
+cat secret
+----
++
+[source,output]
+----
 key=3863b2c6-cc7b-4832-92b6-5b82d6b1a987
 ----
-
-Gitleaks is available as a container image, so no installation is necessary. 
-
-Pull the image into your Dev Spaces workspace:
-
-[source,bash]
++
+. Gitleaks is available as a container image, so no installation is necessary. Pull the image into your Dev Spaces workspace:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
-$ podman pull docker.io/zricethezav/gitleaks:latest
+podman pull docker.io/zricethezav/gitleaks:latest
+----
++
+[source,output]
+----
 Trying to pull docker.io/zricethezav/gitleaks:latest...
 Getting image source signatures
 Copying blob 91da3791a8e8 done   | 
@@ -134,13 +230,16 @@ Copying config 49c41c2292 done   |
 Writing manifest to image destination
 49c41c2292e05b683dd2dbbe7f7677ca397722f1f0364adf615a3a6913f71ade
 ----
-
-Run `gitleaks` to scan the directory containing the generated fake secret by mounting the current working directory into the gitleaks container:
-
-[source,bash]
++
+. Run `gitleaks` to scan the directory containing the generated fake secret by mounting the current working directory into the gitleaks container:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
-$ podman run -v /projects/devspaces-example/:/scan:Z zricethezav/gitleaks:latest dir -v /scan/
-
+podman run -v /projects/devspaces-example/:/pwd:Z zricethezav/gitleaks:latest dir -v /pwd/
+----
++
+[source,output]
+----
     ○
     │╲
     │ ○
@@ -158,8 +257,10 @@ Fingerprint: /scan/secret:generic-api-key:1
 1:43AM INF scanned ~15523 bytes (15.52 KB) in 10.9ms
 1:43AM WRN leaks found: 1
 ----
-
-The default rules should detect the UUID as an API key.
++
+. The default rules should detect the UUID as an API key.
++
+NOTE: If the UUID does not trigger this scan, try re-generating a new one.
 
 While this was only a brief introduction, we hope that you can see just how vital a tool such as _gitleaks_ can be to keep you and the content of your git repository free of sensitive assets.
 
@@ -167,30 +268,30 @@ While this was only a brief introduction, we hope that you can see just how vita
 
 link:https://pre-commit.com/[pre-commit,window=_blank] is a tool that essentially hooks into the `git` lifecycle and runs additional tooling before the commit writes changes to git history. This is a perfect way to automatically invoke actions, like `ansible-lint` and `gitleaks`, before having to go back and squash or clean up git history.
 
-Install pre-commit using `pip`:
-
+. Install pre-commit using `pip`:
++
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-$ pip install --user pre-commit
+pip install --user pre-commit
 ----
-
-[source,bash]
++
+[source,output]
 ----
 Collecting pre-commit
-  Downloading pre_commit-4.3.0-py2.py3-none-any.whl (220 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 221.0/221.0 kB 26.4 MB/s eta 0:00:00
+  Downloading pre_commit-4.5.1-py2.py3-none-any.whl (226 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 226.4/226.4 kB 13.8 MB/s eta 0:00:00
 Collecting cfgv>=2.0.0
-  Downloading cfgv-3.4.0-py2.py3-none-any.whl (7.2 kB)
+  Downloading cfgv-3.5.0-py2.py3-none-any.whl (7.4 kB)
 Collecting identify>=1.0.0
-  Downloading identify-2.6.15-py2.py3-none-any.whl (99 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 99.2/99.2 kB 63.9 MB/s eta 0:00:00
+  Downloading identify-2.6.16-py2.py3-none-any.whl (99 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 99.2/99.2 kB 66.7 MB/s eta 0:00:00
 Collecting nodeenv>=0.11.1
-  Downloading nodeenv-1.9.1-py2.py3-none-any.whl (22 kB)
+  Downloading nodeenv-1.10.0-py2.py3-none-any.whl (23 kB)
 Requirement already satisfied: pyyaml>=5.1 in /usr/local/lib64/python3.11/site-packages (from pre-commit) (6.0.3)
-Requirement already satisfied: virtualenv>=20.10.0 in /usr/local/lib/python3.11/site-packages (from pre-commit) (20.25.1)
-Requirement already satisfied: distlib<1,>=0.3.7 in /usr/local/lib/python3.11/site-packages (from virtualenv>=20.10.0->pre-commit) (0.3.8)
-Requirement already satisfied: filelock<4,>=3.12.2 in /usr/local/lib/python3.11/site-packages (from virtualenv>=20.10.0->pre-commit) (3.13.1)
-Requirement already satisfied: platformdirs<5,>=3.9.1 in /usr/local/lib/python3.11/site-packages (from virtualenv>=20.10.0->pre-commit) (4.2.0)
+Requirement already satisfied: virtualenv>=20.10.0 in /usr/local/lib/python3.11/site-packages (from pre-commit) (20.35.3)
+Requirement already satisfied: distlib<1,>=0.3.7 in /usr/local/lib/python3.11/site-packages (from virtualenv>=20.10.0->pre-commit) (0.4.0)
+Requirement already satisfied: filelock<4,>=3.12.2 in /usr/local/lib/python3.11/site-packages (from virtualenv>=20.10.0->pre-commit) (3.20.0)
+Requirement already satisfied: platformdirs<5,>=3.9.1 in /usr/local/lib/python3.11/site-packages (from virtualenv>=20.10.0->pre-commit) (4.5.0)
 Installing collected packages: nodeenv, identify, cfgv, pre-commit
   WARNING: The script nodeenv is installed in '/home/user/.local/bin' which is not on PATH.
   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
@@ -198,14 +299,14 @@ Installing collected packages: nodeenv, identify, cfgv, pre-commit
   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
   WARNING: The script pre-commit is installed in '/home/user/.local/bin' which is not on PATH.
   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
-Successfully installed cfgv-3.4.0 identify-2.6.15 nodeenv-1.9.1 pre-commit-4.3.0
+Successfully installed cfgv-3.5.0 identify-2.6.16 nodeenv-1.10.0 pre-commit-4.5.1
 ----
-
-Notice the *WARNING:* this tells you the path the binary was installed to.
-
-Create a _pre-commit_ configuration file by creating a new file called `.pre-commit-config.yaml` with the following content:
-
-[source,bash,role=execute,subs="verbatim,attributes"]
++
+NOTE: Notice the *WARNING:* this tells you the path the binary was installed to.
++
+. Create a _pre-commit_ configuration file by creating a new file called `.pre-commit-config.yaml` with the following content:
++
+[source,yaml,title="/projects/devspaces-example/.pre-commit-config.yaml",role=execute,subs="verbatim,attributes"]
 ----
 repos:
   - repo: https://github.com/gitleaks/gitleaks
@@ -217,23 +318,29 @@ repos:
         language: system
         stages: [pre-commit]
 ----
-
-Install the pre-commit hook:
-
++
+. Install the pre-commit hook:
++
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-$ /home/user/.local/bin/pre-commit install
-
+/home/user/.local/bin/pre-commit install
+----
++
+[source,output]
+----
  pre-commit installed at .git/hooks/pre-commit
 ----
-
-Attempt a `git commit` which should fail:
-
-[source,bash]
++
+. Attempt a `git commit` which should fail:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
-$ git add secret
-$ git commit
-
+git add secret
+git commit
+----
++
+[source,output]
+----
 gitleaks.................................................................Failed
 - hook id: gitleaks
 - exit code: 1
@@ -255,12 +362,16 @@ Fingerprint: /gitleaks/secret:generic-api-key:1
 1:22AM INF scanned ~15523 bytes (15.52 KB) in 7.62ms
 1:22AM WRN leaks found: 1
 ----
-
-Run `git status` and confirm the file is still staged for commit: 
-
-[source,bash]
++
+. Run `git status` and confirm the file is still staged for commit: 
++
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
-bash-5.1$ git status
+git status
+----
++
+[source,output]
+----
 On branch main
 Your branch is up to date with 'origin/main'.
 
@@ -273,8 +384,36 @@ Untracked files:
         .pre-commit-config.yaml
 
 ----
++
+. In this way, a developer never needs to remember to run a tool before a commit. _pre-commit_ will do the work for you, keeping mistakes out of git history.
+. Now, unstage the file so it will not be committed:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+git restore --staged secret
+----
++
+. Verify it is not staged:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+git status
+----
++
+[source,output]
+----
+On branch main
+Your branch is up to date with 'origin/main'.
 
-In this way, a developer never needs to remember to run a tool before a commit. _pre-commit_ will do the work for you, keeping mistakes out of git history. For a more comprehensive exploration of pre-commit and the pre-commit-config, see https://github.com/redhat-cop/infra.aap_configuration/blob/devel/.pre-commit-config.yaml
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        .pre-commit-config.yaml
+        secret
+
+nothing added to commit but untracked files present (use "git add" to track)
+----
+
+For a more comprehensive exploration of pre-commit and the pre-commit-config, see https://github.com/redhat-cop/infra.aap_configuration/blob/devel/.pre-commit-config.yaml
 
 == 4: Ansible Development Tools (ADT)
 
@@ -282,12 +421,16 @@ link:https://www.redhat.com/en/technologies/management/ansible/development-tools
 
 In your terminal, view the installed Ansible Development Tools:
 
-[source,bash]
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
-$ adt --version
+adt --version
+----
+
+[source,output]
+----
 ansible-builder                          3.1.0
 ansible-core                             2.19.3
-ansible-creator                          25.9.0
+ansible-creator                          25.10.0
 ansible-dev-environment                  25.8.0
 ansible-dev-tools                        25.8.3
 ansible-lint                             25.9.2
@@ -324,47 +467,43 @@ The curated list of tools installed as part of the Ansible automation developer 
 
 Ansible includes a Visual Studio Code (VS Code) extension to enhance the development experience. You can learn more about the features that are available in the extension at https://ansible.readthedocs.io/projects/vscode-ansible/
 
-. Open the Ansible extension on the left hand side of the Dev Spaces window
-+
-image::03-developer-tools/ansible-extension1.png[]
-+
-. For this lab, we will not be using Lightspeed, so feel free to close these panes
-+
-image::03-developer-tools/ansible-extension2.png[]
-
 === 4.2: Creating a Playbook Project
 
 Now that we have covered the basics of tools available as an automation developer, let's walk through bringing it all together. While not a command-line tool, the VS Code extension ties together functionality of Dev Spaces and Ansible Development Tools into the development Workspace you are currently using. This portion of the lab will walk through several aspects of automation development activities in this Workspace.
 
+. Open the Ansible extension on the left hand side of the Dev Spaces window
++
+image::11-platform-dev-tooling/ansible-extension1.png[]
++
 . Within the _Initialize_ section of the Ansible Development Tools, click on `Playbook project` to open a dialog to create a new project. 
 +
 Specify the following values within the playbook project creation dialog:
 +
-image::03-developer-tools/ansible-creator1.png[]
+image::11-platform-dev-tooling/ansible-creator1.png[]
 +
-.. Destination directory: `/projects/myproject`
-.. Namespace: `mynamespace`
-.. Collection: `mycollection`
+.. *Destination directory*: `/projects/myproject`
+.. *Namespace*: `mynamespace`
+.. *Collection*: `mycollection`
 . Click **Create**
 +
-image::03-developer-tools/ansible-creator2.png[]
+image::11-platform-dev-tooling/ansible-creator2.png[]
 +
 . The logs will display in the box below that
 . Click `Open Project` to open a new VS Code window with this new project
 +
-image::03-developer-tools/ansible-creator3.png[]
+image::11-platform-dev-tooling/ansible-creator3.png[]
 +
 . Once the Dev Spaces Workspace loads with the new folder structure, select the **Yes, I trust the Authors** button again and begin to explore the directories and files created by `ansible-creator`, which was generated using industry standard good practices:
 +
-image::03-developer-tools/ansible-creator4.png[]
+image::11-platform-dev-tooling/ansible-creator4.png[]
 +
 . The `inventory` director contains a ready to use directory structure:
 +
-image::03-developer-tools/ansible-creator6.png[]
+image::11-platform-dev-tooling/ansible-creator6.png[]
 +
 . The `collections` directory contains the tree structure representing how a collection is organized, a collection called `mycollection` and a simple role called `run` with a few tasks.
 +
-image::03-developer-tools/ansible-creator5.png[]
+image::11-platform-dev-tooling/ansible-creator5.png[]
 
 === 4.3: Running playbooks in VS Code
 
@@ -375,11 +514,11 @@ While you may be familiar with `ansible-playbook` or even `ansible-navigator` on
 . Right-click on the file at the base of the directory called `site.yml` and choose `Run Ansible Playbook Via ...`
 . Choose `Run playbook via  'ansible-playbook'`.
 +
-image::03-developer-tools/ansible-playbook1.png[]
+image::11-platform-dev-tooling/ansible-playbook1.png[]
 +
 . A terminal opens up with the results of the `ansible-playbook` execution:
 +
-image::03-developer-tools/ansible-playbook2.png[]
+image::11-platform-dev-tooling/ansible-playbook2.png[]
 
 ==== 4.3.2:Running playbooks via ansible-navigator in VS Code
 
@@ -388,25 +527,25 @@ Alternatively, `ansible-navigator` can be used to execute the `site.yml` playboo
 . Right-click on the file at the base of the directory `site.yml` and choose `Run Ansible Playbook Via ...`
 . Choose `Run playbook via  'ansible-navigator run'`.
 +
-image::03-developer-tools/ansible-navigator1.png[]
+image::11-platform-dev-tooling/ansible-navigator1.png[]
 +
 . This will open a terminal and run `ansible-navigator run site.yml --ee false`. When the run is finished you will see a `Complete` message in `ansible-navigator`:
 +
-image::03-developer-tools/ansible-navigator2.png[]
+image::11-platform-dev-tooling/ansible-navigator2.png[]
 +
 . Click inside the terminal and enter `0` to inspect the execution of the play. You can inspect the output of any of the tasks included within this play. e.g. `3`:
 +
-image::03-developer-tools/ansible-navigator3.png[]
+image::11-platform-dev-tooling/ansible-navigator3.png[]
 +
 . Once reviewed, hit `ESC` several times until you exit `ansible-navigator` and return back to the terminal.
 +
-image::03-developer-tools/ansible-navigator4.png[]
+image::11-platform-dev-tooling/ansible-navigator4.png[]
 
-==== 4.3.3: Using ansible-lint in VS Code
+=== 4.4: Using ansible-lint in VS Code
 
 The VS Code Ansible extension proactively runs `ansible-lint` on any playbook you are editing. Experiment with this tool to understand how the feature works.
 
-. Append the existing `site.yml` playbook with the following poorly written task
+. Append to the existing `site.yml` playbook with the following poorly written task:
 +
 [source,yaml,role=execute,subs="verbatim,attributes"]
 ----
@@ -417,57 +556,32 @@ The VS Code Ansible extension proactively runs `ansible-lint` on any playbook yo
 +
 . As soon as you finish editing, the autosave feature will kick in and run `ansible-lint`. Notice the message and the bottom of the screen:
 +
-image::03-developer-tools/ansible-lint1.png[]
+image::11-platform-dev-tooling/ansible-lint1.png[]
 +
 . The extension should have added red squiggly lines underneath `debug`. Hover over the red squiggly lines to see the violations:
 +
-image::03-developer-tools/ansible-lint2.png[]
+image::11-platform-dev-tooling/ansible-lint2.png[]
 +
 . You can fix these manually. However, why not let automation and  `ansible-lint` do the work for you? Open the extension settings:
 +
-image::03-developer-tools/ansible-lint3.png[]
+image::11-platform-dev-tooling/ansible-lint3.png[]
 +
 . Open **Settings** for the Ansible extension:
 +
-image::03-developer-tools/ansible-lint4.png[]
+image::11-platform-dev-tooling/ansible-lint4.png[]
 +
 . Under the Ansible extension settings, click on the **Validation** subsection and enter `--fix` as an extra argument
 +
-image::03-developer-tools/ansible-lint5.png[]
+image::11-platform-dev-tooling/ansible-lint5.png[]
 +
 . Close the settings page and save the file with either the main menu `File` -> `Save` or `CTRL/CMD + s`
 . `ansible-lint --fix` will automatically correct errors
 +
-image::03-developer-tools/ansible-lint6.png[]
+image::11-platform-dev-tooling/ansible-lint6.png[]
++
+NOTE: If it it does not automatically fix these errors, try closing and reopening the file.
 +
 . Notice it did not fix every violation, such as adding a `name:` key for the _debug_ task. Feel free to fix this manually if you choose. Not every rule is enforced automatically. See `man ansible-lint` for more information.
-
-=== 4.4:Creating a Collection project
-
-You can close the previous project window and return to the original Workspace. Once in the original Workspace, create a new Ansible Collection project using the Ansible extension.
-
-. Click the Ansible extension icon on the left side of the VS Code window
-. Under the _Initialize_ section of the Ansible Development Tools panel, click on the `Collection project` link.
-. Enter the following details:
-.. Namespace: `mynamespace`
-.. Collection: `mycollection2`
-.. Init path: this value should be autodetected for you as `/projects/myproject/.ansible/collections/ansible_collections`
-. Click `Create`
-. When complete, click **Open Collection** to open the new collection project in a new VS Code window.
-+
-image::03-developer-tools/ansible-creator7.png[]
-+
-. Explore the scaffolded files to see their content
-.. `.gitignore`: pre-loaded with settings to ignore files in our git repository and make and avoid including unnecessary or undesired files.
-.. `test-requirements.txt`: Already includes the Ansible Python dependencies required for running tests.
-.. `.github/workflows`: Sample workflow for your collection to run CI capabilities on link:https://github.com/features/actions[GitHub Actions,window=_blank]
-.. `.pre-commit-config`: Includes many useful pre-commit utilities
-+
-image::03-developer-tools/ansible-creator8.png[]
-
-. Review the included sample role `run` and its tasks. Feel free to create a playbook that invokes the collection using the tools that you learned in this lab.
-
-image::03-developer-tools/ansible-creator9.png[]
 
 == Conclusion
 
@@ -487,3 +601,20 @@ This foundation prepares you to develop automation content that follows industry
 . https://github.com/redhat-cop/infra.aap_configuration/blob/devel/.pre-commit-config.yaml
 . https://ansible.readthedocs.io/projects/dev-tools/
 . https://ansible.readthedocs.io/projects/vscode-ansible/
+
+== Appendix
+
+=== Environment Script
+
+This is a handy script containing the commands used in this lab
+
+[source,bash,role=execute,subs="verbatim,attributes",title="/projects/env/config.sh"]
+----
+#!/usr/bin/env bash
+
+source /usr/share/bash-completion/completions/git
+source /usr/share/git-core/contrib/completion/git-prompt.sh
+PS1='[\u \W$(__git_ps1 " (%s)")]\$ '
+git config --global user.name "First Last"
+git config --global user.email "email@example.com"
+----
