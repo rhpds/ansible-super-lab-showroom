@@ -32,7 +32,7 @@ cd /projects/aap-ops
 
 Create a separate secrets file as a best practice:
 
-[source,yaml,role=execute,title="/projects/aap-ops/secrets.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/aap-ops/secrets.yml"]
 ----
 ---
 openshift_username: '{openshift_cluster_admin_username}'
@@ -83,13 +83,14 @@ NOTE: The more components installed at once, the longer it will take. Feel free 
 === 1.4: Setup ansible.cfg
 
 . If you review the documentation this role specifies requirements we need to install in this environment.
-. Create a simple `ansible.cfg` to authenticate to upstream Automation Hub:
 . First, obtain a token from https://console.redhat.com/ansible/automation-hub/token/[Automation Hub,window=_blank]
 . Under **Offline Token** click **Load Token** and copy this token and store it somewhere secure as it cannot be displayed again
 +
 NOTE: For additional information see https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/managing_automation_content/managing-cert-valid-content#token-management-hub_cloud-sync[Managing Automation Content Documentation,window=_blank]
 +
-[source,yaml,role=execute,subs="verbatim,attributes,callouts",title="Custom AAP Deployment",title="/projects/aap-ops/ansible.cfg"]
+. Create an `ansible.cfg` file:
++
+[source,properties,role=execute,subs="verbatim,attributes,callouts",title="Custom AAP Deployment",title="/projects/aap-ops/ansible.cfg"]
 ----
 [galaxy]
 server_list = hub, hub_validated, galaxy
@@ -291,31 +292,50 @@ NOTE: Your prompt changes to reflect the virtual environment.
 . Install `ansible-core` version 2.18:
 +
 ----
-pip install ansible-core==2.18
-Collecting ansible-core==2.18
-  Using cached ansible_core-2.18.0-py3-none-any.whl (2.2 MB)
-Collecting jinja2>=3.0.0
-  Using cached jinja2-3.1.6-py3-none-any.whl (134 kB)
-Collecting PyYAML>=5.1
-  Using cached pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (806 kB)
-Collecting cryptography
-  Using cached cryptography-46.0.3-cp311-abi3-manylinux_2_34_x86_64.whl (4.5 MB)
-Collecting packaging
-  Using cached packaging-26.0-py3-none-any.whl (74 kB)
-Collecting resolvelib<1.1.0,>=0.5.3
-  Using cached resolvelib-1.0.1-py2.py3-none-any.whl (17 kB)
-Collecting MarkupSafe>=2.0
-  Using cached markupsafe-3.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
-Collecting cffi>=2.0.0
-  Using cached cffi-2.0.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (215 kB)
-Collecting pycparser
-  Using cached pycparser-3.0-py3-none-any.whl (48 kB)
-Installing collected packages: resolvelib, PyYAML, pycparser, packaging, MarkupSafe, jinja2, cffi, cryptography, ansible-core
-Successfully installed MarkupSafe-3.0.3 PyYAML-6.0.3 ansible-core-2.18.0 cffi-2.0.0 cryptography-46.0.3 jinja2-3.1.6 packaging-26.0 pycparser-3.0 resolvelib-1.0.1
-
-[notice] A new release of pip available: 22.3.1 -> 25.3
-[notice] To update, run: pip install --upgrade pip
+pip install ansible-core==2.18 requests requests-oauthlib kubernetes
 ----
++
+.Output
+[%collapsible]
+====
+[source,bash]
+----
+Defaulting to user installation because normal site-packages is not writeable
+Collecting ansible-core==2.18
+  Downloading ansible_core-2.18.0-py3-none-any.whl (2.2 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 76.1 MB/s eta 0:00:00
+Requirement already satisfied: requests in /usr/local/lib/python3.11/site-packages (2.32.5)
+Requirement already satisfied: requests-oauthlib in /usr/local/lib/python3.11/site-packages (2.0.0)
+Requirement already satisfied: kubernetes in /usr/local/lib/python3.11/site-packages (34.1.0)
+Requirement already satisfied: jinja2>=3.0.0 in /usr/local/lib/python3.11/site-packages (from ansible-core==2.18) (3.1.6)
+Requirement already satisfied: PyYAML>=5.1 in /usr/local/lib64/python3.11/site-packages (from ansible-core==2.18) (6.0.3)
+Requirement already satisfied: cryptography in /usr/local/lib64/python3.11/site-packages (from ansible-core==2.18) (46.0.3)
+Requirement already satisfied: packaging in /usr/local/lib/python3.11/site-packages (from ansible-core==2.18) (25.0)
+Collecting resolvelib<1.1.0,>=0.5.3
+  Downloading resolvelib-1.0.1-py2.py3-none-any.whl (17 kB)
+Requirement already satisfied: charset_normalizer<4,>=2 in /usr/local/lib64/python3.11/site-packages (from requests) (3.4.4)
+Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.11/site-packages (from requests) (3.11)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.11/site-packages (from requests) (2.3.0)
+Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.11/site-packages (from requests) (2025.10.5)
+Requirement already satisfied: oauthlib>=3.0.0 in /usr/local/lib/python3.11/site-packages (from requests-oauthlib) (3.3.1)
+Requirement already satisfied: six>=1.9.0 in /usr/local/lib/python3.11/site-packages (from kubernetes) (1.17.0)
+Requirement already satisfied: python-dateutil>=2.5.3 in /usr/local/lib/python3.11/site-packages (from kubernetes) (2.9.0.post0)
+Requirement already satisfied: google-auth>=1.0.1 in /usr/local/lib/python3.11/site-packages (from kubernetes) (2.41.1)
+Requirement already satisfied: websocket-client!=0.40.0,!=0.41.*,!=0.42.*,>=0.32.0 in /usr/local/lib/python3.11/site-packages (from kubernetes) (1.9.0)
+Requirement already satisfied: durationpy>=0.7 in /usr/local/lib/python3.11/site-packages (from kubernetes) (0.10)
+Requirement already satisfied: cachetools<7.0,>=2.0.0 in /usr/local/lib/python3.11/site-packages (from google-auth>=1.0.1->kubernetes) (6.2.1)
+Requirement already satisfied: pyasn1-modules>=0.2.1 in /usr/local/lib/python3.11/site-packages (from google-auth>=1.0.1->kubernetes) (0.4.2)
+Requirement already satisfied: rsa<5,>=3.1.4 in /usr/local/lib/python3.11/site-packages (from google-auth>=1.0.1->kubernetes) (4.9.1)
+Requirement already satisfied: MarkupSafe>=2.0 in /usr/local/lib64/python3.11/site-packages (from jinja2>=3.0.0->ansible-core==2.18) (3.0.3)
+Requirement already satisfied: cffi>=2.0.0 in /usr/local/lib64/python3.11/site-packages (from cryptography->ansible-core==2.18) (2.0.0)
+Requirement already satisfied: pycparser in /usr/local/lib/python3.11/site-packages (from cffi>=2.0.0->cryptography->ansible-core==2.18) (2.23)
+Requirement already satisfied: pyasn1<0.7.0,>=0.6.1 in /usr/local/lib/python3.11/site-packages (from pyasn1-modules>=0.2.1->google-auth>=1.0.1->kubernetes) (0.6.1)
+Installing collected packages: resolvelib, ansible-core
+  WARNING: The scripts ansible, ansible-config, ansible-console, ansible-doc, ansible-galaxy, ansible-inventory, ansible-playbook, ansible-pull, ansible-test and ansible-vault are installed in '/home/user/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+Successfully installed ansible-core-2.18.0 resolvelib-1.0.1
+----
+====
 +
 . Verify the version again:
 +
