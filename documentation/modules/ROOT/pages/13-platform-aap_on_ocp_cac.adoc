@@ -555,7 +555,7 @@ dependencies:
       - name: infra.aap_utilities
       - name: redhat.openshift
       - name: kubernetes.core
-  system:
+  python:
     - requests 
     - requests-oauthlib
     - kubernetes
