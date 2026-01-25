@@ -32,7 +32,7 @@ cd /projects/aap-ops
 
 Create a separate secrets file as a best practice:
 
-[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/aap-ops/secrets.yml"]
+[source,yaml,role=execute,title="/projects/aap-ops/secrets.yml"]
 ----
 ---
 openshift_username: '{openshift_cluster_admin_username}'
@@ -83,14 +83,13 @@ NOTE: The more components installed at once, the longer it will take. Feel free 
 === 1.4: Setup ansible.cfg
 
 . If you review the documentation this role specifies requirements we need to install in this environment.
+. Create a simple `ansible.cfg` to authenticate to upstream Automation Hub:
 . First, obtain a token from https://console.redhat.com/ansible/automation-hub/token/[Automation Hub,window=_blank]
 . Under **Offline Token** click **Load Token** and copy this token and store it somewhere secure as it cannot be displayed again
 +
 NOTE: For additional information see https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/managing_automation_content/managing-cert-valid-content#token-management-hub_cloud-sync[Managing Automation Content Documentation,window=_blank]
 +
-. Create an `ansible.cfg` file:
-+
-[source,properties,role=execute,subs="verbatim,attributes,callouts",title="Custom AAP Deployment",title="/projects/aap-ops/ansible.cfg"]
+[source,yaml,role=execute,subs="verbatim,attributes,callouts",title="Custom AAP Deployment",title="/projects/aap-ops/ansible.cfg"]
 ----
 [galaxy]
 server_list = hub, hub_validated, galaxy
@@ -292,50 +291,31 @@ NOTE: Your prompt changes to reflect the virtual environment.
 . Install `ansible-core` version 2.18:
 +
 ----
-pip install ansible-core==2.18 requests requests-oauthlib kubernetes
-----
-+
-.Output
-[%collapsible]
-====
-[source,bash]
-----
-Defaulting to user installation because normal site-packages is not writeable
+pip install ansible-core==2.18
 Collecting ansible-core==2.18
-  Downloading ansible_core-2.18.0-py3-none-any.whl (2.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 76.1 MB/s eta 0:00:00
-Requirement already satisfied: requests in /usr/local/lib/python3.11/site-packages (2.32.5)
-Requirement already satisfied: requests-oauthlib in /usr/local/lib/python3.11/site-packages (2.0.0)
-Requirement already satisfied: kubernetes in /usr/local/lib/python3.11/site-packages (34.1.0)
-Requirement already satisfied: jinja2>=3.0.0 in /usr/local/lib/python3.11/site-packages (from ansible-core==2.18) (3.1.6)
-Requirement already satisfied: PyYAML>=5.1 in /usr/local/lib64/python3.11/site-packages (from ansible-core==2.18) (6.0.3)
-Requirement already satisfied: cryptography in /usr/local/lib64/python3.11/site-packages (from ansible-core==2.18) (46.0.3)
-Requirement already satisfied: packaging in /usr/local/lib/python3.11/site-packages (from ansible-core==2.18) (25.0)
+  Using cached ansible_core-2.18.0-py3-none-any.whl (2.2 MB)
+Collecting jinja2>=3.0.0
+  Using cached jinja2-3.1.6-py3-none-any.whl (134 kB)
+Collecting PyYAML>=5.1
+  Using cached pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (806 kB)
+Collecting cryptography
+  Using cached cryptography-46.0.3-cp311-abi3-manylinux_2_34_x86_64.whl (4.5 MB)
+Collecting packaging
+  Using cached packaging-26.0-py3-none-any.whl (74 kB)
 Collecting resolvelib<1.1.0,>=0.5.3
-  Downloading resolvelib-1.0.1-py2.py3-none-any.whl (17 kB)
-Requirement already satisfied: charset_normalizer<4,>=2 in /usr/local/lib64/python3.11/site-packages (from requests) (3.4.4)
-Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.11/site-packages (from requests) (3.11)
-Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.11/site-packages (from requests) (2.3.0)
-Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.11/site-packages (from requests) (2025.10.5)
-Requirement already satisfied: oauthlib>=3.0.0 in /usr/local/lib/python3.11/site-packages (from requests-oauthlib) (3.3.1)
-Requirement already satisfied: six>=1.9.0 in /usr/local/lib/python3.11/site-packages (from kubernetes) (1.17.0)
-Requirement already satisfied: python-dateutil>=2.5.3 in /usr/local/lib/python3.11/site-packages (from kubernetes) (2.9.0.post0)
-Requirement already satisfied: google-auth>=1.0.1 in /usr/local/lib/python3.11/site-packages (from kubernetes) (2.41.1)
-Requirement already satisfied: websocket-client!=0.40.0,!=0.41.*,!=0.42.*,>=0.32.0 in /usr/local/lib/python3.11/site-packages (from kubernetes) (1.9.0)
-Requirement already satisfied: durationpy>=0.7 in /usr/local/lib/python3.11/site-packages (from kubernetes) (0.10)
-Requirement already satisfied: cachetools<7.0,>=2.0.0 in /usr/local/lib/python3.11/site-packages (from google-auth>=1.0.1->kubernetes) (6.2.1)
-Requirement already satisfied: pyasn1-modules>=0.2.1 in /usr/local/lib/python3.11/site-packages (from google-auth>=1.0.1->kubernetes) (0.4.2)
-Requirement already satisfied: rsa<5,>=3.1.4 in /usr/local/lib/python3.11/site-packages (from google-auth>=1.0.1->kubernetes) (4.9.1)
-Requirement already satisfied: MarkupSafe>=2.0 in /usr/local/lib64/python3.11/site-packages (from jinja2>=3.0.0->ansible-core==2.18) (3.0.3)
-Requirement already satisfied: cffi>=2.0.0 in /usr/local/lib64/python3.11/site-packages (from cryptography->ansible-core==2.18) (2.0.0)
-Requirement already satisfied: pycparser in /usr/local/lib/python3.11/site-packages (from cffi>=2.0.0->cryptography->ansible-core==2.18) (2.23)
-Requirement already satisfied: pyasn1<0.7.0,>=0.6.1 in /usr/local/lib/python3.11/site-packages (from pyasn1-modules>=0.2.1->google-auth>=1.0.1->kubernetes) (0.6.1)
-Installing collected packages: resolvelib, ansible-core
-  WARNING: The scripts ansible, ansible-config, ansible-console, ansible-doc, ansible-galaxy, ansible-inventory, ansible-playbook, ansible-pull, ansible-test and ansible-vault are installed in '/home/user/.local/bin' which is not on PATH.
-  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
-Successfully installed ansible-core-2.18.0 resolvelib-1.0.1
+  Using cached resolvelib-1.0.1-py2.py3-none-any.whl (17 kB)
+Collecting MarkupSafe>=2.0
+  Using cached markupsafe-3.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+Collecting cffi>=2.0.0
+  Using cached cffi-2.0.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (215 kB)
+Collecting pycparser
+  Using cached pycparser-3.0-py3-none-any.whl (48 kB)
+Installing collected packages: resolvelib, PyYAML, pycparser, packaging, MarkupSafe, jinja2, cffi, cryptography, ansible-core
+Successfully installed MarkupSafe-3.0.3 PyYAML-6.0.3 ansible-core-2.18.0 cffi-2.0.0 cryptography-46.0.3 jinja2-3.1.6 packaging-26.0 pycparser-3.0 resolvelib-1.0.1
+
+[notice] A new release of pip available: 22.3.1 -> 25.3
+[notice] To update, run: pip install --upgrade pip
 ----
-====
 +
 . Verify the version again:
 +
@@ -456,6 +436,489 @@ Before completing this lab, deactivate the python virtual environment:
 ----
 deactivate
 ----
+
+== 7: Use an Execution Environment
+
+Better yet, use a supported execution environment
+
+. Log in to your PAH container registry with your AAP user credentials:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+podman login registry.redhat.io
+----
++
+[source,output,subs="callouts"]
+----
+Username: #YOUR_REDHAT_USERNAME#
+Password: #YOUR_REDHAT_PASSWORD#
+Login Succeeded!
+----
++
+. Pull the supported image for AAP 2.6:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+podman pull registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest
+----
++
+[source,output]
+----
+Trying to pull registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest...
+Getting image source signatures
+Checking if image destination supports signatures
+Copying blob b056804d4c63 done   | 
+Copying blob b056804d4c63 done   | 
+Copying config c7681229aa done   | 
+Writing manifest to image destination
+Storing signatures
+c7681229aa32057665a71bc70a5251658cfaeb60648bb424751aa4e450889eae
+----
++
+. Verify the image locally with `podman images`:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+podman images | grep ansible-automation-platform
+----
++
+[source,output]
+----
+registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9  latest      c7681229aa32  5 weeks ago  2.6 GB
+----
++
+. Now run the `install_aap.yml` playbook, but this time with the supported EE:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+ansible-navigator \
+  --execution-environment-image registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9 \
+  run install_aap.yml  \
+  --mode stdout
+----
++
+. This fails because the validated collections are not included with the supported image.
++
+[source,output]
+----
+ERROR! the role 'infra.aap_utilities.aap_ocp_install' was not found in /projects/aap-ops/roles:/home/runner/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:/projects/aap-ops
+
+The error appears to be in '/projects/aap-ops/install_aap.yml': line 29, column 15, but may
+be elsewhere in the file depending on the exact syntax problem.
+
+The offending line appears to be:
+
+      ansible.builtin.include_role:
+        name: infra.aap_utilities.aap_ocp_install
+              ^ here
+
+PLAY RECAP *********************************************************************
+Please review the log for errors.
+----
++
+. The good thing is, we can base a new image on the supported one and. Create an `execution-environment.yml` file with everything we just did in a single file:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+---
+version: 3
+
+images:
+  base_image:
+    name: registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest
+
+dependencies:
+  ansible_core:
+    package_pip: ansible-core==2.18
+  galaxy:
+    collections:
+      - name: infra.aap_utilities
+      - name: redhat.openshift
+      - name: kubernetes.core
+  system:
+    - requests 
+    - requests-oauthlib
+    - kubernetes
+options:
+  package_manager_path: /usr/bin/microdnf
+...
+----
++
+. Build a new Execution Environment:
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+ansible-builder build --verbosity 1
+----
++
+.Full output
+[%collapsible]
+====
+[source,bash]
+----
+Ansible Builder is generating your execution environment build context.
+File context/_build/requirements.yml is already up-to-date.
+File context/_build/requirements.txt is already up-to-date.
+Creating context/_build
+File context/_build/ansible.cfg is already up-to-date.
+File context/_build/scripts/assemble is already up-to-date.
+File context/_build/scripts/install-from-bindep is already up-to-date.
+File context/_build/scripts/introspect.py is already up-to-date.
+File context/_build/scripts/check_galaxy is already up-to-date.
+File context/_build/scripts/check_ansible is already up-to-date.
+File context/_build/scripts/pip_install is already up-to-date.
+File context/_build/scripts/entrypoint is already up-to-date.
+Ansible Builder is building your execution environment image. Tags: my-custom:1.0
+Running command:
+  podman build -f context/Containerfile -t my-custom:1.0 context
+[1/4] STEP 1/14: FROM registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest AS base
+[1/4] STEP 2/14: USER root
+--> Using cache b5084328f117b947a2eb8b3bd10420095301567cc3cc1e74727c9e0e67033f6c
+--> b5084328f117
+[1/4] STEP 3/14: ENV PIP_BREAK_SYSTEM_PACKAGES=1
+--> Using cache 98be6bc676441672749fe8068adc25a775ba62da93e7d4e52e89869ca48d5929
+--> 98be6bc67644
+[1/4] STEP 4/14: ARG EE_BASE_IMAGE
+--> Using cache d66d769dc7e21dc4d2908506581802c6231d0a297e9f6523b68339421ebbfb07
+--> d66d769dc7e2
+[1/4] STEP 5/14: ARG PYCMD
+--> Using cache 4a851683661110af4b5479aa769bec043f0d2f5f8c01feb9defedab97227326e
+--> 4a8516836611
+[1/4] STEP 6/14: ARG PKGMGR_PRESERVE_CACHE
+--> Using cache 713ff2206e40cde5826df7770a3269ee3616c7153d768bf93e81cc2908343e87
+--> 713ff2206e40
+[1/4] STEP 7/14: ARG ANSIBLE_GALAXY_CLI_COLLECTION_OPTS
+--> Using cache d7065e94b3bdf9a6d9aef98113c6b6b723480c322c0f4143aca0c616b384031a
+--> d7065e94b3bd
+[1/4] STEP 8/14: ARG ANSIBLE_GALAXY_CLI_ROLE_OPTS
+--> Using cache 7e31b4eb0fe45084938a5ed7c693712a9ee692d2d825577a992f19755da2ffd6
+--> 7e31b4eb0fe4
+[1/4] STEP 9/14: ARG ANSIBLE_INSTALL_REFS
+--> Using cache 70da6b18dacce32a8b137efab07577346b91845ac84bda5e04a7062be5b72bba
+--> 70da6b18dacc
+[1/4] STEP 10/14: ARG PKGMGR
+--> Using cache 440077043753c7b644e0a231f3933c880c36303d287a4062a0a78000a5eab551
+--> 440077043753
+[1/4] STEP 11/14: COPY _build/scripts/ /output/scripts/
+--> Using cache ea967ff82110526600921c131935edaec4e5a9c96b20cf1bd91f4204362161d9
+--> ea967ff82110
+[1/4] STEP 12/14: COPY _build/scripts/entrypoint /opt/builder/bin/entrypoint
+--> Using cache bebe9aaf222e3d027b7518e0b36c5056b875a15db0e4100866ab44001bcd1832
+--> bebe9aaf222e
+[1/4] STEP 13/14: RUN /output/scripts/pip_install $PYCMD
+--> Using cache 74f11ac6b9769ea58e3b7a941aabd5449c134f0b5548d9ab2e12cc497c37a585
+--> 74f11ac6b976
+[1/4] STEP 14/14: RUN $PYCMD -m pip install --no-cache-dir $ANSIBLE_INSTALL_REFS
+--> Using cache 821ced187eb2363b38f8e3643f25e6acedfdaf4b03b38155126f38b92674a8e7
+--> 821ced187eb2
+[2/4] STEP 1/15: FROM 821ced187eb2363b38f8e3643f25e6acedfdaf4b03b38155126f38b92674a8e7 AS galaxy
+[2/4] STEP 2/15: ARG EE_BASE_IMAGE
+--> Using cache 7396dcbc9cdc607ed93ae332e73bd15b700db25b870697b9b5ad92a281d2e3bb
+--> 7396dcbc9cdc
+[2/4] STEP 3/15: ARG PYCMD
+--> Using cache 21ec2dfb31a86a112331bce1f6a7432ccc601d1ece85462b9ed51d4aaa21ded4
+--> 21ec2dfb31a8
+[2/4] STEP 4/15: ARG PKGMGR_PRESERVE_CACHE
+--> Using cache 04c62661197319e075715b6d564efdbba90e79201fa6fd34ec1eac2422795fab
+--> 04c626611973
+[2/4] STEP 5/15: ARG ANSIBLE_GALAXY_CLI_COLLECTION_OPTS
+--> Using cache fc408d32428e75fe432348fbaa0d5e83208b60fc0c35a508315d5ec2afc80ec7
+--> fc408d32428e
+[2/4] STEP 6/15: ARG ANSIBLE_GALAXY_CLI_ROLE_OPTS
+--> Using cache 262959136186df7f1c09850056c5ecce8da90474e7d682e73b928be9f3e9eacc
+--> 262959136186
+[2/4] STEP 7/15: ARG ANSIBLE_INSTALL_REFS
+--> Using cache 2c093e97700c1ac0deeebddf2afcde62a012a9ee8c46d65b3b8d845964e8719b
+--> 2c093e97700c
+[2/4] STEP 8/15: ARG PKGMGR
+--> Using cache 39ec75bdb7d03ad958119983c720987a439b6cda628e78a65a8f21fbf0564939
+--> 39ec75bdb7d0
+[2/4] STEP 9/15: COPY _build/ansible.cfg /etc/ansible/ansible.cfg
+--> 8ab724df5b85
+[2/4] STEP 10/15: RUN /output/scripts/check_galaxy
++ ansible-galaxy --version
+ansible-galaxy [core 2.18.0]
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = ['/home/runner/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/local/lib/python3.11/site-packages/ansible
+  ansible collection location = /home/runner/.ansible/collections:/usr/share/ansible/collections
+  executable location = /usr/local/bin/ansible-galaxy
+  python version = 3.11.13 (main, Aug 21 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-11)] (/usr/bin/python3)
+  jinja version = 3.1.6
+  libyaml = True
++ '[' 0 -ne 0 ']'
++ exit 0
+--> 63f77aab9a1c
+[2/4] STEP 11/15: COPY _build /build
+--> 7944ad1d3883
+[2/4] STEP 12/15: WORKDIR /build
+--> 9227ec84dfa1
+[2/4] STEP 13/15: RUN mkdir -p /usr/share/ansible
+--> 60a0e421e909
+[2/4] STEP 14/15: RUN ansible-galaxy role install $ANSIBLE_GALAXY_CLI_ROLE_OPTS -r requirements.yml --roles-path "/usr/share/ansible/roles"
+Skipping install, no requirements found
+--> 868df12002ff
+[2/4] STEP 15/15: RUN ANSIBLE_GALAXY_DISABLE_GPG_VERIFY=1 ansible-galaxy collection install $ANSIBLE_GALAXY_CLI_COLLECTION_OPTS -r requirements.yml --collections-path "/usr/share/ansible/collections"
+Starting galaxy collection install process
+Process install dependency map
+Starting collection install process
+'redhat.openshift:5.0.0' is already installed, skipping.
+'kubernetes.core:6.1.0' is already installed, skipping.
+Downloading https://console.redhat.com/api/automation-hub/v3/plugin/ansible/content/validated/collections/artifacts/infra-aap_utilities-2.8.0.tar.gz to /home/runner/.ansible/tmp/ansible-local-185131b9w2wvs8/tmpb_an_ocs/infra-aap_utilities-2.8.0-l5rijakc
+Installing 'infra.aap_utilities:2.8.0' to '/usr/share/ansible/collections/ansible_collections/infra/aap_utilities'
+infra.aap_utilities:2.8.0 was installed successfully
+'ansible.posix:2.1.0' is already installed, skipping.
+--> 1f477f822795
+[3/4] STEP 1/17: FROM 821ced187eb2363b38f8e3643f25e6acedfdaf4b03b38155126f38b92674a8e7 AS builder
+[3/4] STEP 2/17: ENV PIP_BREAK_SYSTEM_PACKAGES=1
+--> fbe18acd50f7
+[3/4] STEP 3/17: WORKDIR /build
+--> 9a805ac4d9d7
+[3/4] STEP 4/17: ARG EE_BASE_IMAGE
+--> 8e755e7ebcd7
+[3/4] STEP 5/17: ARG PYCMD
+--> 45c16994fca0
+[3/4] STEP 6/17: ARG PKGMGR_PRESERVE_CACHE
+--> b612f3bf8e1c
+[3/4] STEP 7/17: ARG ANSIBLE_GALAXY_CLI_COLLECTION_OPTS
+--> a2d679e5a9db
+[3/4] STEP 8/17: ARG ANSIBLE_GALAXY_CLI_ROLE_OPTS
+--> 32eb582850b4
+[3/4] STEP 9/17: ARG ANSIBLE_INSTALL_REFS
+--> b656e6f92a2e
+[3/4] STEP 10/17: ARG PKGMGR
+--> dc903aa8faad
+[3/4] STEP 11/17: RUN $PYCMD -m pip install --no-cache-dir bindep pyyaml packaging
+Collecting bindep
+  Downloading bindep-2.13.0-py3-none-any.whl (34 kB)
+Requirement already satisfied: pyyaml in /usr/local/lib64/python3.11/site-packages (6.0.2)
+Requirement already satisfied: packaging in /usr/local/lib/python3.11/site-packages (24.2)
+Requirement already satisfied: distro>=1.7 in /usr/local/lib/python3.11/site-packages (from bindep) (1.9.0)
+Collecting Parsley
+  Downloading Parsley-1.3-py2.py3-none-any.whl (88 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 88.9/88.9 kB 10.4 MB/s eta 0:00:00
+Requirement already satisfied: pbr>=2 in /usr/local/lib/python3.11/site-packages (from bindep) (7.0.1)
+Requirement already satisfied: setuptools in /usr/lib/python3.11/site-packages (from pbr>=2->bindep) (65.5.1)
+Installing collected packages: Parsley, bindep
+Successfully installed Parsley-1.3 bindep-2.13.0
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+--> 4cfc9b6f076d
+[3/4] STEP 12/17: COPY --from=galaxy /usr/share/ansible /usr/share/ansible
+--> de691a103059
+[3/4] STEP 13/17: COPY _build/requirements.txt requirements.txt
+--> de4e9f5ca49e
+[3/4] STEP 14/17: COPY _build/bindep.txt bindep.txt
+--> 1648a8be80d4
+[3/4] STEP 15/17: COPY _build/exclude-bindep.txt exclude-bindep.txt
+--> 29ee4a0da6ef
+[3/4] STEP 16/17: RUN $PYCMD /output/scripts/introspect.py introspect --user-pip=requirements.txt --user-bindep=bindep.txt --exclude-bindep-reqs=exclude-bindep.txt --write-bindep=/tmp/src/bindep.txt --write-pip=/tmp/src/requirements.txt
+---
+python:
+- 'botocore>=1.31.0  # from collection amazon.aws'
+- 'boto3>=1.28.0  # from collection amazon.aws'
+- 'pytz  # from collection ansible.controller'
+- 'python-dateutil>=2.7.0  # from collection ansible.controller'
+- 'awxkit  # from collection ansible.controller'
+- 'aiobotocore  # from collection ansible.eda'
+- 'aiohttp  # from collection ansible.eda'
+- 'aiokafka[gssapi]  # from collection ansible.eda'
+- 'azure-servicebus  # from collection ansible.eda'
+- 'dpath  # from collection ansible.eda'
+- 'kafka-python; python_version < "3.12"  # from collection ansible.eda'
+- 'kafka-python-ng;  python_version >= "3.12"  # from collection ansible.eda'
+- 'psycopg[binary,pool]  # from collection ansible.eda'
+- 'systemd-python; sys_platform != ''darwin''  # from collection ansible.eda'
+- 'watchdog>=5.0.0  # from collection ansible.eda'
+- 'xxhash  # from collection ansible.eda'
+- 'ansible-pylibssh >= 0.2.0  # from collection ansible.netcommon'
+- 'jxmlease  # from collection ansible.netcommon'
+- 'ncclient  # from collection ansible.netcommon'
+- 'paramiko  # from collection ansible.netcommon'
+- 'xmltodict  # from collection ansible.netcommon'
+- 'grpcio  # from collection ansible.netcommon'
+- 'protobuf  # from collection ansible.netcommon'
+- 'jsonschema  # from collection ansible.utils'
+- 'textfsm  # from collection ansible.utils'
+- 'ttp  # from collection ansible.utils'
+- 'xmltodict  # from collection ansible.utils'
+- 'netaddr>=0.10.1  # from collection ansible.utils'
+- 'ncclient  # from collection ansible.yang'
+- 'pyang  # from collection ansible.yang'
+- 'xmltodict  # from collection ansible.yang'
+- 'ncclient  # from collection ansible.yang'
+- 'pyang  # from collection ansible.yang'
+- 'jxmlease  # from collection ansible.yang'
+- 'ansible-pylibssh  # from collection arista.eos'
+- 'paramiko  # from collection arista.eos'
+- 'cryptography >= 36.0.0  # from collection cisco.intersight'
+- 'paramiko  # from collection cisco.ios'
+- 'ncclient  # from collection cisco.iosxr'
+- 'paramiko  # from collection cisco.iosxr'
+- 'grpcio  # from collection cisco.iosxr'
+- 'protobuf  # from collection cisco.iosxr'
+- 'ansible-pylibssh  # from collection cisco.iosxr'
+- 'paramiko  # from collection cisco.nxos'
+- 'scp  # from collection cisco.nxos'
+- 'requests  # from collection hashicorp.terraform'
+- 'pydantic>=2.0.0  # from collection hashicorp.terraform'
+- 'requests  # from collection hashicorp.vault'
+- 'jxmlease  # from collection junipernetworks.junos'
+- 'ncclient  # from collection junipernetworks.junos'
+- 'paramiko  # from collection junipernetworks.junos'
+- 'scp  # from collection junipernetworks.junos'
+- 'xmltodict  # from collection junipernetworks.junos'
+- 'ansible-pylibssh  # from collection junipernetworks.junos'
+- 'kubernetes>=24.2.0  # from collection kubernetes.core'
+- 'requests-oauthlib  # from collection kubernetes.core'
+- 'jsonpatch  # from collection kubernetes.core'
+- 'cryptography >= 3.1  # from collection microsoft.ad'
+- 'dnspython >= 2.0.0  # from collection microsoft.ad'
+- 'dpapi-ng  # from collection microsoft.ad'
+- 'krb5  # from collection microsoft.ad'
+- 'pyspnego[kerberos] >= 0.8.0  # from collection microsoft.ad'
+- 'sansldap  # from collection microsoft.ad'
+- 'lxml  # from collection redhat.amq_broker'
+- 'jmespath  # from collection redhat.amq_broker'
+- 'lxml  # from collection redhat.data_grid'
+- 'jmespath  # from collection redhat.data_grid'
+- 'requests  # from collection redhat.insights'
+- 'kubernetes>=12.0.0  # from collection redhat.openshift'
+- 'requests-oauthlib  # from collection redhat.openshift'
+- 'jsonpatch  # from collection redhat.openshift_virtualization'
+- 'kubernetes>=28.1.0  # from collection redhat.openshift_virtualization'
+- 'lxml  # from collection redhat.redhat_csp_download'
+- 'requests  # from collection redhat.redhat_csp_download'
+- 'netaddr  # from collection redhat.rhbk'
+- 'lxml  # from collection redhat.rhbk'
+- 'ovirt-engine-sdk-python>=4.5.0  # from collection redhat.rhv'
+- 'ovirt-imageio  # from collection redhat.rhv'
+- 'lxml  # from collection redhat.runtimes_common'
+- 'jmespath  # from collection redhat.runtimes_common'
+- 'requests>=2.4.2  # from collection redhat.satellite'
+- 'netaddr  # from collection redhat.sso'
+- 'pyVmomi>=8.0.3.0.1  # from collection vmware.vmware'
+- 'vmware-vcenter  # from collection vmware.vmware'
+- 'vmware-vapi-common-client  # from collection vmware.vmware'
+- 'aiohttp  # from collection vmware.vmware'
+- 'aiohttp  # from collection vmware.vmware_rest'
+- 'requests  # from collection user'
+- 'requests-oauthlib  # from collection user'
+- 'kubernetes  # from collection user'
+- 'openshift  # from collection user'
+system:
+- 'openssl [test platform:rpm]  # from collection amazon.aws'
+- 'gcc [test platform:rpm]  # from collection amazon.aws'
+- 'python3-devel [test platform:rpm]  # from collection amazon.aws'
+- 'python38-pytz [platform:centos-8 platform:rhel-8]  # from collection ansible.controller'
+- 'python38-requests [platform:centos-8 platform:rhel-8]  # from collection ansible.controller'
+- 'python38-pyyaml [platform:centos-8 platform:rhel-8]  # from collection ansible.controller'
+- 'libsystemd0 [test platform:debian]  # from collection ansible.eda'
+- 'libsystemd-dev [test platform:debian]  # from collection ansible.eda'
+- 'pkg-config  [test platform:debian]  # from collection ansible.eda'
+- 'shellcheck [lint platform:ubuntu-noble]  # from collection ansible.eda'
+- 'gcc-c++ [doc test platform:rpm]  # from collection ansible.netcommon'
+- 'libyaml-devel [test platform:rpm]  # from collection ansible.netcommon'
+- 'libyaml-dev [test platform:dpkg]  # from collection ansible.netcommon'
+- 'gcc [compile platform:rpm]  # from collection ansible.netcommon'
+- 'libssh-dev [compile platform:dpkg]  # from collection ansible.netcommon'
+- 'libssh-devel [compile platform:rpm]  # from collection ansible.netcommon'
+- 'python3-Cython [compile platform:fedora-35 platform:rhel-9]  # from collection
+  ansible.netcommon'
+- 'python3-six [platform:centos-9 platform:rhel-9]  # from collection ansible.netcommon'
+- 'python3-lxml [platform:centos-9 platform:rhel-9]  # from collection ansible.netcommon'
+- 'findutils [compile platform:centos-8 platform:rhel-8]  # from collection ansible.netcommon'
+- 'gcc [compile platform:centos-8 platform:rhel-8]  # from collection ansible.netcommon'
+- 'make [compile platform:centos-8 platform:rhel-8]  # from collection ansible.netcommon'
+- 'python3-cffi [platform:centos-9 platform:rhel-9]  # from collection ansible.netcommon'
+- 'python3-cryptography [platform:centos-9 platform:rhel-9]  # from collection ansible.netcommon'
+- 'python3-pycparser [platform:centos-9 platform:rhel-9]  # from collection ansible.netcommon'
+- 'libyaml-dev [test platform:dpkg]  # from collection ansible.scm'
+- 'gcc-c++ [doc test platform:rpm]  # from collection ansible.utils'
+- 'python3-devel [test platform:rpm]  # from collection ansible.utils'
+- 'python3 [test platform:rpm]  # from collection ansible.utils'
+- 'gcc-c++ [doc test platform:rpm]  # from collection ansible.yang'
+- 'libyaml-devel [test platform:rpm]  # from collection ansible.yang'
+- 'libyaml-dev [test platform:dpkg]  # from collection ansible.yang'
+- 'libxml2-dev [test platform:dpkg]  # from collection ansible.yang'
+- 'libxml2-dev [test platform:rpm]  # from collection ansible.yang'
+- 'libxslt1-dev [test platform:dpkg]  # from collection ansible.yang'
+- 'libxslt1-dev [test platform:rpm]  # from collection ansible.yang'
+- 'gcc-c++ [doc test platform:rpm]  # from collection arista.eos'
+- 'python3-devel [test platform:rpm]  # from collection arista.eos'
+- 'python3 [test platform:rpm]  # from collection arista.eos'
+- 'libssh-devel [test platform:rpm]  # from collection arista.eos'
+- 'libffi-devel [test platform:rpm]  # from collection arista.eos'
+- 'openssl-devel [test platform:rpm]  # from collection arista.eos'
+- 'gcc-c++ [doc test platform:rpm]  # from collection cisco.ios'
+- 'python3-devel [test platform:rpm]  # from collection cisco.ios'
+- 'python3 [test platform:rpm]  # from collection cisco.ios'
+- 'gcc-c++ [doc test platform:rpm]  # from collection cisco.iosxr'
+- 'libssh-devel [test platform:rpm]  # from collection cisco.iosxr'
+- 'libffi-devel [test platform:rpm]  # from collection cisco.iosxr'
+- 'openssl-devel [test platform:rpm]  # from collection cisco.iosxr'
+- 'python3-lxml [platform:centos-8 platform:rhel-8]  # from collection cisco.iosxr'
+- 'gcc-c++ [doc test platform:rpm]  # from collection cisco.nxos'
+- 'gcc-c++ [doc test platform:rpm]  # from collection junipernetworks.junos'
+- 'python3-devel [test platform:rpm]  # from collection junipernetworks.junos'
+- 'python3 [test platform:rpm]  # from collection junipernetworks.junos'
+- 'libssh-devel [compile platform:rpm]  # from collection junipernetworks.junos'
+- 'kubernetes-client [platform:fedora]  # from collection kubernetes.core'
+- 'gcc [compile platform:rpm]  # from collection microsoft.ad'
+- 'krb5-devel [compile platform:rpm]  # from collection microsoft.ad'
+- 'krb5-libs [platform:rpm]  # from collection microsoft.ad'
+- 'python3-devel [compile platform:rpm]  # from collection microsoft.ad'
+- 'python39-devel [compile platform:centos-8 platform:rhel-8]  # from collection microsoft.ad'
+- 'python3-lxml [platform:rpm]  # from collection redhat.amq_broker'
+- 'python3-jmespath [platform:rpm]  # from collection redhat.amq_broker'
+- 'python3-devel [compile platform:rpm]  # from collection redhat.data_grid'
+- 'python39-devel [compile platform:centos-8 platform:rhel-8]  # from collection redhat.data_grid'
+- 'python3-lxml [platform:rpm]  # from collection redhat.data_grid'
+- 'python3-jmespath [platform:rpm]  # from collection redhat.data_grid'
+- 'python3-requests [platform:rpm]  # from collection redhat.data_grid'
+- 'python38-requests [platform:centos-8 platform:rhel-8]  # from collection redhat.insights'
+- 'python3-devel [compile platform:rpm]  # from collection redhat.jws'
+- 'python39-devel [compile platform:centos-8 platform:rhel-8]  # from collection redhat.jws'
+- 'python3-requests [platform:rpm]  # from collection redhat.jws'
+- 'python3-dev [compile platform:dpkg]  # from collection redhat.rhbk'
+- 'python3-devel [compile platform:rpm]  # from collection redhat.rhbk'
+- 'python39-devel [compile platform:centos-8 platform:rhel-8]  # from collection redhat.rhbk'
+- 'git-lfs [platform:rpm platform:dpkg]  # from collection redhat.rhbk'
+- 'python3-netaddr [platform:rpm platform:dpkg]  # from collection redhat.rhbk'
+- 'python3-lxml [platform:rpm platform:dpkg]  # from collection redhat.rhbk'
+- 'python3-jmespath [platform:rpm platform:dpkg]  # from collection redhat.rhbk'
+- 'python3-requests [platform:rpm platform:dpkg]  # from collection redhat.rhbk'
+- 'openssl  # from collection redhat.rhel_system_roles'
+- 'dnf  # from collection redhat.rhel_system_roles'
+- 'gcc [compile platform:centos-8 platform:rhel-8]  # from collection redhat.rhv'
+- 'libcurl-devel [compile platform:centos-8 platform:rhel-8]  # from collection redhat.rhv'
+- 'libxml2-devel [compile platform:centos-8 platform:rhel-8]  # from collection redhat.rhv'
+- 'openssl-devel [compile platform:centos-8 platform:rhel-8]  # from collection redhat.rhv'
+- 'python38-devel [compile platform:centos-8 platform:rhel-8]  # from collection redhat.rhv'
+- 'qemu-img [platform:centos-8 platform:rhel-8]  # from collection redhat.rhv'
+- 'python3-rpm [(platform:redhat platform:base-py3)]  # from collection redhat.satellite'
+- 'python38-requests [platform:centos-8 platform:rhel-8]  # from collection redhat.satellite'
+- 'python3-devel [compile platform:rpm]  # from collection redhat.sso'
+- 'python39-devel [compile platform:centos-8 platform:rhel-8]  # from collection redhat.sso'
+- 'git-lfs [platform:rpm]  # from collection redhat.sso'
+- 'python3-netaddr [platform:rpm]  # from collection redhat.sso'
+- 'python3-lxml [platform:rpm]  # from collection redhat.sso'
+- 'python3-jmespath [platform:rpm]  # from collection redhat.sso'
+- 'python3-requests [platform:rpm]  # from collection redhat.sso'
+- 'gcc-c++ [doc test platform:rpm]  # from collection splunk.es'
+- 'python3-devel [test platform:rpm]  # from collection splunk.es'
+- 'python3 [test platform:rpm]  # from collection splunk.es'
+- 'gcc-c++ [doc test platform:rpm]  # from collection trendmicro.deepsec'
+- 'python3-devel [test platform:rpm]  # from collection trendmicro.deepsec'
+- 'python3 [test platform:rpm]  # from collection trendmicro.deepsec'
+- 'gcc [compile platform:centos-8 platform:rhel-8]  # from collection vmware.vmware_rest'
+- 'gcc [compile platform:rhel-9]  # from collection vmware.vmware_rest'
+- 'requests  # from collection user'
+- 'requests-oauthlib  # from collection user'
+- 'kubernetes  # from collection user'
+Creating parent directory for /tmp/src/requirements.txt
+
+----
+====
 
 == Summary
 
