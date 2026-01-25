@@ -32,7 +32,7 @@ cd /projects/aap-ops
 
 Create a separate secrets file as a best practice:
 
-[source,yaml,role=execute,title="/projects/aap-ops/secrets.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/aap-ops/secrets.yml"]
 ----
 ---
 openshift_username: '{openshift_cluster_admin_username}'
