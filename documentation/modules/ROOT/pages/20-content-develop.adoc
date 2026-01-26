@@ -279,10 +279,35 @@ TIP: `ansible-lint` will complain unless each file ends with and empty newline, 
 +
 . Create another new task file in that same `tasks` directory for validation tasks:
 +
+[source,yaml,role=execute,title="/projects/lab_collection/roles/web_server/tasks/service.yml"]
+----
+---
+- name: Ensure W3SVC (IIS) is started
+  ansible.windows.win_service:
+    name: W3SVC
+    state: started
+
+- name: Include validation tasks
+  ansible.builtin.include_tasks:
+    file: validate.yml
+...
+----
++
+. Create another new task file in that same `tasks` directory for validation tasks:
++
 [source,yaml,role=execute,title="/projects/lab_collection/roles/web_server/tasks/validate.yml"]
 ----
 ---
-- name: Test IIS locally on the Windows Server
+- name: Verify service is responsive
+  ansible.windows.win_uri:
+    url: http://localhost
+    return_content: false
+  register: web_check
+  until: web_check.status_code == 200
+  retries: 3
+  delay: 5
+
+- name: Capture content for debugging
   ansible.windows.win_uri:
     url: "http://localhost"
     return_content: true
@@ -320,9 +345,9 @@ NOTE: The reason this is plain text and not using HTML tags is because we cannot
   ansible.builtin.include_tasks:
     file: website.yml
 
-- name: Include validate tasks
+- name: Include service tasks
   ansible.builtin.include_tasks:
-    file: validate.yml
+    file: service.yml
     apply:
       check_mode: false
   when: ansible_check_mode
