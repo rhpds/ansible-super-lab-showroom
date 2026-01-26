@@ -68,6 +68,7 @@ In the previous module, we built and ran a automation that installed `Chocolatey
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
 ansible-playbook \
+  --inventory inventory/hosts.yml \
   --extra-vars @/projects/env/secrets.yml \
   setup_monitoring.yml
 ----

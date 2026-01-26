@@ -231,7 +231,7 @@ Switched to a new branch 'main'
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-git add site.yml test_pah_ee.yml collections/requirements.yml
+git add site.yml test_pah_ee.yml collections/requirements.yml inventory/hosts.yml
 ----
 +
 . Next, add the new remote:
@@ -251,8 +251,9 @@ git commit --message "Initial commit of playbook files"
 [source,output]
 ----
  [main (root-commit) f2a144b] Initial commit of playbook files
- 3 files changed, 29 insertions(+)
+ 4 files changed, 38 insertions(+)
  create mode 100644 collections/requirements.yml
+ create mode 100644 inventory/hosts.yml
  create mode 100644 site.yml
  create mode 100644 test_pah_ee.yml
 ----
@@ -502,7 +503,7 @@ collections:
 +
 . Click **Save remote** to apply the changes.
 
-=== 3.2: Add Validated Remote
+=== 3.1: Add Validated Remote
 
 Create a new remote for the `validated` collections repository. The API token for upstream Red Hat Automation Hub is required to access this repository. The token retrieved in a prior lab can be used here.
 
@@ -534,18 +535,19 @@ image::22-content-execute/repositories-edit-validated.png[Edit Validated Reposit
 
 image::22-content-execute/repositories-update-validated.png[Updated Validated Repository]
 
-=== 3.3: Sync Repositories
+=== 3.2: Sync Repositories
 
 Finally, synchronize the `validated` and `community` repositories to pull in the new collections within the _Repositories_ page.
 
 . From the navigation menu on the left, expand **Automation Content** and click on **Repositories**.
 +
-. Next to the `community` repository, click the kebab menu (three vertical dots) on the right hand side of the entry and select **Sync repository**.
+. Next to the `validated` repository, click the kebab menu (three vertical dots) on the right hand side of the entry and select **Sync repository**.
 +
 image::22-content-execute/sync-repository.png[Sync Repository]
 +
 . In the _Sync Repository_ dialog, click **Sync** to start the synchronization.
-. Repeat the above steps to sync the `validated` repositories as well.
++
+. Repeat the above steps to sync the `community` repositories as well.
 +
 NOTE: Syncing the collections can take some time. You can monitor the progress, but it will not impact the next set of labs.
 

@@ -66,14 +66,14 @@ In your Dev Spaces terminal, create a file containing the following variables. T
 
 . Create a file called `set_pah_vars.env` in your `/projects/env/` directory with the following contents. Be sure to use your PAH API token created previously:
 +
-NOTE: Replace #{your_api_token}# below with the personal API token you just copied from PAH.
+NOTE: Replace #YOUR_API_TOKEN# below with the personal API token you just copied from PAH.
 +
 [source,bash,role=execute,subs="verbatim,attributes,quotes",title="/projects/env/set_pah_vars.env"]
 ----
 # This file contains configuration variables and is intended to be sourced, not executed.
 
 # This is your unique token from Private Automation hub
-export PAH_API_TOKEN=#{your_api_token}#
+export PAH_API_TOKEN=#YOUR_API_TOKEN#
 
 # Set your AAP web URL used throughout the rest of the vars
 export AAP_CONTROLLER_WEB_URL='{aap_controller_web_url}
@@ -138,10 +138,10 @@ source /projects/env/set_pah_vars.env
 ----
 ANSIBLE_GALAXY_SERVER_COMMUNITY_URL=${AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/community/
 ANSIBLE_GALAXY_SERVER_PUBLISHED_URL=${AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/published/
-ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=#{your_api_token}#
-ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=#{your_api_token}#
-ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=#{your_api_token}#
-ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=#{your_api_token}#
+ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=#YOUR_API_TOKEN#
+ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=#YOUR_API_TOKEN#
+ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=#YOUR_API_TOKEN#
+ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=#YOUR_API_TOKEN#
 ANSIBLE_GALAXY_SERVER_LIST=published,certified,validated,community
 ANSIBLE_GALAXY_SERVER_VALIDATED_URL=${AAP_CONTROLLER_WEB_URL}/pulp_ansible/galaxy/validated/
 ANSIBLE_GALAXY_SERVER_CERTIFIED_URL=${AAP_CONTROLLER_WEB_URL}/pulp_ansible/galaxy/rh-certified/
@@ -265,8 +265,8 @@ image::21-content-build/create-remote-registry.png[Create Remote Registry]
 . Enter the following details on the _Create Remote Registry_ page:
 .. _Name_: `redhat`
 .. _URL_: `https://registry.redhat.io`
-.. _Username_: `YOUR_REDHAT_USERNAME`
-.. _Password_: `YOUR_REDHAT_PASSWORD`
+.. _Username_: #YOUR_REDHAT_USERNAME#
+.. _Password_: #YOUR_REDHAT_PASSWORD#
 .. Click **Create remote registry** to add the new registry.
 +
 image::21-content-build/create-remote-registry-details.png[Create Remote Registry Details]
@@ -608,7 +608,7 @@ REPOSITORY  TAG         IMAGE ID    CREATED     SIZE
 +
 NOTE: You may have images from previous labs, those are not relevant.
 +
-. Build the Execution Environment. It will pull the base from PAH, then add our content:
+. Build the Execution Environment. It will pull the base from PAH, then add our content (this takes just under 5 minutes):
 +
 [source,bash,role=execute,subs="verbatim,attributes,callouts"]
 ----

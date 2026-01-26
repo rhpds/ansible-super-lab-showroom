@@ -40,23 +40,10 @@ To make this lab self-contained, we will create a one-off remediation playbook. 
   hosts: windows
   gather_facts: false
   tasks:
-    - name: Ensure W3SVC (IIS) is started
-      ansible.windows.win_service:
-        name: W3SVC
-        state: started
-
-    - name: Verify service is responsive
-      ansible.windows.win_uri:
-        url: http://localhost
-        return_content: false
-      register: web_check
-      until: web_check.status_code == 200
-      retries: 3
-      delay: 5
-
-    - name: Log remediation action
-      ansible.builtin.debug:
-        msg: "IIS Service is running."
+    - name: Call service task for web server role
+      ansible.builtin.include_role:
+        name: red_hat_one.super_lab.web_server
+        tasks_from: service
 ...
 ----
 
@@ -198,8 +185,8 @@ Next, create a credential for EDA Controller to access Decision Environments.
 .. *Organization*: `Default`
 .. *Credential type*: `Container Registry`
 .. *Authentication URL*: `registry.redhat.io`
-.. *Username*: #<your_redhat_username>#
-.. *Password*: #<your_redhat_password>#
+.. *Username*: #YOUR_REDHAT_USERNAME#
+.. *Password*: #YOUR_REDHAT_PASSWORD#
 . Click **Create Credential**
 +
 image::30-events-health-probe/eda-credentials-de-create.png[Create Decision Environment Credential]

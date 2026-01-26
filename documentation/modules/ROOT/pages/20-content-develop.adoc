@@ -279,10 +279,35 @@ TIP: `ansible-lint` will complain unless each file ends with and empty newline, 
 +
 . Create another new task file in that same `tasks` directory for validation tasks:
 +
+[source,yaml,role=execute,title="/projects/lab_collection/roles/web_server/tasks/service.yml"]
+----
+---
+- name: Ensure W3SVC (IIS) is started
+  ansible.windows.win_service:
+    name: W3SVC
+    state: started
+
+- name: Include validation tasks
+  ansible.builtin.include_tasks:
+    file: validate.yml
+...
+----
++
+. Create another new task file in that same `tasks` directory for validation tasks:
++
 [source,yaml,role=execute,title="/projects/lab_collection/roles/web_server/tasks/validate.yml"]
 ----
 ---
-- name: Test IIS locally on the Windows Server
+- name: Verify service is responsive
+  ansible.windows.win_uri:
+    url: http://localhost
+    return_content: false
+  register: web_check
+  until: web_check.status_code == 200
+  retries: 3
+  delay: 5
+
+- name: Capture content for debugging
   ansible.windows.win_uri:
     url: "http://localhost"
     return_content: true
@@ -320,9 +345,9 @@ NOTE: The reason this is plain text and not using HTML tags is because we cannot
   ansible.builtin.include_tasks:
     file: website.yml
 
-- name: Include validate tasks
+- name: Include service tasks
   ansible.builtin.include_tasks:
-    file: validate.yml
+    file: service.yml
     apply:
       check_mode: false
   when: ansible_check_mode
@@ -482,8 +507,8 @@ NOTE: If the directory already exists from the previous module, there is no outp
 [source,yaml,role=execute,title="/projects/env/secrets.yml",subs="verbatim,attributes"]
 ----
 ---
-ansible_user: {windows_user}
-ansible_password: {windows_password}
+ansible_user: '{windows_user}'
+ansible_password: '{windows_password}'
 ...
 ----
 +
@@ -500,6 +525,8 @@ NOTE: For additional information see https://docs.redhat.com/en/documentation/re
 +
 . Add the following to the end of the provided `ansible.cfg`:
 +
+NOTE: If you completed a previous lab and already have an `ansible.cfg` simply copy that and append it.
++
 [source,bash,role=execute,title="/projects/lab_playbooks/ansible.cfg",subs="verbatim,quotes"]
 ----
 [galaxy]
@@ -508,18 +535,18 @@ server_list = hub, hub_validated, galaxy
 [galaxy_server.hub]
 url=https://console.redhat.com/api/automation-hub/content/published/
 auth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
-token=#{your_token}#
+token=#YOUR_TOKEN#
 
 [galaxy_server.hub_validated]
 url=https://console.redhat.com/api/automation-hub/content/validated/
 auth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
-token=#{your_token}#
+token=#YOUR_TOKEN#
 
 [galaxy_server.galaxy]
 url=https://galaxy.ansible.com
 ----
 +
-IMPORTANT: Be sure to replace #{your_token}# with the token from step 2.
+IMPORTANT: Be sure to replace #YOUR_TOKEN# with the token from step 2.
 
 === 3.5: Configure Collections
 
@@ -714,6 +741,7 @@ windows | SUCCESS => {
 [source,bash,role=execute]
 ----
 ansible-playbook --extra-vars @/projects/env/secrets.yml \
+  --inventory inventory/hosts.yml \
   site.yml --check
 ----
 +
@@ -763,6 +791,7 @@ NOTE: There are several ways to address this situation, but this was included in
 [source,bash,role=execute]
 ----
 ansible-playbook --extra-vars @/projects/env/secrets.yml \
+  --inventory inventory/hosts.yml \
   site.yml
 ----
 +
@@ -838,7 +867,8 @@ curl http://windows.aap.svc.cluster.local
 ----
 Welcome to Super Lab IIS Server
 Machine ID S-1-5-21-2979851890-3482578088-4054385452
-Hostname windows.lab.sandbox-5tt52-ocp4-cluster.svc.cluster.local
+Hostname windows.lab.sandbox-xz6nl-ocp4-cluster.svc.cluster.local
+Deployed on 2026-01-25 at 09:27:26
 ----
 +
 . Run check mode once again, this time it will succeed:
@@ -846,6 +876,7 @@ Hostname windows.lab.sandbox-5tt52-ocp4-cluster.svc.cluster.local
 [source,bash,role=execute]
 ----
 ansible-playbook --extra-vars @/projects/env/secrets.yml \
+  --inventory inventory/hosts.yml \
   site.yml --check
 ----
 +
