@@ -389,8 +389,6 @@ image::22-content-execute/automation-controller-organizations-edit.png[Edit Orga
 .. **PAH - published | Ansible Galaxy/Automation Hub API Token**
 .. **PAH - rh-certified | Ansible Galaxy/Automation Hub API Token**
 +
-NOTE: Uncheck *Ansible Galaxy* as no community collections are used in this lab.
-+
 image::22-content-execute/automation-controller-organizations-add-credentials.png[Add Credentials to Organization]
 +
 . Click **Next** at the bottom of the page, then **Next** and finally **Finish** to save change to the Organization.
