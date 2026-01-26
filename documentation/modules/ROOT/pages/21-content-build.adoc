@@ -608,7 +608,7 @@ REPOSITORY  TAG         IMAGE ID    CREATED     SIZE
 +
 NOTE: You may have images from previous labs, those are not relevant.
 +
-. Build the Execution Environment. It will pull the base from PAH, then add our content:
+. Build the Execution Environment. It will pull the base from PAH, then add our content (this takes just under 5 minutes):
 +
 [source,bash,role=execute,subs="verbatim,attributes,callouts"]
 ----

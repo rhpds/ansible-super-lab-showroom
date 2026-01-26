@@ -251,9 +251,9 @@ git commit --message "Initial commit of playbook files"
 [source,output]
 ----
  [main (root-commit) f2a144b] Initial commit of playbook files
- 4 files changed, 29 insertions(+)
- create mode 100644 inventory/hosts.yml
+ 4 files changed, 38 insertions(+)
  create mode 100644 collections/requirements.yml
+ create mode 100644 inventory/hosts.yml
  create mode 100644 site.yml
  create mode 100644 test_pah_ee.yml
 ----
@@ -389,6 +389,8 @@ image::22-content-execute/automation-controller-organizations-edit.png[Edit Orga
 .. **PAH - published | Ansible Galaxy/Automation Hub API Token**
 .. **PAH - rh-certified | Ansible Galaxy/Automation Hub API Token**
 +
+NOTE: Uncheck *Ansible Galaxy* as no community collections are used in this lab.
++
 image::22-content-execute/automation-controller-organizations-add-credentials.png[Add Credentials to Organization]
 +
 . Click **Next** at the bottom of the page, then **Next** and finally **Finish** to save change to the Organization.
@@ -482,28 +484,7 @@ image::22-content-execute/jt-provision-windows.png[Job Template Success]
 
 The final exercise in this lab is to customize the content sources from link:https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.5/html-single/managing_automation_content/index#proc-create-remote_remote-management[Remote Automation Hub / Ansible Galaxy instances,window=_blank] into Private Automation Hub. To support lab exercises later in this bootcamp, we will specify additional collections to be synchronized.
 
-=== 3.1: Update Community Remote
-
-. From the navigation menu on the left, expand **Automation Content** and click on **Remotes**.
-+
-image::22-content-execute/remotes-overview.png[Remotes Navigation]
-+
-. Click the pencil icon to edit the `community` remote.
-+
-image::22-content-execute/remotes-edit-community.png[Edit Community Remote]
-+
-. Paste the following into the _Requirements file_ field to specify additional collections to be synced:
-+
-[source,bash,role=execute,subs="verbatim,attributes"]
-----
-collections:
-  - name: containers.podman
-  - name: community.postgresql
-----
-+
-. Click **Save remote** to apply the changes.
-
-=== 3.2: Add Validated Remote
+=== 3.1: Add Validated Remote
 
 Create a new remote for the `validated` collections repository. The API token for upstream Red Hat Automation Hub is required to access this repository. The token retrieved in a prior lab can be used here.
 
@@ -535,18 +516,17 @@ image::22-content-execute/repositories-edit-validated.png[Edit Validated Reposit
 
 image::22-content-execute/repositories-update-validated.png[Updated Validated Repository]
 
-=== 3.3: Sync Repositories
+=== 3.2: Sync Repository
 
-Finally, synchronize the `validated` and `community` repositories to pull in the new collections within the _Repositories_ page.
+Finally, synchronize the `validated` repository to pull in the new collections within the _Repositories_ page.
 
 . From the navigation menu on the left, expand **Automation Content** and click on **Repositories**.
 +
-. Next to the `community` repository, click the kebab menu (three vertical dots) on the right hand side of the entry and select **Sync repository**.
+. Next to the `validated` repository, click the kebab menu (three vertical dots) on the right hand side of the entry and select **Sync repository**.
 +
 image::22-content-execute/sync-repository.png[Sync Repository]
 +
 . In the _Sync Repository_ dialog, click **Sync** to start the synchronization.
-. Repeat the above steps to sync the `validated` repositories as well.
 +
 NOTE: Syncing the collections can take some time. You can monitor the progress, but it will not impact the next set of labs.
 

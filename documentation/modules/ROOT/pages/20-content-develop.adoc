@@ -842,7 +842,8 @@ curl http://windows.aap.svc.cluster.local
 ----
 Welcome to Super Lab IIS Server
 Machine ID S-1-5-21-2979851890-3482578088-4054385452
-Hostname windows.lab.sandbox-5tt52-ocp4-cluster.svc.cluster.local
+Hostname windows.lab.sandbox-xz6nl-ocp4-cluster.svc.cluster.local
+Deployed on 2026-01-25 at 09:27:26
 ----
 +
 . Run check mode once again, this time it will succeed:
