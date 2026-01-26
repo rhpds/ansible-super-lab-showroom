@@ -482,8 +482,8 @@ NOTE: If the directory already exists from the previous module, there is no outp
 [source,yaml,role=execute,title="/projects/env/secrets.yml",subs="verbatim,attributes"]
 ----
 ---
-ansible_user: {windows_user}
-ansible_password: {windows_password}
+ansible_user: '{windows_user}'
+ansible_password: '{windows_password}'
 ...
 ----
 +
