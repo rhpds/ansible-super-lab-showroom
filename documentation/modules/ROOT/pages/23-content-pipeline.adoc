@@ -18,7 +18,7 @@ After completing this module, you will be able to:
 
 Before starting this lab, ensure you have completed the following:
 
-.  Ansible Bootcamp Lab: xref:04-managing-content-automation-hub.adoc[Managing Ansible Content with Private Automation Hub]
+* Content collection and playbook created
 
 == 2: Introduction
 
@@ -34,11 +34,11 @@ Upon completion of this lab you will have
 
 Prior to starting the lab, ensure the following tools and services are set up:
 
-. Repository for the `ansible_bootcamp_my_collection` has been created on Gitea
+. Repository for the `red_hat_one.super_lab` collection has been created on Gitea
 . You have access to your Dev Spaces workspace for your environment
 . Make sure the Gitea repository is *public*
 
-NOTE: Lab setup should have been previously completed in xref:04-managing-content-automation-hub.adoc[Managing Ansible Content with Private Automation Hub]
+NOTE: The lab setup should have been completed in the prior modules.
 
 == 4: Implementing the CI/CD Pipeline
 
@@ -46,28 +46,43 @@ In this section, we'll share how to apply the *collection-pipeline.yml* link:htt
 
 === 4.1: Create CI/CD Pipeline Repository
 
-Create another Gitea repository, separate from the _ansible_bootcamp_my_collection_ repository that was created previously in xref:04-managing-content-automation-hub.adoc[Managing Ansible Content with Private Automation Hub], which will serve as a working CI/CD pipeline development repository.
+Create another Gitea repository, separate from the _red_hat_one_super_lab_ repository that was xref:21-content-build.adoc[created previously], which will serve as a working CI/CD pipeline development repository.
 
 . Navigate to your link:{gitea_console_url}[Gitea instance,window=_blank] and click the **Sign In** button on the upper right hand corner. Enter the username and password using the credentials provided from the xref:environment-details.adoc[Environment Details,window=_blank] page and click the **Sign In** button
 . In the top left of the web interface, click on the **+** symbol and select **New Repository**.
 +
-image::06-ansible-cicd/gitea-repo-create.png[]
+image::23-pipelines/pipelines-gitea-repo-new-select.png[Select New Gitea Repository]
 +
-. On the New Repository page, enter **ansible_bootcamp_ci_cd_pipeline** in the _Repository Name_ field.
+. On the New Repository page, enter **red_hat_one_ci_cd_pipeline** in the _Repository Name_ field.
 . Leave everything else as their default values and click on the button at the bottom, **Create Repository**.
 
-image::06-ansible-cicd/gitea-repo-config.png[]
+image::23-pipelines/pipelines-gitea-repo-new.png[New Gitea Repository]
 
 ==== 4.1.1: Clone CI/CD Pipeline Repository into Dev Spaces Workspace
 
 After an empty repository is created on your Gitea, we need to clone the repository into the workspace to begin creating lab files.
 
-. Clone the _ansible_bootcamp_ci_cd_pipeline_ repository you just created into your workspace
+. First change to the `/projects/` directory:
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-  git clone {gitea_console_url}/{gitea_user}/ansible_bootcamp_ci_cd_pipeline.git
+cd /projects/
 ----
++
+. Clone the _red_hat_one_ci_cd_pipeline_ repository you just created into your workspace
++
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+git clone {gitea_console_url}/{gitea_user}/red_hat_one_ci_cd_pipeline.git
+----
++
+[source,output]
+----
+Cloning into 'red_hat_one_ci_cd_pipeline'...
+warning: You appear to have cloned an empty repository.
+----
+
+NOTE: You can safely ignore the `warning: You appear to have cloned an empty repository.` message as you will populate the repository with content in the next steps.
 
 With the repository cloned locally, proceed to the next section where you will begin to populate the repository with Tekton resources.
 
@@ -75,7 +90,7 @@ With the repository cloned locally, proceed to the next section where you will b
 
 ==== 4.2.1: Create the Pipeline Definition
 
-In the _ansible_bootcamp_ci_cd_pipeline_ directory, create a new file called `collection-pipeline.yml` with the following content.
+In the _red_hat_one_ci_cd_pipeline_ directory, create a new file called `collection-pipeline.yml` with the following content.
 
 .collection-pipeline.yml
 [source,yaml,role=execute,subs="verbatim,attributes",title="collection-pipeline.yml"]
@@ -103,12 +118,12 @@ spec:
         spec: null
         steps:
           - computeResources: {}
-            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            image: 'registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest'
             name: playbook-install
             script: |
               git clone -vvv $(params.playbook-repo)
               echo "change into playbook dir"
-              cd ansible_bootcamp_ci_cd_pipeline
+              cd red_hat_one_ci_cd_pipeline
               echo "create vars file"
               cat <<EOF > params.yml
               ---
@@ -132,10 +147,10 @@ spec:
         spec: null
         steps:
           - computeResources: {}
-            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            image: 'registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest'
             name: collection-clone
             script: |
-              cd ansible_bootcamp_ci_cd_pipeline
+              cd red_hat_one_ci_cd_pipeline
               ansible-playbook collection-publish.yml --tags git-checkout
             workingDir: $(workspaces.source.path)
         workspaces:
@@ -151,10 +166,10 @@ spec:
         spec: null
         steps:
           - computeResources: {}
-            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            image: 'registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest'
             name: build-collection
             script: |
-              cd ansible_bootcamp_ci_cd_pipeline
+              cd red_hat_one_ci_cd_pipeline
               ansible-playbook collection-publish.yml --tags collection-build
             workingDir: $(workspaces.source.path)
         workspaces:
@@ -214,10 +229,10 @@ spec:
         spec: null
         steps:
           - computeResources: {}
-            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            image: 'registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest'
             name: create-namespace
             script: |
-              cd ansible_bootcamp_ci_cd_pipeline
+              cd red_hat_one_ci_cd_pipeline
               ansible-playbook collection-publish.yml --tags pah-namespace
             workingDir: $(workspaces.source.path)
         workspaces:
@@ -233,10 +248,10 @@ spec:
         spec: null
         steps:
           - computeResources: {}
-            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            image: 'registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest'
             name: publish-collection
             script: |
-              cd ansible_bootcamp_ci_cd_pipeline
+              cd red_hat_one_ci_cd_pipeline
               ansible-playbook collection-publish.yml --tags collection-publish
             workingDir: $(workspaces.source.path)
         workspaces:
@@ -252,10 +267,10 @@ spec:
         spec: null
         steps:
           - computeResources: {}
-            image: 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9:latest'
+            image: 'registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest'
             name: approve-collection
             script: |
-              cd ansible_bootcamp_ci_cd_pipeline
+              cd red_hat_one_ci_cd_pipeline
               ansible-playbook collection-publish.yml --tags collection-approve
             workingDir: $(workspaces.source.path)
         workspaces:
@@ -271,7 +286,7 @@ spec:
 
 Next create a Trigger Binding that is used to extract information from the webhook payload and make it available to the Tekton Pipeline as parameters.
 
-Within the _ansible_bootcamp_ci_cd_pipeline_ directory, create a new file called `collection-cluster-trigger-binding.yml` with the following content.
+Within the _red_hat_one_ci_cd_pipeline_ directory, create a new file called `collection-cluster-trigger-binding.yml` with the following content.
 
 .collection-cluster-trigger-binding.yml
 [source,yaml,role=execute,subs="verbatim,attributes",title="collection-cluster-trigger-binding.yml"]
@@ -302,11 +317,11 @@ Now that we have created the necessary configuration files for the Tekton Pipeli
 
 NOTE: Your Dev Spaces environment is automatically authenticated to the OpenShift cluster, so you can use `oc` commands without needing to login.
 
-In the Dev Spaces terminal, change into the _ansible_bootcamp_ci_cd_pipeline_ directory and use the OpenShift CLI to apply the configurations to the OpenShift cluster.
+In the Dev Spaces terminal, change into the _red_hat_one_ci_cd_pipeline_ directory and use the OpenShift CLI to apply the configurations to the OpenShift cluster.
 
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-cd ansible_bootcamp_ci_cd_pipeline
+cd red_hat_one_ci_cd_pipeline
 oc apply -f collection-pipeline.yml
 oc apply -f collection-cluster-trigger-binding.yml
 ----
@@ -323,22 +338,23 @@ First, check that the ClusterTriggerBinding was created successfully and is avai
 . Select the *ClusterTriggerBindings* tab on the _Triggers_ page
 . Verify that `gitea-push` trigger is present
 
-image::06-ansible-cicd/clustertrigger.png[]
+image::23-pipelines/pipelines-clustertriggerbindings.png[Cluster Trigger Bindings]
 
 Next, check that the Pipeline was created successfully and is available within OpenShift.
 
 . In the left hand menu, expand the _Pipelines_ section and select *Pipelines*
+. In the _Project_ dropdown at the top of the page, ensure you are in the **aap** project.
 . Locate the **ansible-collection-ci** pipeline in the list of pipelines
 . Review the details of the pipeline within the _Pipeline details_ page.
 
-image:06-ansible-cicd/pipeline.png[]
+image:23-pipelines/pipelines-pipeline.png[Ansible Collection CI Pipeline]
 
 === 4.3: Create collection-publish.yml Ansible Playbook
 
 [abstract]
 The _ansible-collection-ci_ Pipeline references an Ansible Pipeline within the file `collection-publish.yml` multiple times during its execution.
 
-Within the _ansible_bootcamp_ci_cd_pipeline_ directory, create an Ansible playbook in the file `collection-publish.yml` with the following content.
+Within the _red_hat_one_ci_cd_pipeline_ directory, create an Ansible playbook in the file `collection-publish.yml` with the following content.
 
 .collection-publish.yml
 [source,yaml,role=execute,subs="verbatim,attributes",title="collection-publish.yml"]
@@ -438,7 +454,7 @@ Within the _ansible_bootcamp_ci_cd_pipeline_ directory, create an Ansible playbo
 ...
 ----
 
-Commit all files you have created in the _ansible_bootcamp_ci_cd_pipeline_ directory and push the contents to the Gitea repository
+Commit all files you have created in the _red_hat_one_ci_cd_pipeline_ directory and push the contents to the Gitea repository
 
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
@@ -463,12 +479,12 @@ Add a _Trigger_ to the _ansible-collection-ci_ Pipeline created earlier to enabl
 Enter the following parameters to create the link:https://tekton.dev/docs/triggers/eventlisteners[Event Listener,window=_blank].
 .. Git provider type: `gitea-push`
 .. collection-url: `$(tt.params.git-repo-url)`
-.. playbook-repo: `{gitea_console_url}/{gitea_user}/ansible_bootcamp_ci_cd_pipeline.git`
+.. playbook-repo: `{gitea_console_url}/{gitea_user}/red_hat_one_ci_cd_pipeline.git`
 .. collection-repo-version: `$(tt.params.git-revision)`
 .. shared-workspace: `VolumeClaimTemplate`
 . Click **Add** to create the Trigger.
 
-image::06-ansible-cicd/trigger-config.png[]
+image:23-pipelines/pipelines-trigger-config.png[Pipeline Trigger Config]
 
 ==== 4.4.2: Copy Event Listener URL
 
@@ -477,10 +493,9 @@ With the Trigger created, copy the Event Listener URL to be used when creating t
 . In the left hand menu, expand the _Pipelines_ section and select *Pipelines*
 . Open your OpenShift Container Platform GUI, in the left menu, goto the _Pipelines_ section of the menu and select *Pipelines*
 . Click on the link of the _ansible-collection-ci_ pipeline that is contained within the _aap_ project.
-. Click on the link of the _ansible-collection-ci_ pipeline that is now created
 . Under the _TriggerTemplates_ section, copy the Event Listener URL
 
-image::06-ansible-cicd/webhook-url.png[]
+image:23-pipelines/pipelines-webhook-url.png[Pipelines Webhook URL]
 
 ==== 4.4.3: Create the Webhook within the Gitea Collection Repository
 
@@ -490,42 +505,42 @@ Copy the URL using the copy button next to the URL as it will be used when creat
 
 Navigate to the Gitea repository containing the collection and create the webhook
 
-. Navigate to the link:{gitea_console_url}/{gitea_user}/ansible_bootcamp_my_collection[Gitea ansible_bootcamp_my_collection Repository,window=_blank]
+. Navigate to the link:{gitea_console_url}/{gitea_user}/red_hat_one_super_lab[Gitea red_hat_one_super_lab Repository,window=_blank]
 . Select the *Settings* tab on the right side of the window
 . Click on the _Webhooks_ section under the _Settings_ box on the left side of the window
-. Click the green *Add Webhook* button on the right side of the window ad select *Gitea* from the dropdown selections
+. Click the green *Add Webhook* button on the right side of the window and select *Gitea* from the dropdown selections
 . Paste the Event Listener URL that was copied previously in the _Target URL_ field
 . Leave the remaining fields at their default values
 . Click on the green *Add Webhook* button at the bottom of the page to create the webhook
 
-image::06-ansible-cicd/gitea-webhook-config.png[]
+image:23-pipelines/pipelines-gitea-webhook-config.png[Webhook Configuration]
 
 ==== 4.4.4: Test Webhook
 
 With the webhook created, let's send a test payload to confirm that it is working properly.
 
-. From the link:{gitea_console_url}/{gitea_user}/ansible_bootcamp_my_collection/settings/hooks[Webhooks page,window=_blank] of the _ansible_bootcamp_my_collection_ repository in Gitea, click on the link for the webhook you just created
+. From the link:{gitea_console_url}/{gitea_user}/red_hat_one_super_lab/settings/hooks[Webhooks page,window=_blank] of the red_hat_one_super_lab repository in Gitea, click on the link for the webhook you just created
 . At the bottom of the page, click the *Test Delivery* button to trigger the pipeline
 
-image::06-ansible-cicd/gitea-webhook-test.png[]
+image:23-pipelines/pipelines-gitea-webhook-test.png[Test Webhook Delivery]
 
 A _Green_ check mark next to the delivery indicates that the webhook was successfully sent to OpenShift.
 
-NOTE: You can see the status of the pipeline by going back into your OpenShift console and navigating to the pipeline you created and clicking on _PipelineRuns_.
+NOTE: You can see the status of the pipeline by going back into your OpenShift console and navigating to the pipeline you created and clicking on _PipelineRuns_. The _PipelineRun_ will fail as there are parameters that are not populated when testing the webhook. As long as the pipeline is triggered successfully, you can proceed to the next section.
 
 === 4.5: Update and Push New Version of Ansible Collection to Gitea
 
-Update the Ansible collection created in xref:04-managing-content-automation-hub.adoc[Managing Ansible Content with Private Automation Hub] by adding a new role called `dad_joke` that fetches and displays a random dad joke from the link:https://icanhazdadjoke.com[icanhazdadjoke,window=_blank] API. In addition, we will add a Molecule test scenario based on our learning xref:05-ansible-tdd.adoc[TDD for Ansible] section to validate the functionality of the new role.
+Update the Ansible collection created previously and contained in the `/projects/lab_collection` directory by adding a new role called `dad_joke` that fetches and displays a random dad joke from the link:https://icanhazdadjoke.com[icanhazdadjoke,window=_blank] API. In addition, we will add a Molecule test scenario to validate the functionality of the new role.
 
 Add the dad_joke role to your collection
 
 . Click on the Ansible extension in the left hand menu of your Dev Spaces workspace
 . Click on `Role`
-. Provide the path for your collection root directory (`/projects/devspaces-example/my_pah_project`)
+. Provide the path for your collection root directory (`/projects/lab_collection`)
 . Name the role `dad_joke`
 . Click **Create** to create the role
 
-image::06-ansible-cicd/devspace-role-create.png[]
+image:23-pipelines/pipelines-devspace-role-create.png[Create dad_joke Role]
 
 A message indicating the role was created successfully should appear in the _Logs_ output.
 
@@ -564,7 +579,7 @@ Add a Molecule test scenario to validate the functionality of the `dad_joke` rol
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-cd /projects/devspaces-example/my_pah_project/extensions
+cd /projects/lab_collection/extensions
 ----
 +
 . Initialize the `dad_joke` Molecule test scenario
@@ -587,7 +602,7 @@ molecule init scenario dad_joke
   tasks:
     - name: "Include the dad_joke role"
       ansible.builtin.include_role:
-        name: ansible_bootcamp.my_collection.dad_joke
+        name: red_hat_one.super_lab.dad_joke
 ...
 
 ----   
@@ -618,7 +633,7 @@ provisioner:
 
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-cd /projects/devspaces-example/my_pah_project
+cd /projects/lab_collection
 git add --all
 git commit -m "Adding dad_joke role and molecule test"
 git push origin main
@@ -628,6 +643,10 @@ NOTE: You may be prompted to enter your Gitea credentials to complete the push. 
 
 A PipelineRun should be triggered in OpenShift automatically via the webhook you created earlier. You can monitor the progress of the pipeline from the OpenShift Web Console by navigating to the _Pipelines_ section and selecting _PipelineRuns_.
 
+Confirm the PipelineRun completes successfully before proceeding to the next section. It is possible that one of the steps has failed.
+
+NOTE: This run will fail if there are any lint errors found. We intentionally introduced some in earlier labs along the way. View the PipelineRun output to determine where the errors are and fix them.
+
 === 4.6: Verify that your updated collection is available in Private Automation Hub
 
 NOTE: This step should be started only after you verify that the Tekton `PipelineRun` has completed successfully.
@@ -636,59 +655,30 @@ NOTE: This step should be started only after you verify that the Tekton `Pipelin
 . From the navigation menu on the left, expand **Automation Content** and expand **Collections**
 . Verify version `2.0.0` of your collection is present
 
-image::06-ansible-cicd/PAH-verify.png[]
+image::23-pipelines/pipelines-pah-verify.png[Verify Collection in Automation Hub]
 
-=== 4.7: Install and Use the update collection from PAH
+=== 4.7: Install and Use the updated collection from PAH
 
 With the collection published and approved in Private Automation Hub, you can now install and use the updated collection in your local Dev Spaces workspace.
 
-In your terminal, run the following commands. These variables will configure `ansible-galaxy` and `ansible-builder` to use your PAH instance for the current terminal session.
+Ensure that you have the necessary environment variables set to connect to your Private Automation Hub instance as was configured in xref:21-content-build.adoc[Building Ansible Content Collections]. These variables can be set by running the following command in your terminal.
 
-NOTE: If you have these environment variables set from the previous lab you do not need to set them again.
-
-. First, set your Private Automation Hub API token as an environment variable
-+
-[source,bash,role=execute,subs="verbatim,attributes"]
+[source,bash,role=execute]
 ----
-# Set your Private Automation Hub API token
-export PAH_API_TOKEN='YOUR_API_TOKEN_HERE'
+source /projects/env/set_pah_vars.env
 ----
-+
-. Now, set the remaining environment variables
-+
-[source,bash,role=execute,subs="verbatim,attributes"]
-----
-# Set the list of servers Ansible should know about
-export ANSIBLE_GALAXY_SERVER_LIST='published,certified,validated,community'
 
-# Configure the 'published' repository
-export ANSIBLE_GALAXY_SERVER_PUBLISHED_URL={aap_controller_web_url}/pulp_ansible/galaxy/published/
-export ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=$PAH_API_TOKEN
-
-# Configure the 'certified' repository
-export ANSIBLE_GALAXY_SERVER_CERTIFIED_URL={aap_controller_web_url}/pulp_ansible/galaxy/rh-certified/
-export ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=$PAH_API_TOKEN
-
-# Configure the 'validated' repository
-export ANSIBLE_GALAXY_SERVER_VALIDATED_URL={aap_controller_web_url}/pulp_ansible/galaxy/validated/
-export ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=$PAH_API_TOKEN
-
-# Configure the 'community' repository
-export ANSIBLE_GALAXY_SERVER_COMMUNITY_URL={aap_controller_web_url}/pulp_ansible/galaxy/community/
-export ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=$PAH_API_TOKEN
-----
-+
 . Use `ansible-galaxy` to install the new version of your collection from Private Automation hub
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
- ansible-galaxy collection install ansible_bootcamp.my_collection
+ansible-galaxy collection install --force red_hat_one.super_lab
 ----
 +
-. Create the following ansible playbook in a file named `test_dad_joke.yml` to test the new collection in the `playbooks` directory of the collection.
+. Create the following ansible playbook in a file named `test_dad_joke.yml` in the _lab_playbooks_ repository to test the new collection in the `playbooks` directory of the collection.
 +
-.playbooks/test_dad_joke.yml
-[source,yaml,role=execute,subs="verbatim,attributes",title="playbooks/test_dad_joke.yml"]
+./projects/lab_playbooks/test_dad_joke.yml
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/lab_playbooks/test_dad_joke.yml"]
 ----
 ---
 - name: Random Dad Joke Generator
@@ -697,14 +687,17 @@ export ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=$PAH_API_TOKEN
   gather_facts: false
 
   roles:
-    - ansible_bootcamp.my_collection.dad_joke
+    - red_hat_one.super_lab.dad_joke
+...
+
 ----   
 +
-. From the root of the collection, execute the playbook and if successful, it should return a Dad Joke
+. From the root of the _lab_playbooks_ repository, execute the playbook and if successful, it should return a Dad Joke
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
- ansible-playbook playbooks/test_dad_joke.yml
+cd /projects/lab_playbooks
+ansible-playbook test_dad_joke.yml
 ----
 
 Verify the playbooks runs successfully and returns a dad joke in the output.
@@ -729,4 +722,3 @@ For additional reference and deeper learning on CI/CD pipelines:
 . https://tekton.dev/docs/[Tekton Documentation]
 . https://docs.ansible.com/ansible/latest/collections_guide/index.html[Ansible Collections Guide]
 . https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.5/html/using_automation_hub/index[Private Automation Hub Documentation]
-
