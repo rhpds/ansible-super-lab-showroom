@@ -76,10 +76,10 @@ NOTE: Replace #YOUR_API_TOKEN# below with the personal API token you just copied
 export PAH_API_TOKEN=#YOUR_API_TOKEN#
 
 # Set your AAP web URL used throughout the rest of the vars
-export AAP_CONTROLLER_WEB_URL='{aap_controller_web_url}
+export AAP_CONTROLLER_WEB_URL={aap_controller_web_url}
 
 # Set the list of servers Ansible should know about
-export ANSIBLE_GALAXY_SERVER_LIST='published,certified,validated,community
+export ANSIBLE_GALAXY_SERVER_LIST=published,certified,validated,community
 
 # Configure the 'published' repository
 export ANSIBLE_GALAXY_SERVER_PUBLISHED_URL=$\{AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/published/
