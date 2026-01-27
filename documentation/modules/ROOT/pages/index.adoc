@@ -43,8 +43,9 @@ The following modules are included in this superlab:
 .. xref:20-content-develop.adoc[Creating automation for Windows]
 .. xref:21-content-build.adoc[Build a custom Execution Environment and Collection]
 .. xref:22-content-execute.adoc[Create a Playbook and configure AAP to execute it all]
-.. xref:23-content-pipeline.adoc[Pipeline for collections]
+.. xref:23-content-ansible-tdd.adoc[TDD with Molecule]
 .. xref:24-content-config-as-code.adoc[Config as Code]
+.. xref:25-content-pipeline.adoc[Pipeline for collections]
 . Events
 [arabic]
 .. xref:30-events-health-probe.adoc[EDA Overview and Rulebook for health monitoring]
