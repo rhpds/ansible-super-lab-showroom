@@ -320,6 +320,7 @@ collections:
   - chocolatey.chocolatey
   - ansible.windows
   - microsoft.iis
+  - ansible.posix
 ----
 +
 . Click *Save remote*
