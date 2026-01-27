@@ -13,8 +13,9 @@
 *** xref:20-content-develop.adoc[2.1. Creating automation for Windows]
 *** xref:21-content-build.adoc[2.2. Develop a custom Execution Environment]
 *** xref:22-content-execute.adoc[2.3. Develop a Playbook to execute it all]
-*** xref:23-content-pipeline.adoc[2.4. BONUS: Pipeline for collections]
+*** xref:23-content-ansible-tdd.adoc[2.4. TDD with Molecule]
 *** xref:24-content-config-as-code.adoc[2.5. Config as Code]
+*** xref:25-content-pipeline.adoc[2.6. Pipeline for collections]
 ** Module 3: Events 
 *** xref:30-events-health-probe.adoc[3.1. EDA Overview and Rulebook for health monitoring]
 *** xref:31-events-log-streaming.adoc[3.2. EDA Log streaming with Filebeat and Kafka]
