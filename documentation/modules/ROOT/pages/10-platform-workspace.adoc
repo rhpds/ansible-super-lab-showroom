@@ -1,4 +1,4 @@
-= Lab: Cloud-Navite Ansible Development in Dev Spaces
+= Lab: Cloud-Native Ansible Development in Dev Spaces
 
 [abstract]
 We will explore the Red Hat OpenShift Dev Spaces environment you will be working within and learn how to launch and configure development workspaces for Ansible automation development. This includes understanding the various components available in the lab environment, authenticating with git repositories, and using the Ansible Development Tools.
@@ -48,7 +48,7 @@ TIP: Alternatively, the direct URL is link:https://devspaces.{openshift_cluster_
 
 === 4.1: Launching a specific Dev Spaces Workspace
 
-Once you have launched the OpenShift Dev Spaces console, use the following steps toe access your Ansible Dev Space workspace.
+Once you have launched the OpenShift Dev Spaces console, use the following steps to access your Ansible Dev Space workspace.
 
 . Login via OpenShift authentication using the same credentials as the OpenShift console
 . Select **Allow selected permissions** to authorize access and launch the console
