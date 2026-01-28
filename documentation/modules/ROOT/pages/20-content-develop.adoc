@@ -54,6 +54,8 @@ image::20-content-develop/aap_run_command_credential.png[Credential]
 . After a few seconds a result will display which should resemble this output:
 +
 image::20-content-develop/aap_run_command_results.png[Results]
++
+NOTE: If you encounter any issues with your Windows server during any parts of these labs, repeat these steps and choose *win_reboot* as a *Run command* if needed.
 
 === 1.2: Review Connectivity Details
 
