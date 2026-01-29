@@ -74,15 +74,7 @@ For this lab, we have have provided a link:https://code.visualstudio.com/docs/ed
 +
 image::10-platform-workspace/intro6.png[Ansible extension interface in VS Code showing available Ansible development tools]
 
-== 6: User Credentials in Workspaces
-
-NOTE: This section describes a key feature of OpenShift Dev Spaces which enables secure access to git repositories. These details are shared for informational purposes only. No action is required to be performed in your Dev Spaces workspace.
-
-OpenShift Dev Spaces includes the capability to store user credentials for Git repositories, such as Personal Access Tokens (PATs), which can be applied to all your workspaces. This can be accomplished after logging into the Red Hat OpenShift Dev Spaces dashboard. Click on the top right drop down next to your username and icon and select, **User Preferences**. In the User Preferences page, select **Personal Access Tokens** and add a git Personal Access Token (PAT) associated with the desired Git provider.
-
-For more information, see the https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.23/html/user_guide/getting-started-with-devspaces#authenticating-to-a-git-server-from-a-workspace[Authenticating to a Git server from a Workspace].
-
-== 7: Accessing a Terminal
+== 6: Accessing a Terminal
 
 The majority of the exercises in this lab will be performed using the Visual Studio Code terminal.
 

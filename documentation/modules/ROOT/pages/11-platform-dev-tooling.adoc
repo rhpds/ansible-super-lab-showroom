@@ -517,7 +517,8 @@ While you may be familiar with `ansible-playbook` or even `ansible-navigator` on
 
 ==== 4.3.1: Running playbooks via ansible-playbook in VS Code
 
-. Right-click on the file at the base of the directory called `site.yml` and choose `Run Ansible Playbook Via ...`
+. Now close the *collections* folder and scroll down to the very last file all the way to the left `site.yml`
+. Right-click on `site.yml` and choose `Run Ansible Playbook Via ...`
 . Choose `Run playbook via  'ansible-playbook'`.
 +
 image::11-platform-dev-tooling/ansible-playbook1.png[]
