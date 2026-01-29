@@ -356,7 +356,7 @@ NOTE: The reason this is plain text and not using HTML tags is because we cannot
 +
 . The file structure should look like this:
 +
-image::20-content-develop/web_server_role.png[Log Shipper Role]
+image::20-content-develop/web_server_role.png[Web Server Role]
 
 ==== 2.2.2: Build Log Shipper Role
 
