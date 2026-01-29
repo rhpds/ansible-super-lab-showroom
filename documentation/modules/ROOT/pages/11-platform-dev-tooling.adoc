@@ -578,7 +578,7 @@ image::11-platform-dev-tooling/ansible-lint3.png[]
 image::11-platform-dev-tooling/ansible-lint4.png[]
 +
 . Under the Ansible extension settings, click on the **Validation** subsection
-. Select the checkbox for `Auto Fox on Save`.
+. Select the checkbox for `Auto Fix on Save`.
 +
 image::11-platform-dev-tooling/ansible-lint5.png[]
 +
