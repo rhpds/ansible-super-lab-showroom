@@ -99,6 +99,12 @@ git config --global user.email "email@example.com"
 
 link:https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell[Git branches] should be used liberally. They can be used to test ideas and have no fear trashing a branch that didn't quite work out. It's better to leave a branch as is and start a new one based on your current working branch rather than testing a few things and reverting the commits or to comment/uncomment things. Using the new `git` prompt configured previously, your prompt should update when your branch changes similar to the following:
 
+. Execute this lab in the `/projects/devspaces-example`
++
+[source,role=execute,bash,subs="verbatim,attributes"]
+----
+cd /projects/devspaces-example
+----
 . Check what branch you are in. Notice it is also dynamically displayed in your prompt:
 +
 [source,role=execute,bash,subs="verbatim,attributes"]
@@ -571,7 +577,7 @@ image::11-platform-dev-tooling/ansible-lint3.png[]
 image::11-platform-dev-tooling/ansible-lint4.png[]
 +
 . Under the Ansible extension settings, click on the **Validation** subsection
-. Select the checkbox for `Auto Fox on Save`.t
+. Select the checkbox for `Auto Fox on Save`.
 +
 image::11-platform-dev-tooling/ansible-lint5.png[]
 +
