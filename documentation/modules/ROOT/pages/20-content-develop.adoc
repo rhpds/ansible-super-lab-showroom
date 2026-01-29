@@ -525,6 +525,8 @@ NOTE: For additional information see https://docs.redhat.com/en/documentation/re
 +
 . Add the following to the end of the provided `ansible.cfg`:
 +
+WARNING: Be careful NOT to overwrite the existing content, just append to it!
++
 NOTE: If you completed a previous lab and already have an `ansible.cfg` simply copy that and append it.
 +
 [source,bash,role=execute,title="/projects/lab_playbooks/ansible.cfg",subs="verbatim,quotes"]
@@ -726,6 +728,7 @@ cd /projects/lab_playbooks/
 ansible \
   --module-name ansible.builtin.win_ping windows \
   --extra-vars @/projects/env/secrets.yml
+  --inventory inventory/hosts.yml
 ----
 +
 [source,output]
