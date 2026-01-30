@@ -58,7 +58,7 @@ image::21-content-build/api-token-generate.png[Generate an API Token]
 +
 . Click the *Copy to clipboard* icon to copy it.
 +
-NOTE: Make sure to store the token securely, as it will not be displayed again.
+IMPORTANT: Make sure to store the token securely, as it will not be displayed again. Also note that this is your token for Private Automation Hub, it should be around 40 characters. This is completely different from the *UPSTREAM_CONSOLE_HUB_TOKEN* obtained in the previous lab used to communicate upstream with *console.redhat.com*. This token is used to communicate with your specific lab Private Automation Hub.
 
 ==== Step 2.1.3: Set Environment Variables
 
@@ -66,14 +66,14 @@ In your Dev Spaces terminal, create a file containing the following variables. T
 
 . Create a file called `set_pah_vars.env` in your `/projects/env/` directory with the following contents. Be sure to use your PAH API token created previously:
 +
-NOTE: Replace #YOUR_API_TOKEN# below with the personal API token you just copied from PAH.
+NOTE: Replace #YOUR_PAH_API_TOKEN# below with the personal API token you just copied from PAH.
 +
 [source,bash,role=execute,subs="verbatim,attributes,quotes",title="/projects/env/set_pah_vars.env"]
 ----
 # This file contains configuration variables and is intended to be sourced, not executed.
 
 # This is your unique token from Private Automation hub
-export PAH_API_TOKEN=#YOUR_API_TOKEN#
+export PAH_API_TOKEN=#YOUR_PAH_API_TOKEN#
 
 # Set your AAP web URL used throughout the rest of the vars
 export AAP_CONTROLLER_WEB_URL={aap_controller_web_url}
@@ -138,10 +138,10 @@ source /projects/env/set_pah_vars.env
 ----
 ANSIBLE_GALAXY_SERVER_COMMUNITY_URL=${AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/community/
 ANSIBLE_GALAXY_SERVER_PUBLISHED_URL=${AAP_CONTROLLER_WEB_URL\}/pulp_ansible/galaxy/published/
-ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=#YOUR_API_TOKEN#
-ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=#YOUR_API_TOKEN#
-ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=#YOUR_API_TOKEN#
-ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=#YOUR_API_TOKEN#
+ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=#YOUR_PAH_API_TOKEN#
+ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=#YOUR_PAH_API_TOKEN#
+ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=#YOUR_PAH_API_TOKEN#
+ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=#YOUR_PAH_API_TOKEN#
 ANSIBLE_GALAXY_SERVER_LIST=published,certified,validated,community
 ANSIBLE_GALAXY_SERVER_VALIDATED_URL=${AAP_CONTROLLER_WEB_URL}/pulp_ansible/galaxy/validated/
 ANSIBLE_GALAXY_SERVER_CERTIFIED_URL=${AAP_CONTROLLER_WEB_URL}/pulp_ansible/galaxy/rh-certified/
@@ -161,6 +161,7 @@ dependencies:
   "ansible.windows": "*"
   "chocolatey.chocolatey": "*"
   "microsoft.iis": "*"
+  "ansible.posix": "*"
 ----
 +
 . Feel free to modify the rest of the file as desired, such as author and description details.
@@ -311,7 +312,7 @@ image::21-content-build/execution-environment-confirm-sync.png[Confirm Sync Exec
 +
 image::21-content-build/edit-certified-remote.png[Edit RH-Certified Repository]
 +
-. In the *Token* field, paste the token obtained in the previous lab for upstream Automation Hub
+. In the *Token* field, paste the upstream console token obtained in the previous lab for Automation Hub (the long 769 character *UPSTREAM_CONSOLE_HUB_TOKEN*)
 . In the *Requirements file* field, paste the contents of `/projects/lab_playbooks/collections/requirements.yml`
 +
 [source,yaml,role=execute]

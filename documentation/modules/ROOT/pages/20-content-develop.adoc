@@ -519,7 +519,9 @@ NOTE: You may need to perform this activity  from a terminal or open the `/proje
 The file that was automatically scaffolded is acceptable as it currently stands as it correctly specifies the location of the inventory file. However, entries need to be added to install collections from Red Hat Automation Hub. Since we have not configured Private Automation Hub with the collections required, in this step we will use upstream Red Hat Automation Hub. 
 
 . First, obtain a token from https://console.redhat.com/ansible/automation-hub/token/[Automation Hub,window=_blank]
-. Under **Offline Token** click **Load Token** and copy this token and store it somewhere secure as it cannot be displayed again
+. Under **Offline Token** click **Load Token** and copy this token and store it somewhere secure as it cannot be displayed again.
++
+IMPORTANT: This is your personal token for *console.redhat.com* used to communicate upstream with Automation Hub on Red Hat console. For clarification, this token should be about 769 characters long (no need to count). Do NOT confuse this later with the Private Automation Hub token which will be much shorter at around 40 characters. Record this token to `/projects/env/my_tokens.env` for safe keeping with a name such as `UPSTREAM_CONSOLE_HUB_TOKEN=`.
 +
 NOTE: For additional information see https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/managing_automation_content/managing-cert-valid-content#token-management-hub_cloud-sync[Managing Automation Content Documentation,window=_blank]
 +
@@ -537,18 +539,18 @@ server_list = hub, hub_validated, galaxy
 [galaxy_server.hub]
 url=https://console.redhat.com/api/automation-hub/content/published/
 auth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
-token=#YOUR_TOKEN#
+token=#YOUR_UPSTREAM_CONSOLE_HUB_TOKEN#
 
 [galaxy_server.hub_validated]
 url=https://console.redhat.com/api/automation-hub/content/validated/
 auth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
-token=#YOUR_TOKEN#
+token=#YOUR_UPSTREAM_CONSOLE_HUB_TOKEN#
 
 [galaxy_server.galaxy]
 url=https://galaxy.ansible.com
 ----
 +
-IMPORTANT: Be sure to replace #YOUR_TOKEN# with the token from step 2.
+IMPORTANT: Be sure to replace #YOUR_UPSTREAM_CONSOLE_HUB_TOKEN# with the token obtained from step 2 above (i.e. the 769 character long token from console.redhat.com).
 
 === 3.5: Configure Collections
 

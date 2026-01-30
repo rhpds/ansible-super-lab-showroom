@@ -354,11 +354,11 @@ In order for Automation Controller to pull collections from Private Automation H
 +
 image::22-content-execute/automation-controller-create-credential-3.png[Create Credentials]
 +
-. Enter the following details on the _Create Credential_ page to create a credential for the _published_ repository in Private Automation Hub. Use the API token obtained in the prior lab:
+. Enter the following details on the _Create Credential_ page to create a credential for the _published_ repository in Private Automation Hub. Use the API token obtained in the prior lab (this is the shorter 40 character token):
 .. *Name*: `PAH - published`
 .. *Credential type*: `Ansible Galaxy/Automation Hub API Token`
 .. *Galaxy Server URL*: `{aap_controller_web_url}/pulp_ansible/galaxy/published/`
-.. *API Token*: `#{pah_api_token}#`
+.. *API Token*: `#PAH_API_TOKEN#`
 . Click **Create credential** to save the new credential.
 +
 image::22-content-execute/automation-controller-create-credential-pah-dialog.png[Create Credentials Dialog]
@@ -366,11 +366,11 @@ image::22-content-execute/automation-controller-create-credential-pah-dialog.png
 Perform the same steps to create a second credential for the _rh-certified_ repository in Private Automation Hub.
 
 . From the Credentials page in Automation Controller, click **Create credential** once again to add a new credential.
-. Enter the following details on the _Create Credential_ page to create a credential for the _published_ repository in Private Automation Hub. Use the API token obtained in the prior lab:
+. Enter the following details on the _Create Credential_ page to create a credential for the _published_ repository in Private Automation Hub. Use the API token obtained in the prior lab (this is the shorter 40 character token):
 .. *Name*: `PAH - rh-certified`
 .. *Credential type*: `Ansible Galaxy/Automation Hub API Token`
 .. *Galaxy Server URL*: `{aap_controller_web_url}/pulp_ansible/galaxy/rh-certified/`
-.. *API Token*: `#{pah_api_token}#`
+.. *API Token*: `#PAH_API_TOKEN#`
 . Click **Create credential** to save the new credential.
 
 === 2.6: Add Credentials to the Default Organization
@@ -505,7 +505,7 @@ collections:
 
 === 3.1: Add Validated Remote
 
-Create a new remote for the `validated` collections repository. The API token for upstream Red Hat Automation Hub is required to access this repository. The token retrieved in a prior lab can be used here.
+Create a new remote for the `validated` collections repository. The API token for upstream Red Hat Automation Hub is required to access this repository. The token retrieved in a prior lab can be used here (this is the longer 769 character token saved as *UPSTREAM_CONSOLE_HUB>TOKEN*)
 
 . From the Remotes page in Private Automation Hub, click **Create remote**.
 +
@@ -515,7 +515,7 @@ image::22-content-execute/remotes-create-remote.png[Create Remote]
 .. Name: `validated`
 .. Server URL: `https://console.redhat.com/api/automation-hub/content/validated/`
 .. SSO URL: `https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token`
-.. Token: `<The token copied previously from Red Hat Automation Hub>`
+.. Token: `#UPSTREAM_CONSOLE_HUB_TOKEN#`
 . Click **Create remote** to create the new Remote.
 
 image::22-content-execute/remotes-add-remote.png[Add Remote]
