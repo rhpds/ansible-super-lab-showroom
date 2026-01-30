@@ -421,7 +421,7 @@ This can be verified by performing the following steps:
 * Look at what is displayed in the `Status` column on this page.
 * When the status for both components (`aap` and `aap-controller`) shows `Conditions: Running, Successful`, then proceed to the next section.
 +
-NOTE: It will take about 10 minutes for the AAP deployment to complete.
+NOTE: It will take about 10-15 minutes for the AAP deployment to complete.
 +
 image::12-platform-aap_on_openshift/aap-running.png[AAP Running Status]
 

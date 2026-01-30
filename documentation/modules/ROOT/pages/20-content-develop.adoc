@@ -758,7 +758,7 @@ WARNING: This run will fail the first time you run it. The output will be review
 +
 [source,output,subs="quotes,callouts"]
 ----
-...
+# ... other playbook output
 TASK [red_hat_one.super_lab.log_shipper : Ensure Chocolatey is installed (requires .NET 4.8)] ***************************************************************************************************************************
 task path: /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/log_shipper/tasks/chocolatey.yml:6
 #[ERROR]: Task failed: Module failed: Chocolatey 2.0.0 requires .NET Framework 4.8 or higher to be installed. Please install .NET Framework 4.8 or higher and try again, or specify a 1.x version of Chocolatey to install.#
@@ -782,7 +782,7 @@ windows                    : ok=19   changed=5    unreachable=0    failed=1    s
 ====
 [source,output]
 ----
-...
+# ... other playbook output
 TASK [red_hat_one.super_lab.web_server : Debug captured result] *********************************************************************************************************************************************************
 task path: /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/web_server/tasks/validate.yml:8
 ok: [windows] => {
@@ -791,7 +791,7 @@ ok: [windows] => {
         "changed": false,
         "character_set": "ISO-8859-1",
         "content": "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />\r\n<title>IIS Windows Server</title>\r\n<style type=\"text/css\">\r\n<!--\r\nbody {\r\n\tcolor:#000000;\r\n\tbackground-color:#0072C6;\r\n\tmargin:0;\r\n}\r\n\r\n#container {\r\n\tmargin-left:auto;\r\n\tmargin-right:auto;\r\n\ttext-align:center;\r\n\t}\r\n\r\na img {\r\n\tborder:none;\r\n}\r\n\r\n-->\r\n</style>\r\n</head>\r\n<body>\r\n<div id=\"container\">\r\n<a href=\"http://go.microsoft.com/fwlink/?linkid=66138&amp;clcid=0x409\"><img src=\"iisstart.png\" alt=\"IIS\" width=\"960\" height=\"600\" /></a>\r\n</div>\r\n</body>\r\n</html>",
-...
+# ... other playbook output
 ----
 ====
 +
