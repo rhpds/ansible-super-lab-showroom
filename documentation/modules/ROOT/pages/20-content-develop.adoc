@@ -802,7 +802,8 @@ NOTE: If you have any issues with the Windows server, you may need to reboot the
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
 ansible --module-name ansible.builtin.win_reboot windows \
-  --extra-vars @/projects/env/secrets.yml
+  --extra-vars @/projects/env/secrets.yml \
+  --inventory inventory/hosts.yml
 ----
 +
 . Review the output. Notice this time the validation tasks did not run:
