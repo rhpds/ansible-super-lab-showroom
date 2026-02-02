@@ -797,14 +797,7 @@ ansible-playbook --extra-vars @/projects/env/secrets.yml \
   site.yml
 ----
 +
-NOTE: If you have any issues with the Windows server, you may need to reboot the server:
-+
-[source,bash,role=execute,subs="verbatim,attributes"]
-----
-ansible --module-name ansible.builtin.win_reboot windows \
-  --extra-vars @/projects/env/secrets.yml \
-  --inventory inventory/hosts.yml
-----
+NOTE: If you have any issues with the Windows server, you may need to reboot the server. Use the AAP ad-hoc command discussed in the first lab or see the appendix for additional troubleshooting.
 +
 . Review the output. Notice this time the validation tasks did not run:
 +
@@ -938,6 +931,8 @@ For additional references, refer to the following resources:
 
 == Appendix
 
+=== Dev Spaces Workspace Restarts
+
 In case your workspace restarts, all files and directories will be preserved but this script may need to be run:
 
 [source,bash,role=execute,title="/projects/env/config.sh"]
@@ -953,4 +948,15 @@ pip install pypsrp
 ansible_user: {windows_user}
 ansible_password: {windows_password}
 ...
+----
+
+=== Windows Reboot
+
+If you encounter any issues with the Windows server, you can attempt to remotely reboot it:
+
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+ansible --module-name ansible.builtin.win_reboot windows \
+  --extra-vars @/projects/env/secrets.yml \
+  --inventory inventory/hosts.yml
 ----
