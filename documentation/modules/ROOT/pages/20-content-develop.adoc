@@ -752,7 +752,7 @@ ansible-playbook --extra-vars @/projects/env/secrets.yml \
   site.yml --check
 ----
 +
-WARNING: This run will fail the first time you run it. The output will be reviewed in the following steps.
+IMPORTANT: This run will fail the first time you run it. The output will be reviewed in the following steps.
 +
 . The final task that fails is likely the following. This is due to a requirement that hasn't been installed yet:
 +
