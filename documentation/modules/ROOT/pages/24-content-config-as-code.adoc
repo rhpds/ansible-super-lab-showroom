@@ -1,5 +1,13 @@
 = Lab: Configuration as Code
 
+[.sidebar]
+****
+* **Before you start:** Access to Dev Spaces and AAP in xref:environment-details.adoc[Environment Details], content from xref:22-content-execute.adoc[Lab 2-3. Develop a Playbook to execute it all]
+* **Prepares you for:** Using Config as Code to install and configure AAP
+* **Lab Type:** Self-Contained (_You can skip this without missing steps for other labs_)
+* **Estimated Time:** 30 - 90 minutes
+****
+
 [abstract]
 Learn how to manage your entire Ansible Automation Platform with collections for both Infrastructure as Code (IaC) and Configuration as Code (CaC) using Ansible playbooks. This includes deployment to OpenShift, as well as configuring various objects such as organizations, teams, users, credentials, projects, inventories, job templates, and execution environments through an automated, version-controlled processes.
 

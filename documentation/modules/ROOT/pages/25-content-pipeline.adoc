@@ -1,5 +1,13 @@
 = Lab: Creating a CI/CD Pipeline
 
+[.sidebar]
+****
+* **Before you start:** Access to Dev Spaces and AAP in xref:environment-details.adoc[Environment Details], content from xref:22-content-execute.adoc[Lab 2-3. Develop a Playbook to execute it all]
+* **Prepares you for:** Using OpenShift Pipelines to automate the collection build and publish process
+* **Lab Type:** Self-Contained (_You can skip this without missing steps for other labs_)
+* **Estimated Time:** 20 - 60 minutes
+****
+
 [abstract]
 We will create a complete CI/CD pipeline for Ansible collection development using Tekton on OpenShift. This includes building a pipeline that automatically lints, tests, builds, publishes, and approves Ansible collections to Private Automation Hub, with webhook integration for automated triggering on git commits.
 

@@ -1,5 +1,13 @@
 = Lab: Ansible Test-Driven Development with Molecule
 
+[.sidebar]
+****
+* **Before you start:** Access to Dev Spaces and AAP in xref:environment-details.adoc[Environment Details], content from xref:22-content-execute.adoc[Lab 2-3. Develop a Playbook to execute it all]
+* **Prepares you for:** Using Molecule for Test Driven Development
+* **Lab Type:** Self-Contained (_You can skip this without missing steps for other labs_)
+* **Estimated Time:** 15 - 45 minutes
+****
+
 [abstract]
 Learn how Test-Driven Development (TDD) principles can be applied to Ansible automation using Molecule. This lab demonstrates how to write tests before writing code, creating isolated testing environments, and implementing comprehensive testing strategies for Ansible roles that manage PostgreSQL databases in containerized environments.
 

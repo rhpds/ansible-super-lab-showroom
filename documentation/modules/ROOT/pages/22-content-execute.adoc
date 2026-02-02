@@ -1,5 +1,13 @@
 = Lab: Develop a Playbook and Execute within AAP
 
+[.sidebar]
+****
+* **Before you start:** Access to Dev Spaces and AAP in xref:environment-details.adoc[Environment Details], content from xref:21-content-build.adoc[Lab 2-2. Develop a custom Execution Environment]
+* **Prepares you for:** Populating AAP via ClickOps to execute automation created previously
+* **Lab Type:** Foundational (_actions in this lab prepare you for the remaining labs_)
+* **Estimated Time:** 20 - 60 minutes
+****
+
 [abstract]
 In this lab we will configure AAP to execute the automation content created in previous labs. We will also learn some additional activities around collection management.
 

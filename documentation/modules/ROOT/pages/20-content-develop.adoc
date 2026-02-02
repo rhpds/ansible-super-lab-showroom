@@ -1,5 +1,13 @@
 = Lab: Creating Automation Content for Windows
 
+[.sidebar]
+****
+* **Before you start:** Access to Dev Spaces and AAP in xref:environment-details.adoc[Environment Details]
+* **Prepares you for:** Creating a content collection to manage a Windows host
+* **Lab Type:** Foundational (_actions in this lab prepare you for the remaining labs_)
+* **Estimated Time:** 45 - 90 minutes
+****
+
 [abstract]
 In this lab we will develop a custom Ansible collection to manage a Windows server in our lab that will represent an example enterprise environment. We will build the content a piece at a time until the full collection is ready to be deployed. The server will be configured to run a custom website, have chocolatey software manager installed, and Filebeat installed and configured.
 

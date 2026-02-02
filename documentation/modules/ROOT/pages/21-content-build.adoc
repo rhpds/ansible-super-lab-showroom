@@ -1,5 +1,13 @@
 = Lab: Build a custom Collection and Execution Environment
 
+[.sidebar]
+****
+* **Before you start:** Access to Dev Spaces and AAP in xref:environment-details.adoc[Environment Details], content from xref:20-content-develop.adoc[Lab 2-1. Creating automation for Windows]
+* **Prepares you for:** Building a collection and execution environment and publishing to Private Automation Hub
+* **Lab Type:** Foundational (_actions in this lab prepare you for the remaining labs_)
+* **Estimated Time:** 30 - 90 minutes
+****
+
 [abstract]
 We will create a custom Collection, publish it to a Private Automation Hub (PAH), build a custom Execution Environment (EE) from a Red Hat certified base image, and finally, run the automation from Ansible Automation Controller.
 
