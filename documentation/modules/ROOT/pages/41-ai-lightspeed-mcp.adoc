@@ -109,7 +109,7 @@ To allow an external AI tool to interact with Ansible Automation Platform via th
 Create a Personal Access Token (PAT) by performing the following:
 
 . Launch the link:{aap_controller_web_url}[Ansible Automation Platform,window=_blank] web interface and login using the credentials from the xref:environment-details.adoc[Environment Details,window=_blank] page.
-. From the navigation menu on the left, expand **Automation Content** and click on **API Token**.
+. From the navigation menu on the left, expand **Access Management** and click on **API Token**.
 +
 image::41-lightspeed-mcp/api-token-overview.png[API Token Overview]
 +

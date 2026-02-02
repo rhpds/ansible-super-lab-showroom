@@ -358,7 +358,7 @@ NOTE: The reason this is plain text and not using HTML tags is because we cannot
 +
 . The file structure should look like this:
 +
-image::20-content-develop/web_server_role.png[Log Shipper Role]
+image::20-content-develop/web_server_role.png[Web Server Role]
 
 ==== 2.2.2: Build Log Shipper Role
 
@@ -521,11 +521,15 @@ NOTE: You may need to perform this activity  from a terminal or open the `/proje
 The file that was automatically scaffolded is acceptable as it currently stands as it correctly specifies the location of the inventory file. However, entries need to be added to install collections from Red Hat Automation Hub. Since we have not configured Private Automation Hub with the collections required, in this step we will use upstream Red Hat Automation Hub. 
 
 . First, obtain a token from https://console.redhat.com/ansible/automation-hub/token/[Automation Hub,window=_blank]
-. Under **Offline Token** click **Load Token** and copy this token and store it somewhere secure as it cannot be displayed again
+. Under **Offline Token** click **Load Token** and copy this token and store it somewhere secure as it cannot be displayed again.
++
+IMPORTANT: This is your personal token for *console.redhat.com* used to communicate upstream with Automation Hub on Red Hat console. For clarification, this token should be several hundred characters long (no need to count). Do NOT confuse this later with the Private Automation Hub token which will be much shorter at around 40 characters. Record this token to `/projects/env/my_tokens.env` for safe keeping with a name such as `UPSTREAM_CONSOLE_HUB_TOKEN=`.
 +
 NOTE: For additional information see https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/managing_automation_content/managing-cert-valid-content#token-management-hub_cloud-sync[Managing Automation Content Documentation,window=_blank]
 +
 . Add the following to the end of the provided `ansible.cfg`:
++
+WARNING: Be careful NOT to overwrite the existing content, just append to it!
 +
 NOTE: If you completed a previous lab and already have an `ansible.cfg` simply copy that and append it.
 +
@@ -537,18 +541,18 @@ server_list = hub, hub_validated, galaxy
 [galaxy_server.hub]
 url=https://console.redhat.com/api/automation-hub/content/published/
 auth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
-token=#YOUR_TOKEN#
+token=#YOUR_UPSTREAM_CONSOLE_HUB_TOKEN#
 
 [galaxy_server.hub_validated]
 url=https://console.redhat.com/api/automation-hub/content/validated/
 auth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
-token=#YOUR_TOKEN#
+token=#YOUR_UPSTREAM_CONSOLE_HUB_TOKEN#
 
 [galaxy_server.galaxy]
 url=https://galaxy.ansible.com
 ----
 +
-IMPORTANT: Be sure to replace #YOUR_TOKEN# with the token from step 2.
+IMPORTANT: Be sure to replace #YOUR_UPSTREAM_CONSOLE_HUB_TOKEN# with the token obtained from step 2 above (i.e. the very long token from console.redhat.com).
 
 === 3.5: Configure Collections
 
@@ -655,6 +659,8 @@ rm --force --recursive --verbose \
   /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/
 ----
 +
+WARNING: Do not run this command again AFTER you complete the next step `ln` or it WILL delete EVERYTHING in your `/projects/lab_collection/` directory and you will have to perform all the tasks again!
++
 [source,output]
 ----
 removed '/projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/run/README.md'
@@ -728,6 +734,7 @@ cd /projects/lab_playbooks/
 ansible \
   --module-name ansible.builtin.win_ping windows \
   --extra-vars @/projects/env/secrets.yml
+  --inventory inventory/hosts.yml
 ----
 +
 [source,output]
@@ -747,13 +754,37 @@ ansible-playbook --extra-vars @/projects/env/secrets.yml \
   site.yml --check
 ----
 +
-NOTE: This run will fail the first time you run it. The output will be reviewed in the following steps.
+IMPORTANT: This run will fail the first time you run it. The output will be reviewed in the following steps.
 +
-. The first role will succeed. Notice the tasks in `validate.yml` will run, which are specified _only_ to run in check mode. The contents on the web server are a default website:
+. The final task that fails is likely the following. This is due to a requirement that hasn't been installed yet:
 +
+[source,output,subs="quotes,callouts"]
+----
+# ... other playbook output
+TASK [red_hat_one.super_lab.log_shipper : Ensure Chocolatey is installed (requires .NET 4.8)] ***************************************************************************************************************************
+task path: /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/log_shipper/tasks/chocolatey.yml:6
+#[ERROR]: Task failed: Module failed: Chocolatey 2.0.0 requires .NET Framework 4.8 or higher to be installed. Please install .NET Framework 4.8 or higher and try again, or specify a 1.x version of Chocolatey to install.#
+Origin: /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/log_shipper/tasks/chocolatey.yml:6:3
+
+4     file: prerequisites.yml
+5
+6 - name: Ensure Chocolatey is installed (requires .NET 4.8)
+    ^ column 3
+
+#fatal: [windows]: FAILED! => {"changed": false, "command": "", "msg": "Chocolatey 2.0.0 requires .NET Framework 4.8 or higher to be installed. Please install .NET Framework 4.8 or higher and try again, or specify a 1.x version of Chocolatey to install.", "rc": 0}#
+
+PLAY RECAP **************************************************************************************************************************************************************************************************************
+windows                    : ok=19   changed=5    unreachable=0    failed=1    skipped=2    rescued=0    ignored=0   
+----
++
+. The first role will succeed. Notice the tasks in `validate.yml` will run, which are specified _only_ to run in check mode. If you scroll up to the task named *Debug captured result* you can see the default website, not the one we want to configure.
++
+.View Output Detail
+[%collapsible]
+====
 [source,output]
 ----
-...
+# ... other playbook output
 TASK [red_hat_one.super_lab.web_server : Debug captured result] *********************************************************************************************************************************************************
 task path: /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/web_server/tasks/validate.yml:8
 ok: [windows] => {
@@ -762,33 +793,13 @@ ok: [windows] => {
         "changed": false,
         "character_set": "ISO-8859-1",
         "content": "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />\r\n<title>IIS Windows Server</title>\r\n<style type=\"text/css\">\r\n<!--\r\nbody {\r\n\tcolor:#000000;\r\n\tbackground-color:#0072C6;\r\n\tmargin:0;\r\n}\r\n\r\n#container {\r\n\tmargin-left:auto;\r\n\tmargin-right:auto;\r\n\ttext-align:center;\r\n\t}\r\n\r\na img {\r\n\tborder:none;\r\n}\r\n\r\n-->\r\n</style>\r\n</head>\r\n<body>\r\n<div id=\"container\">\r\n<a href=\"http://go.microsoft.com/fwlink/?linkid=66138&amp;clcid=0x409\"><img src=\"iisstart.png\" alt=\"IIS\" width=\"960\" height=\"600\" /></a>\r\n</div>\r\n</body>\r\n</html>",
-...
+# ... other playbook output
 ----
-+
-. The final task that fails is likely the following. This is due to a requirement that hasn't been installed yet:
-+
-[source,output]
-----
-...
-TASK [red_hat_one.super_lab.log_shipper : Ensure Chocolatey is installed (requires .NET 4.8)] ***************************************************************************************************************************
-task path: /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/log_shipper/tasks/chocolatey.yml:6
-[ERROR]: Task failed: Module failed: Chocolatey 2.0.0 requires .NET Framework 4.8 or higher to be installed. Please install .NET Framework 4.8 or higher and try again, or specify a 1.x version of Chocolatey to install.
-Origin: /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/roles/log_shipper/tasks/chocolatey.yml:6:3
-
-4     file: prerequisites.yml
-5
-6 - name: Ensure Chocolatey is installed (requires .NET 4.8)
-    ^ column 3
-
-fatal: [windows]: FAILED! => {"changed": false, "command": "", "msg": "Chocolatey 2.0.0 requires .NET Framework 4.8 or higher to be installed. Please install .NET Framework 4.8 or higher and try again, or specify a 1.x version of Chocolatey to install.", "rc": 0}
-
-PLAY RECAP **************************************************************************************************************************************************************************************************************
-windows                    : ok=19   changed=5    unreachable=0    failed=1    skipped=2    rescued=0    ignored=0   
-----
+====
 +
 NOTE: There are several ways to address this situation, but this was included intentionally to demonstrate this scenario.
 +
-. Run the full playbook now:
+. Run the full playbook now without `--check`:
 +
 [source,bash,role=execute]
 ----

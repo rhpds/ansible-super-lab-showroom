@@ -1,4 +1,4 @@
-= Lab: Cloud-Navite Ansible Development in Dev Spaces
+= Lab: Cloud-Native Ansible Development in Dev Spaces
 
 [abstract]
 We will explore the Red Hat OpenShift Dev Spaces environment you will be working within and learn how to launch and configure development workspaces for Ansible automation development. This includes understanding the various components available in the lab environment, authenticating with git repositories, and using the Ansible Development Tools.
@@ -48,7 +48,7 @@ TIP: Alternatively, the direct URL is link:https://devspaces.{openshift_cluster_
 
 === 4.1: Launching a specific Dev Spaces Workspace
 
-Once you have launched the OpenShift Dev Spaces console, use the following steps toe access your Ansible Dev Space workspace.
+Once you have launched the OpenShift Dev Spaces console, use the following steps to access your Ansible Dev Space workspace.
 
 . Login via OpenShift authentication using the same credentials as the OpenShift console
 . Select **Allow selected permissions** to authorize access and launch the console
@@ -74,15 +74,7 @@ For this lab, we have have provided a link:https://code.visualstudio.com/docs/ed
 +
 image::10-platform-workspace/intro6.png[Ansible extension interface in VS Code showing available Ansible development tools]
 
-== 6: User Credentials in Workspaces
-
-NOTE: This section describes a key feature of OpenShift Dev Spaces which enables secure access to git repositories. These details are shared for informational purposes only. No action is required to be performed in your Dev Spaces workspace.
-
-OpenShift Dev Spaces includes the capability to store user credentials for Git repositories, such as Personal Access Tokens (PATs), which can be applied to all your workspaces. This can be accomplished after logging into the Red Hat OpenShift Dev Spaces dashboard. Click on the top right drop down next to your username and icon and select, **User Preferences**. In the User Preferences page, select **Personal Access Tokens** and add a git Personal Access Token (PAT) associated with the desired Git provider.
-
-For more information, see the https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.23/html/user_guide/getting-started-with-devspaces#authenticating-to-a-git-server-from-a-workspace[Authenticating to a Git server from a Workspace].
-
-== 7: Accessing a Terminal
+== 6: Accessing a Terminal
 
 The majority of the exercises in this lab will be performed using the Visual Studio Code terminal.
 
