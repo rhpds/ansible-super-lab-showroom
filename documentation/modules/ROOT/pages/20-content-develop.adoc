@@ -54,6 +54,8 @@ image::20-content-develop/aap_run_command_credential.png[Credential]
 . After a few seconds a result will display which should resemble this output:
 +
 image::20-content-develop/aap_run_command_results.png[Results]
++
+NOTE: If you encounter any issues with your Windows server during any parts of these labs, repeat these steps and choose *win_reboot* as a *Run command* if needed.
 
 === 1.2: Review Connectivity Details
 
@@ -806,7 +808,9 @@ ansible-playbook --extra-vars @/projects/env/secrets.yml \
   site.yml
 ----
 +
-. Scroll up and review the output. Notice this time the validation tasks did not run:
+NOTE: If you have any issues with the Windows server, you may need to reboot the server. Use the AAP ad-hoc command discussed in the first lab or see the appendix for additional troubleshooting.
++
+. Review the output. Notice this time the validation tasks did not run:
 +
 [source,output]
 ----
@@ -938,6 +942,8 @@ For additional references, refer to the following resources:
 
 == Appendix
 
+=== Dev Spaces Workspace Restarts
+
 In case your workspace restarts, all files and directories will be preserved but this script may need to be run:
 
 [source,bash,role=execute,title="/projects/env/config.sh"]
@@ -953,4 +959,15 @@ pip install pypsrp
 ansible_user: {windows_user}
 ansible_password: {windows_password}
 ...
+----
+
+=== Windows Reboot
+
+If you encounter any issues with the Windows server, you can attempt to remotely reboot it:
+
+[source,bash,role=execute,subs="verbatim,attributes"]
+----
+ansible --module-name ansible.builtin.win_reboot windows \
+  --extra-vars @/projects/env/secrets.yml \
+  --inventory inventory/hosts.yml
 ----
