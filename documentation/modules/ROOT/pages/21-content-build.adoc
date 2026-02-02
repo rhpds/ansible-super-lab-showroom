@@ -312,7 +312,7 @@ image::21-content-build/execution-environment-confirm-sync.png[Confirm Sync Exec
 +
 image::21-content-build/edit-certified-remote.png[Edit RH-Certified Repository]
 +
-. In the *Token* field, paste the upstream console token obtained in the previous lab for Automation Hub (the long 769 character *UPSTREAM_CONSOLE_HUB_TOKEN*)
+. In the *Token* field, paste the upstream console token obtained in the previous lab for Automation Hub (the several hundred character long *UPSTREAM_CONSOLE_HUB_TOKEN*)
 . In the *Requirements file* field, paste the contents of `/projects/lab_playbooks/collections/requirements.yml`
 +
 [source,yaml,role=execute]
