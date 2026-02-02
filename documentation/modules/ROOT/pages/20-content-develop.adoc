@@ -657,7 +657,7 @@ rm --force --recursive --verbose \
   /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/
 ----
 +
-WARNING: Do not run this command again AFTER you complete the next step `ln` or it WILL delete EVERYTHING in your `/projects/lab_collection/` directory and you will have to enter all the tasks again!
+WARNING: Do not run this command again AFTER you complete the next step `ln` or it WILL delete EVERYTHING in your `/projects/lab_collection/` directory and you will have to perform all the tasks again!
 +
 [source,output]
 ----
