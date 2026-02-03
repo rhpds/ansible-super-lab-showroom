@@ -1,7 +1,7 @@
 = Lab: Ansible Model Context Protocol (MCP) Server
 
 [abstract]
-We will explore the Ansible MCP Server and its role in integrating external AI tools with Ansible Automation Platform (AAP). This lab will guide you through how to deploy the Ansible MCP Server to your OpenShift environment and configure an external AI tool to interact with Ansible Automation Platform.
+We will explore the Ansible MCP Server and its role in integrating external AI tools with Ansible Automation Platform (AAP). This lab will guide you through how to deploy the Ansible MCP Server to your OpenShift environment and configure one or more external AI tools to interact with Ansible Automation Platform.
 
 == Learning Objectives
 
@@ -11,13 +11,11 @@ After completing this module, you will be able to:
 * Deploy the Ansible MCP Server to an OpenShift environment
 * Generate API tokens that can be used to interact with Ansible Automation Platform
 * Customize OpenShift Dev Spaces to inject variables into the workspace
-* Configure an external AI tool to connect and interact with Ansible Automation Platform using the Ansible MCP Server
+* Configure external AI tools to connect and interact with Ansible Automation Platform using the Ansible MCP Server
 
 == 1: Introduction
 
-In the prior lab, you explored the Ansible Lightspeed Intelligent Assistant and how by leveraging LLM's, generative AI capabilities can be integrated into Ansible Automation Platform (AAP) to enable to be empowered through the use of a chat-based interface to interact with AAP using natural language prompts.
-
-One of the limitation of LLM's is that they are essentially a snapshot in time and do not have access to real-time information or context about specific systems or environments. To overcome this limitation, the Ansible Model Context Protocol (MCP) Server was developed to provide a standardized way for LLM's and other AI tools to access real-time data and context from Ansible Automation Platform.
+In the prior lab, you explored the Ansible Lightspeed Intelligent Assistant and how by leveraging LLM's, generative AI capabilities can be integrated into Ansible Automation Platform (AAP) to enable to be empowered through the use of a chat-based interface to interact with AAP using natural language prompts. One of the limitation of LLM's is that they are essentially a snapshot in time and do not have access to real-time information or context about specific systems or environments. To overcome this limitation, the Ansible Model Context Protocol (MCP) Server was developed to provide a standardized way for LLM's and other AI tools to access real-time data and context from Ansible Automation Platform.
 
 === 1.1: What is the Model Context Protocol (MCP)?
 
@@ -81,18 +79,19 @@ image::41-lightspeed-mcp/ansible-automation-platform-instances.png[Ansible Autom
 . Add the following to the `spec` section by updating the configuration to enable the MCP server:
 +
 [source,yaml]
----
+----
+...
 spec:
   mcp:
     disabled: false
     allow_write_operations: false
-    image: quay.io/ablock/aap-mcp-server
-    image_version: bugfix
----
+    image: registry.redhat.io/ansible-automation-platform-tech-preview/mcp-server-rhel9
+    image_version: latest
+----
 +
 NOTE: Setting `allow_write_operations` to `false` will restrict the MCP server to read-only operations. This is the preferred option, especially in Enterprise environments, when beginning to incorporate AAP with external AI tools. The AI tool may perform unwanted actions if write operations are enabled without fully understanding the implications. For the purpose of this lab, access to write operations will be restricted.
 +
-IMPORTANT: A custom MCP image is being used for this lab as defined in the `image` and `image_version` properties above due to an issue identified with the official MCP image. This issue is expected to be resolved in a future release of Ansible Automation Platform and can be tracked link:https://issues.redhat.com/browse/AAP-62002[here].
+IMPORTANT: The latest version of the AAP MCP server is being specified within the `image` and `image_version` properties above as the specific version of Ansible Automation Platform included within the environment contains a known link:https://issues.redhat.com/browse/AAP-62002[issue]. By specifying the latest version, the issue can be avoided.
 + 
 . Click the **Save** button to apply the changes.
 
@@ -126,13 +125,93 @@ image::41-lightspeed-mcp/api-token-details.png[API Token Creation Details]
 
 NOTE: Make sure to store the token securely, as it will not be displayed again.
 
-== 4: Configuring an External AI Tool
+== 4: Configuring External AI Tools
 
-Now that the Ansible MCP Server is deployed and an API token has been generated, the final step is to configure an external AI tool to connect to the Ansible MCP Server using the generated API token. We will utilize our OpenShift Dev Spaces environment and the link:https://opencode.ai[OpenCode,window=_blank] project to demonstrate how to utilize the Ansible MCP Server. OpenCode is already installed in your Dev Spaces workspace. However, you will need to perform some configuration steps prior to its use.
+Now that the Ansible MCP Server is deployed and an API token has been generated, the final step is to configure external AI tools that can be used to connect to the Ansible MCP Server using the generated API token. While there are multiple external AI tools that can be used to demonstrate the integration with the Ansible MCP Server, for the purpose of this lab, the following solutions will be demonstrated:
 
-=== 4.1: Customizing a Dev Spaces Workspace
+. link:https://www.librechat.ai[LibreChat,window=_blank] - Web based AI chat tool that can be accessed via a web browser.
+. link:https://opencode.ai[OpenCode,window=_blank] - Terminal based AI agent that can be executed from within the OpenShift Dev Spaces workspace.
 
-There are multiple methods that can be used to customize OpenShift Dev Spaces workspace. For this lab, we will create a `ConfigMap` and `Secret` resource within the `admin-devspaces` project that contains your workspace to externalize and inject environment variables into your workspace. These values will be referenced by the OpenCode configuration file that you will then define to drive the functionality of the tool.
+NOTE: While steps will be provided for both OpenCode and LibreChat, it is recommended that you utilize the _LibreChat_ given some of the limitations that have been encountered when using OpenCode in this lab environment.
+
+=== 4.1: Using LibreChat with the Ansible MCP Server
+
+link:https://www.librechat.ai[LibreChat,window=_blank] is a Open Source AI chat tool that can be integrated with various hosted and self-hosted LLM's. LibreChat can be accessed via a web browser and provides a chat-based interface for interacting with AI models. This section will illustrate how to configure LibreChat to connect to the Ansible MCP Server.
+
+==== 4.1.1: Configuring LibreChat
+
+LibreChat has been deployed within the OpenShift environment as part of the lab setup. While most of the configurations have been pre-configured for you, there is one final step that you need to complete to enable the integration with the Ansible MCP Server: Specifying the API token that was generated in the prior section.
+
+All of the resources associated with LibreChat have been deployed in the `librechat` Project. To configure the Ansible MCP API token, perform the following steps in the OpenShift web console to update the value stored in the `librechat-credentials-env` Secret resource in the `librechat` Project:
+
+. Launch the link:{openshift_cluster_console_url}[OpenShift Web Console,window=_blank]
+. Select the **htpasswd_provider** button and use the credentials provided in the xref:environment-details.adoc[Environment Details,window=_blank] page to login to the OpenShift console
+. Navigate to **Workloads** on the left hand navigation -> **Secrets**. From the project dropdown at the top, select **librechat**.
+. Locate the **librechat-credentials-env** Secret resource, click the kebab menu (three vertical dots) on the right hand side of the entry and select **Edit Secret**.
++
+image::41-lightspeed-mcp/librechat-edit-secret.png[Edit the librechat-credentials-env Secret]
++
+. Locate the `ANSIBLE_MCP_TOKEN` entry. By default, the value is set as `placeholder`. Update the value of this entry by replacing `placeholder` with the API token that was generated in the prior section.
++
+image::41-lightspeed-mcp/librechat-edit-secret-value.png[Edit ANSIBLE_MCP_TOKEN in the librechat-credentials-env Secret]
++
+. Scroll to the bottom of the page and click the **Save** button to apply the changes.
+
+Once the _Secret_ containing the API token has been updated, the next step is to restart the LibreChat pod so that it can load the updated value. To restart the LibreChat pod, perform the following steps:
+
+. Navigate to **Workloads** on the left hand navigation -> **Pods**. From the project dropdown at the top, ensure **librechat** is selected.
+. Locate the filter section at the top of the page and select the dropdown that has the value of `Name` present and select **Label**. Enter **app.kubernetes.io/name=librechat** in the text box and select the button provided below the textbox to apply the filter.
++
+image::41-lightspeed-mcp/librechat-pods-filter.png[Filter the librechat Pods by Label]
++
+. Locate the single pod that is displayed and click the kebab menu (three vertical dots) on the right hand side of the entry and select **Delete Pod**.
++
+image::41-lightspeed-mcp/librechat-delete-pod.png[Delete the librechat Pod]
++
+. Wait until the pod has been recreated, is _Running_, and displays `1/1` in the _Ready_ column.
++
+. Launch the LibreChat web interface by navigating to: link:http://librechat-librechat.{openshift_cluster_ingress_domain}[LibreChat Web Interface,window=_blank]. You will be presented with the LibreChat login page.
++
+image::41-lightspeed-mcp/librechat-login-page.png[LibreChat Login Page]
++
+. Enter the username and password using the credentials provided from the xref:environment-details.adoc[Environment Details,window=_blank] page and click the **Continue** button.
++
+Once authenticated, you will be presented with the LibreChat main interface.
++
+. Enable the {litellm_available_models_list} model by clicking on the **My Agents** button at the top of the page, hover over **LiteMaaS**, and then select **{litellm_available_models_list}**.
++
+image::41-lightspeed-mcp/librechat-enable-model.png[Enable the {litellm_available_models_list} Model in LibreChat]
++
+. Enable the connection to the Ansible MCP Server by selecting the _MCP Servers_ dropdown within the chat window and selecting **aap**. A successful connection will display a checkmark next to the MCP server name.
++
+image::41-lightspeed-mcp/librechat-enable-mcp.png[Enable aap MCP Server in LibreChat]
++
+Now, lets start a chat session using our natural language that retrieves details that originate from Ansible Automation Platform that is facilitated through the integration with the AAP MCP Server.
++
+. Ask for information related to the _Projects_ that have been defined:
+
+[source,console,role=execute]
+----
+Display the names of aap projects
+----
+
+In a few moments, you will see LibreChat making queries to the _Tools_ exposed by the AAP MCP Server and then providing a natural language response based on the information retrieved. A successful invocation of the MCP tool will display similar to the following:
+
+image::41-lightspeed-mcp/librechat-chat-result.png[LibreChat Chat Result]
+
+Notice how the `projects_list` tool was invoked to retrieve the list of projects from Ansible Automation Platform. The response provided by LibreChat includes the names of the projects that were retrieved. You can expand the result of the `projects_list` tool to see the raw data that was returned from Ansible Automation Platform if desired.
+
+NOTE: Due to the non-deterministic nature of LLM's, the exact response provided by LibreChat may vary between invocations and may not match exactly what is shown in the screenshot or steps above.
+
+Feel free to continue the chat session or start a new session to continuing to converse with the LLM, obtaining realtime insights from Ansible Automation Platform though the use of the Ansible MCP Server.
+
+=== 4.2: Using OpenCode with the Ansible MCP Server
+
+link:https://opencode.ai[OpenCode,window=_blank] is an Open Source, terminal based AI agent. It is already installed in your Dev Spaces workspace and requires that a few steps be completed prior to its use.
+
+==== 4.2.1: Customizing a Dev Spaces Workspace
+
+OpenShift Dev Spaces includes several different methods for configuring and customizing a workspace. For this section, we will create a `ConfigMap` and `Secret` resource within the `admin-devspaces` project containing your workspace to externalize and inject environment variables into your workspace. These values will be referenced by the OpenCode configuration file that you will then define to drive the functionality of the tool.
 
 Labels and annotations are applied to the `ConfigMap` and `Secret` resources so that they become eligible for injection into the Dev Spaces workspace. By setting the `controller.devfile.io/mount-to-devworkspace` label to `true`, the Dev Spaces controller will automatically mount the resources into the workspace. The contents of the `ConfigMap` or `Secret` can either by mounted as files or environment variables. This is dictated by the `controller.devfile.io/mount-as` annotation.
 
@@ -214,11 +293,11 @@ env | grep -E "(AAP_MCP|LITELLM)"
 
 The output should display values that correspond to the environment variables defined in the `ConfigMap` and `Secret` resources previously.
 
-=== 4.2: Configuring OpenCode
+==== 4.2.2: Configuring OpenCode
 
-With the necessary environment variables now mounted into your Dev Spaces workspace, the next step is to introduce the external AI tool that will interact with Ansible Automation Platform via the Ansible MCP Server. For this lab, we will utilize link:https://opencode.ai[OpenCode,window=_blank], an open-source AI development platform that enables developers to build, deploy, and manage AI applications. OpenCode provides a unified interface for interacting with various AI models and services, making it easier to integrate AI capabilities into applications.
+With the necessary environment variables now mounted into your Dev Spaces workspace, the next step is to introduce the external AI tool that will interact with Ansible Automation Platform via the Ansible MCP Server. For this section, we will utilize link:https://opencode.ai[OpenCode,window=_blank], an open-source AI development platform that enables developers to build, deploy, and manage AI applications. OpenCode provides a unified interface for interacting with various AI models and services, making it easier to integrate AI capabilities into applications.
 
-You may have noticed earlier that one of the environment variables defined in the `ConfigMap` resource was the `OPENCODE_CONFIG` property, which specifies the location of the OpenCode configuration file (Hint: you run the command `env | grep OPENCODE_CONFIG` to see the value). This file does not exist yet as we will need to create it as part of this exercise. An link:https://opencode.ai/docs/config[OpenCode configuration file] contains details related to the inference service as well as any MCP servers that should be utilized. 
+You may have noticed earlier that one of the environment variables defined in the `ConfigMap` resource was the `OPENCODE_CONFIG` property, which specifies the location of the OpenCode configuration file (Hint: you can run the command `env | grep OPENCODE_CONFIG` to see the value). This file does not exist yet as we will need to create it as part of this exercise. An link:https://opencode.ai/docs/config[OpenCode configuration file] contains details related to the inference service as well as any MCP servers that should be utilized. 
 
 Create a new file named `opencode.json` at the within the `/projects/devspaces-example` directory containing the following:
 
@@ -265,7 +344,7 @@ Create a new file named `opencode.json` at the within the `/projects/devspaces-e
 
 In this configuration file, we are specifying details related to our inference service along with the AAP MCP Server. Take note of the variables beginning with `{env:...}` which will replace the the values with the content injected from the _Secret_ or _ConfigMap_ defined previously.
 
-=== 4.4: Using OpenCode to Interact with the Ansible MCP Server
+==== 4.2.3: Using OpenCode to Interact with the Ansible MCP Server
 
 With all of the configuration steps complete, let's utilize OpenCode to interact with the Ansible MCP Server.
 
@@ -299,18 +378,47 @@ Hit the `ESC` key to exit the status dialog to return to the main prompt.
 
 Now, lets start a chat session using our natural language that retrieves details that originate from Ansible Automation Platform that is facilitated through the integration with the AAP MCP Server.
 
-Let's ask for information related to the _Job Templates_ that have been defined:
+Let's ask for information related to the _Projects_ that have been defined:
 
-[source,bash,role=execute]
+[source,console,role=execute]
 ----
-How many job templates are in AAP?
+Display the names of aap projects
 ----
 
 In a few moments, you will see OpenCode making queries to the _Tools_ exposed by the AAP MCP Server and then providing a natural language response based on the information retrieved.
 
-One of the best parts about AI coding tools is their ability to retain context related to prior commands and interactions. The responses you receive may ask you a follow up question for which additional queries can be performed. The ability to gain insights using natural language is just one way that AI tools are transforming how we use technology.
+A successful invocation of the `project_list` MCP tool will display similar to the following:
 
-This chat session only scratches the surface for how AI tools . However, feel free to continue the chat session or start a new session to continuing to converse with the LLM, obtaining realtime insights from Ansible Automation Platform though the use of the Ansible MCP Server.
+image::41-lightspeed-mcp/opencode-mcp-invoke.png[OpenCode MCP Tool Invocation]
+
+Either the list of AAP project that are returned as a result of the `projects_list` tool invocation will be displayed or you can continue the conversation by asking additional questions to display more information related to the desired query.
+
+If an error or returned or no data is displayed, you can review the <<mcp-opencode-troubleshooting, troubleshooting section>> below for additional guidance.
+
+NOTE: Due to the non-deterministic nature of LLM's, the exact response provided by OpenCode may vary between invocations and may not match exactly what is shown in the screenshot or steps above.
+
+[#mcp-opencode-troubleshooting]
+==== 4.2.3: Troubleshooting OpenCode MCP Integration
+
+If you encounter issues when attempting to interact with the Ansible MCP Server via OpenCode, consider the following troubleshooting steps:
+
+. Response similar to `Your current request is incomplete. Please provide more details or specify the task you need help with`
++
+* This response typically indicates that the LLM model was unable to interpret the request or map it to an available MCP tool. Feel free to retry the request again.
++
+TIP: Hitting the up arrow key will place the last request into the chat window for easy access for subsequent invocations.
++
+. No response is provided
++
+* Retry the request again
++
+. Abort the current request
++
+* If the request appears to be taking too long to process, or you wish to abort the current request, hit the `ESC` key to interrupt the current operation.
++
+. Clear the existing context/start a new chat session
++
+* Enter `/new` into the chat prompt to start a new session
 
 == Conclusion
 
@@ -319,7 +427,7 @@ In this lab, you have learned:
 . An overview of the Model Context Protocol (MCP) and its role in the AI ecosystem
 . MCP capabilities provided by Ansible Automation Platform
 . How to deploy the AAP MCP Server
-. How to configure an AI chat tool (OpenCode) to integrate with the APP MCP Server
+. How to configure AI chat tools (LibreChat/OpenCode) to integrate with the APP MCP Server
 . Interact with the Ansible MCP Server using natural language prompts
 
 The MCP capabilities provided by Ansible Automation Platform are not limited to the MCP Server that was used in this exercise. MCP capabilities are also available in Ansible Lightspeed intelligent assistant which enables realtime insights to be applied to the responses provided by the chatbot within the AAP user interface. Enabling this capability can be achieved by defining additional properties within the chatbot secret that is referenced in the `AnsibleAutomationPlatform` custom resource. Consult the Ansible Lightspeed intelligent assistant documentation for further details.
