@@ -90,7 +90,7 @@ Each CRD manages its own set of OpenShift resources that are needed for the comp
 
 ==== 2.2.1: Deployments
 
-Each CRD will create and manage `Deployment` resources that in turn manage the pods and other resources listed below in section 2.2.1.
+Each CRD will create and manage a set of `Deployment` resources representing the key components of AAP.
 
 . Navigate to **Workloads** on the left hand navigation -> **Deployments**. You will see a list of created deployments, their pod counts, and other information.
 +
