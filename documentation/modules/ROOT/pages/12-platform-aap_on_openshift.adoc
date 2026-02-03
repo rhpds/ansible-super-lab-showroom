@@ -82,7 +82,7 @@ Next to the _Details_ tab click on **YAML**. This will show you the current YAML
   route_tls_termination_mechanism: Edge
 ----
 
-This `spec` definition shows us that the `controller`, `eda`, `hub`, and `lightspeed` components are enabled (`disabled: false`) and some customizations made to the `hub` component specifically.
+This `spec` definition shows us that the `controller`, `eda`, and `hub` components are enabled (`disabled: false`) and some customizations made to the `hub` component specifically.
 
 === 2.2: Resources managed by the CRDs
 
