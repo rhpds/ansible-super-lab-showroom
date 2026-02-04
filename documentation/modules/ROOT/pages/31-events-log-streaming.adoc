@@ -99,7 +99,7 @@ git push origin main
 
 The EDA Rulebook must match the structure of the Kafka event to properly trigger the remediation playbook. We are going to check for log messages that indicate the IIS service has stopped in the `condition` property of the rule:
 
-. In your `lab_playbooks_ repository, create the `check_kafka.yml` rulebook in the `rulebooks` directory:
+. In your `lab_playbooks` repository, create the `check_kafka.yml` rulebook in the `rulebooks` directory:
 +
 [source,yaml,role=execute,title="/projects/lab_playbooks/rulebooks/check_kafka.yml",subs="verbatim,attributes,callouts"]
 ----
