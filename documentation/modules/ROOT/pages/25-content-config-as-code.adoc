@@ -1,4 +1,4 @@
-= Lab: Configuration as Code
+= Module 2 Lab 5: Content - Configuration as Code
 
 [abstract]
 Learn how to manage your entire Ansible Automation Platform with collections for both Infrastructure as Code (IaC) and Configuration as Code (CaC) using Ansible playbooks. This includes deployment to OpenShift, as well as configuring various objects such as organizations, teams, users, credentials, projects, inventories, job templates, and execution environments through an automated, version-controlled processes.
@@ -14,7 +14,7 @@ After completing this module, you will be able to:
 
 == 1: Introduction
 
-In this module, we will explore how to manage Ansible Automation Platform (AAP) configurations declaratively as code using Ansible playbooks and the `infra.aap_configuration` and `infnra.aap_utilities` collections. instead of manually configuring settings through the AAP user interface (ClickOps). This approach allows for automated, repeatable, and version-controlled management of AAP settings, ensuring consistency across environments.
+In this module, we will explore how to manage Ansible Automation Platform (AAP) configurations declaratively as code using Ansible playbooks and the `infra.aap_configuration` and `infra.aap_utilities` collections. instead of manually configuring settings through the AAP user interface (ClickOps). This approach allows for automated, repeatable, and version-controlled management of AAP settings, ensuring consistency across environments.
 
 WARNING: In prior labs, we provided many of the values that are required to simplify the experience.
 

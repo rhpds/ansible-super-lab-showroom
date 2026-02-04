@@ -1,4 +1,4 @@
-= Lab: Develop a Playbook and Execute within AAP
+= Module 2 Lab 3: Content - Develop Playbook and Execute within AAP
 
 [abstract]
 In this lab we will configure AAP to execute the automation content created in previous labs. We will also learn some additional activities around collection management.

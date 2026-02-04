@@ -1,4 +1,4 @@
-= Lab: Build a custom Collection and Execution Environment
+= Module 2 Lab 2: Content - Build a custom Collection and Execution Environment
 
 [abstract]
 We will create a custom Collection, publish it to a Private Automation Hub (PAH), build a custom Execution Environment (EE) from a Red Hat certified base image, and finally, run the automation from Ansible Automation Controller.

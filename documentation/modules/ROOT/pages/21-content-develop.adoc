@@ -1,4 +1,4 @@
-= Lab: Creating Automation Content for Windows
+= Module 2 Lab 1: Content - Creating Automation for Windows
 
 [abstract]
 In this lab we will develop a custom Ansible collection to manage a Windows server in our lab that will represent an example enterprise environment. We will build the content a piece at a time until the full collection is ready to be deployed. The server will be configured to run a custom website, have chocolatey software manager installed, and Filebeat installed and configured.
@@ -115,7 +115,7 @@ In this section we will begin building content to setup and configure our Window
 NOTE: The remainder of this lab takes place inside link:https://devspaces.{openshift_cluster_ingress_domain}[OpenShift Dev Spaces,window=_blank]. As a quick reminder, here are the relevant steps:
 
 . Launch link:https://devspaces.{openshift_cluster_ingress_domain}[OpenShift Dev Spaces,window=_blank]
-. Return to your Workspace or see xref:11-platform-workspace.adoc[Module 1 Lab 1] for more details
+. Return to your Workspace or see xref:11-platform-dev-spaces.adoc[Module 1 Lab 1] for more details
 . If needed, ensure a terminal is open by selecting the hamburger (3 dashes) in the top left and choosing **Terminal** -> **New Terminal**
 . See xref:environment-details.adoc[Environment Details,window=_blank] for more information.
 
