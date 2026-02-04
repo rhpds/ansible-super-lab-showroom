@@ -315,7 +315,11 @@ image::21-content-build/execution-environment-confirm-sync.png[Confirm Sync Exec
 +
 . After the sync is complete, the `ee-minimal-rhel9` image will be available in your Private Automation Hub instance. Feel free to explore the details of the newly synchronized Execution Environment as you see fit.
 
-=== 4.3: Synchronize required collections
+== 5: Syncing Collections from the Red Hat Automation Hub
+
+The Ansible collection created previously includes dependencies that are sourced from Red Hat Automation Hub. These collections need to be synchronized into your Private Automation Hub instance to ensure that the all required collections are made available.
+
+=== 5.1: Synchronize required collections
 
 . Go to *Automation Content* -> *Remotes*
 . Click on the edit (pencil) icon next to the *rh-certified* repository
@@ -346,11 +350,11 @@ image::21-content-build/sync-certified-repository.png[Sync Repository]
 +
 image::21-content-build/sync-repo-confirm.png[caption="Confirm Sync", role="thumb"]
 
-== 5: Push Collection to Repository
+== 6: Push Collection to Repository
 
 After we've published our collection to Private Automation Hub, the next step is to save our work into your lab's Gitea instance.
 
-=== 5.1: Create Gitea Repository
+=== 6.1: Create Gitea Repository
 
 Create a new repository in your Gitea instance to hold the collection code using the following steps:
 
@@ -375,7 +379,7 @@ image::21-content-build/gitea-new-repository-name.png[Gitea New Repository]
 image::21-content-build/gitea-create-repository.png[Gitea Create Repository]
 
 
-==== 5.2: Append to the `.gitignore` file
+==== 6.2: Append to the `.gitignore` file
 
 . Return to your Dev Spaces terminal. 
 . Update the `.gitignore` file within the `/projects/lab_collection` directory containing the collection and append the following lines to exclude files that should not be committed to the repository.
@@ -391,7 +395,7 @@ ansible.cfg
 secrets.*
 ----
 
-=== 5.3: Push collection to new repository
+=== 6.3: Push collection to new repository
 
 After an empty repository is created on your Gitea instance, the next step is to push the collection to the repository.
 
@@ -536,11 +540,11 @@ branch 'main' set up to track 'origin/main'.
 image::21-content-build/gitea-repository.png[Dev Spaces Git Authentication]
 . This repository will be referenced in later labs.
 
-== 6: Building a Custom Execution Environment
+== 7: Building a Custom Execution Environment
 
 Now, we'll define and build a custom Execution Environment (EE) that uses our synced minimal image and our custom collection.
 
-=== 6.1: Define the Execution Environment
+=== 7.1: Define the Execution Environment
 
 Create a file named `execution-environment.yml` at the root of the `lab_collection` directory with the following content.
 
@@ -577,7 +581,7 @@ additional_build_steps:
     - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=${TOKEN}
 ----
 
-=== 6.2: Build and Publish the Execution Environment
+=== 7.2: Build and Publish the Execution Environment
 
 Login to your PAH container registry, build the custom Execution Environment, and push the resulting image to your PAH instance using the following commands:
 
@@ -713,11 +717,11 @@ Writing manifest to image destination
 +
 image::21-content-build/collection-uploaded.png[Confirm Collection Upload]
 
-== 7: Adding a Custom Filter Plugin
+== 8: Adding a Custom Filter Plugin
 
 Now that we have a working EE, let's iterate by adding a custom link:https://docs.ansible.com/ansible/latest/plugins/filter.html[Filter plugin,window=_blank] to our collection.
 
-=== 7.1: Create the Custom Filter Plugin
+=== 8.1: Create the Custom Filter Plugin
 
 Create a file at `plugins/filter/cowsay_filter.py` with the following content:
 
@@ -752,7 +756,7 @@ class FilterModule(object):
         }
 ----
 
-=== Step 7.2: Update the EE Definition for the Plugin Dependency
+=== Step 8.2: Update the EE Definition for the Plugin Dependency
 
 Our new plugin requires the link:https://pypi.org/project/cowsay/[cowsay Python library,window=_blank], and we need to ensure our EE is pulling the new version of our collection. Modify the `execution-environment.yml` to include both changes.
 
@@ -793,7 +797,7 @@ additional_build_steps:
 <1> Increment the collection version.
 <2> Add the `python` section to include the `cowsay` dependency. Ensure this lines up properly with `galaxy` and NOT `collections`.
 
-=== 7.3: Increment Collection and Version and Republish
+=== 8.3: Increment Collection and Version and Republish
 
 Now, we publish a new version of the collection and a new version of the EE that includes the updated collection and dependency.
 
@@ -836,7 +840,7 @@ Collection has been successfully published and imported to the Galaxy server cmd
 +
 image::21-content-build/collection-verify-new-version.png[Verify New Collection Version]
 
-=== 7.4: Build and push new Execution Environment
+=== 8.4: Build and push new Execution Environment
 
 Finally, build and push the new EE version:
 
