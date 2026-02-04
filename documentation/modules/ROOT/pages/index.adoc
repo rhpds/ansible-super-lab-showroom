@@ -35,26 +35,26 @@ The following modules are included in this superlab:
 
 . Platform
 [arabic]
-.. xref:10-platform-workspace.adoc[Introduction and exploration of Dev Spaces Workspace]
-.. xref:11-platform-dev-tooling.adoc[Using Ansible developer tools]
-.. xref:12-platform-aap_on_openshift.adoc[AAP on OpenShift]
+.. xref:11-platform-dev-spaces.adoc[OpenShift Dev Spaces for Ansible Development]
+.. xref:12-platform-dev-experience.adoc[Cloud-Native Automation Developer Experience]
+.. xref:13-platform-aap-on-openshift.adoc[Ansible Automation Platform on OpenShift]
 . Content
 [arabic]
-.. xref:20-content-develop.adoc[Creating automation for Windows]
-.. xref:21-content-build.adoc[Build a custom Execution Environment and Collection]
-.. xref:22-content-execute.adoc[Create a Playbook and configure AAP to execute it all]
-.. xref:23-content-ansible-tdd.adoc[TDD with Molecule]
-.. xref:24-content-config-as-code.adoc[Config as Code]
-.. xref:25-content-pipeline.adoc[Pipeline for collections]
+.. xref:21-content-develop.adoc[Creating Automation for Windows]
+.. xref:22-content-build.adoc[Build a custom Collection and Execution Environment]
+.. xref:23-content-execute.adoc[Develop Playbook and Execute within AAP]
+.. xref:24-content-ansible-tdd.adoc[Ansible Test-Driven Development with Molecule]
+.. xref:25-content-config-as-code.adoc[Configuration as Code]
+.. xref:26-content-pipeline.adoc[Creating a CI/CD Pipeline for Collections]
 . Events
 [arabic]
-.. xref:30-events-health-probe.adoc[EDA Overview and Rulebook for health monitoring]
-.. xref:31-events-log-streaming.adoc[EDA Log streaming with Filebeat and Kafka]
-.. xref:32-events-troubleshooting.adoc[EDA Troubleshooting]
+.. xref:31-events-eda-overview-active-monitoring.adoc[Event-Driven Ansible Overview and Active Health Monitoring]
+.. xref:32-events-automated-reactive-remediation.adoc[Automated Reactive Remediation with Filebeat and Kafka]
+.. xref:33-events-troubleshooting.adoc[Troubleshooting Event-Driven Ansible]
 . AI
 [arabic]
-.. xref:40-ai-lightspeed-int-assistant.adoc[Ansible Lightspeed Intelligent Assistant]
-.. xref:41-ai-lightspeed-mcp.adoc[Ansible MCP Server]
+.. xref:41-ai-lightspeed-int-assistant.adoc[Ansible Lightspeed Intelligent Assistant]
+.. xref:42-ai-mcp.adoc[Ansible Model Context Protocol (MCP) Server]
 
 == Learning Outcomes
 
@@ -66,11 +66,11 @@ By the end of this superlab, you will be able to:
 * Develop, test, and publish Ansible collections
 * Build, publish Ansible Execution Environments
 * Leverage Automation Hub for content distribution
-* Create and manage Event Driven Ansible rulebooks and scenarios
+* Create and manage Event-Driven Ansible rulebooks and scenarios
 * Integrate AI capabilities into Ansible Automation Platform
 
 == Getting Started
 
-Begin with xref:10-platform-workspace.adoc[Module 1a: Platform - Introduction and exploration of Dev Spaces Workspace] to set up your development environment. Each module includes detailed instructions, code examples, and verification steps.
+Begin with xref:11-platform-dev-spaces.adoc[Module 1 Lab 1: Platform - OpenShift Dev Spaces for Ansible Development] to set up your development environment. Each module includes detailed instructions, code examples, and verification steps.
 
 For questions or issues, refer to the xref:appendix.adoc[Appendix] or contact your instructor.

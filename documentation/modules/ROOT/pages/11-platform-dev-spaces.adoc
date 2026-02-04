@@ -1,4 +1,4 @@
-= Lab: Cloud-Native Ansible Development in Dev Spaces
+= Module 1 Lab 1: Platform - OpenShift Dev Spaces for Ansible Development
 
 [abstract]
 We will explore the Red Hat OpenShift Dev Spaces environment you will be working within and learn how to launch and configure development workspaces for Ansible automation development. This includes understanding the various components available in the lab environment, authenticating with git repositories, and using the Ansible Development Tools.
@@ -40,7 +40,7 @@ It provides, by default, a Visual Studio Code (VS Code) environment as configure
 . Select the **htpasswd_provider** button and use the credentials provided in the xref:environment-details.adoc[Environment Details,window=_blank] page to login to the OpenShift console
 . Use the 9-block icon in the upper right to launch _Red Hat OpenShift Dev Spaces_ directly from the OpenShift console header.
 +
-image::10-platform-workspace/intro-dev_spaces_shortcut.png[OpenShift console header showing the 9-block application launcher icon for quick access to Dev Spaces]
+image::11-platform-dev-spaces/intro-dev_spaces_shortcut.png[OpenShift console header showing the 9-block application launcher icon for quick access to Dev Spaces]
 +
 TIP: Alternatively, the direct URL is link:https://devspaces.{openshift_cluster_ingress_domain}[https://devspaces.{openshift_cluster_ingress_domain},window=_blank] also available in xref:environment-details.adoc[Environment Details,window=_blank].
 
@@ -54,17 +54,17 @@ Once you have launched the OpenShift Dev Spaces console, use the following steps
 . Select **Allow selected permissions** to authorize access and launch the console
 . Scroll down and select the workspace titled **Ansible Dev Space**
 +
-image::10-platform-workspace/intro3.png[Dev Spaces workspace selection page showing available workspaces including Ansible Dev Space]
+image::11-platform-dev-spaces/intro3.png[Dev Spaces workspace selection page showing available workspaces including Ansible Dev Space]
 +
 NOTE: It will take a few minutes for the Dev Spaces instance to initialize. When it has loaded, a Visual Studio Code interface will appear.
 +
-image::10-platform-workspace/intro4.png[Dev Spaces workspace loading screen showing VS Code interface initialization]
+image::11-platform-dev-spaces/intro4.png[Dev Spaces workspace loading screen showing VS Code interface initialization]
 +
 . Click the **Trust Publishers and Install** button to trust the extension publishers that are included within the Dev Spaces workspace
 . Click the **Yes, I trust the Authors** button to trust the workspace authors (your instructors).
 . Wait a few minutes until the additional extension icons appear for Ansible and OpenShift on the left side.
 +
-image::10-platform-workspace/intro5.png[VS Code interface in Dev Spaces showing Ansible and OpenShift extension icons in the left sidebar]
+image::11-platform-dev-spaces/intro5.png[VS Code interface in Dev Spaces showing Ansible and OpenShift extension icons in the left sidebar]
 
 == 5: Ansible and OpenShift Extensions
 
@@ -72,7 +72,7 @@ For this lab, we have have provided a link:https://code.visualstudio.com/docs/ed
 
 . Click on the **Ansible** extension icon to access the Ansible Development Tools extension (covered in a subsequent lab)
 +
-image::10-platform-workspace/intro6.png[Ansible extension interface in VS Code showing available Ansible development tools]
+image::11-platform-dev-spaces/intro6.png[Ansible extension interface in VS Code showing available Ansible development tools]
 
 == 6: Accessing a Terminal
 
@@ -80,7 +80,7 @@ The majority of the exercises in this lab will be performed using the Visual Stu
 
 . Open a new terminal by selecting the VS Code menu starting with the hamburger (3 horizontal lines) in the top left, then selecting **Terminal** -> **New Terminal**
 +
-image::10-platform-workspace/intro7.png[VS Code terminal interface showing basic command line operations in the Dev Spaces environment]
+image::11-platform-dev-spaces/intro7.png[VS Code terminal interface showing basic command line operations in the Dev Spaces environment]
 +
 . Explore the environment:
 +
