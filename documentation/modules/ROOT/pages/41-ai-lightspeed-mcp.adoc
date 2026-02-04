@@ -6,7 +6,7 @@
 ** Access to OpenShift Dev Spaces and AAP in xref:environment-details.adoc[Environment Details]
 ** Completion of xref:10-platform-workspace.adoc[Lab 1-1. Introduction and exploration of Dev Spaces Workspace]]
 * **Prepares you for:** Using Ansible MCP Server
-* **Lab Type:** Self-Contained (_You can skip this without missing steps for other labs_)
+* **Lab Type:** Self-Contained (_You can skip lab this without missing steps for other labs_)
 * **Estimated Time:** 20 - 40 minutes
 ****
 
