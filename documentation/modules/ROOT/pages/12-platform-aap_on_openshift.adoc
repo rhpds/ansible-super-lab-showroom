@@ -260,7 +260,7 @@ These sets of pods are responsible for managing one or more sets of AAP deployme
 
 In essence, this single set of operator controller manager pods watches all the namespaces on the cluster for any of the AAP CRDs as described in previously.
 
-The benefit of this approach is a single set of operator controller manager pods can manage many AAP deployments on a single cluster, thus less resources are consumed by the operator manager controller pods.
+The benefit of this approach is a single set of operator controller manager pods can manage many AAP deployments on a single cluster, thus less resources are consumed by the operator controller manager pods.
 
 The downside is that each deployed instance of AAP on the OpenShift cluster must be on the same AAP version.
 
