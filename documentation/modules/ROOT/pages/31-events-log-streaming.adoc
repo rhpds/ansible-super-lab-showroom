@@ -26,7 +26,7 @@ In this lab, you will implement a production-grade automation pipeline. You will
 
 == 1: Create the Configuration Playbook
 
-In the previous module, we built and ran a automation that installed `Chocolatey` and `Filebeat` to the Windows host. In this lab, we will add additional configurations for Filebeat.
+In a previous module, we built and ran automation that installed `Chocolatey` and `Filebeat` to the Windows host. In this lab, we will add additional configuration for Filebeat.
 
 . In your `lab_playbooks` repository, create the `setup_monitoring.yml` playbook:
 +
