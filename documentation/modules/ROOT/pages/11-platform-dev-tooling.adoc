@@ -4,7 +4,7 @@
 ****
 * **Before you start:** Access to Dev Spaces in xref:environment-details.adoc[Environment Details]
 * **Prepares you for:** Using Ansible Development Tools
-* **Lab Type:** Self-Contained (_You can skip this without missing steps for other labs_)
+* **Lab Type:** Self-Contained (_You can skip this lab without missing steps for other labs_)
 * **Estimated Time:** 30 - 60 minutes
 ****
 
