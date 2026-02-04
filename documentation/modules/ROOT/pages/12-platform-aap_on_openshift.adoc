@@ -2,10 +2,11 @@
 
 [.sidebar]
 ****
-* **Before you start:** Access to Dev Spaces and OpenShift in xref:environment-details.adoc[Environment Details]
+* **Before you start:**
+** Access to OpenShift and Dev Spaces in xref:environment-details.adoc[Environment Details]
 * **Prepares you for:** Installing AAP on OpenShift via ClickOps
-* **Lab Type:** Self-Contained (_You can skip this without missing steps for other labs_)
-* **Estimated Time:** 45 - 90 minutes
+* **Lab Type:** Self-Contained (_You can skip this lab without missing steps for other labs_)
+* **Estimated Time:** 30 - 60 minutes
 ****
 
 [abstract]

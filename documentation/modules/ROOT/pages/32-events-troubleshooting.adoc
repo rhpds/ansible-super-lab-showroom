@@ -2,7 +2,9 @@
 
 [.sidebar]
 ****
-* **Before you start:** Access to Dev Spaces and AAP in xref:environment-details.adoc[Environment Details], content from xref:22-content-execute.adoc[Lab 2-3. Develop a Playbook to execute it all]
+* **Before you start:**
+** Access to OpenShift Dev Spaces and AAP in xref:environment-details.adoc[Environment Details]
+** Content from xref:22-content-execute.adoc[Lab 2-3. Develop a Playbook to execute it all]
 * **Prepares you for:** Troubleshooting Event-Driven Ansible
 * **Lab Type:** Self-Contained (_You can skip this without missing steps for other labs_)
 * **Estimated Time:** 5 - 10 minutes

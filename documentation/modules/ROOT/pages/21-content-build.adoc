@@ -2,9 +2,11 @@
 
 [.sidebar]
 ****
-* **Before you start:** Access to Dev Spaces and AAP in xref:environment-details.adoc[Environment Details], content from xref:20-content-develop.adoc[Lab 2-1. Creating automation for Windows]
+* **Before you start:** 
+** Access to OpenShift Dev Spaces and AAP in xref:environment-details.adoc[Environment Details]
+** Content from xref:20-content-develop.adoc[Lab 2-1. Creating automation for Windows]
 * **Prepares you for:** Building a collection and execution environment and publishing to Private Automation Hub
-* **Lab Type:** Foundational (_actions in this lab prepare you for the remaining labs_)
+* **Lab Type:** Foundational (_activities in this lab prepare you for the remaining labs_)
 * **Estimated Time:** 30 - 90 minutes
 ****
 
