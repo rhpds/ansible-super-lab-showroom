@@ -304,7 +304,7 @@ Once the playbook completes, verify that the AAP components are running in OpenS
 . In the toolbar, click on `All instances`.
 . Verify installation was completed.
 +
-image::24-content-config-as-code/installed-operators-aap.png[Installed Operators in the AAP Project]
+image::25-content-config-as-code/installed-operators-aap.png[Installed Operators in the AAP Project]
 +
 . Navigate to *Networking* -> *Routes*
 . Open the URL under *Location* for the *lab* instance in a new window which should be link:https://lab-aap-as-code.{openshift_cluster_ingress_domain}/

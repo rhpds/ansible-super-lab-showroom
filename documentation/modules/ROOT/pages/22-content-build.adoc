@@ -50,11 +50,11 @@ Utilize the following steps to obtain your PAH API token:
 . Launch the link:{aap_controller_web_url}[Private Automation Hub,window=_blank] web interface and login using the credentials from the xref:environment-details.adoc[Environment Details,window=_blank] page.
 . From the navigation menu on the left, expand **Automation Content** and click on **API Token**.
 +
-image::21-content-build/api-token-overview.png[API Token Overview]
+image::22-content-build/api-token-overview.png[API Token Overview]
 +
 . On the API Token page, click the **Generate token** button. Your API token will be displayed.
 +
-image::21-content-build/api-token-generate.png[Generate an API Token]
+image::22-content-build/api-token-generate.png[Generate an API Token]
 +
 . Click the *Copy to clipboard* icon to copy it.
 +
@@ -177,12 +177,12 @@ Create a new _Namespace_ in PAH.
 . Launch the link:{aap_controller_web_url}[Private Automation Hub,window=_blank] web interface and login using the credentials from the xref:environment-details.adoc[Environment Details,window=_blank] page.
 . From the navigation menu on the left, expand **Automation Content** and click on **Namespaces**.
 +
-image::21-content-build/navigate-namespaces.png[Namespaces navigation]
+image::22-content-build/navigate-namespaces.png[Namespaces navigation]
 +
 . Click **Create Namespace** to create the namespace.
 . Enter `red_hat_one` for the name. The rest of the values can be left blank. Click *Create namespace*:
 +
-image::21-content-build/create-namespace.png[Namespace creation form]
+image::22-content-build/create-namespace.png[Namespace creation form]
 
 === 3.3: Build and Publish the Collection
 
@@ -234,21 +234,21 @@ NOTE: You can safely ignore any warnings that may be emitted during the publishi
 . Launch the link:{aap_controller_web_url}[Private Automation Hub,window=_blank] web interface and login using the credentials from the xref:environment-details.adoc[Environment Details,window=_blank] page.
 . From the navigation menu on the left, expand **Automation Content** and click on **Collection Approvals**.
 +
-image::21-content-build/collections-approvals-pending.png[Approve the Collection]
+image::22-content-build/collections-approvals-pending.png[Approve the Collection]
 +
 . The `red_hat_one.super_lab` should be listed as pending approval. Select this namespace checkbox and click the **Thumbs Up** icon all the way to the right to approve and sign the collection.
 +
-image::21-content-build/collections-approvals-selection.png[Select Collection to Approve]
+image::22-content-build/collections-approvals-selection.png[Select Collection to Approve]
 +
 . Select the _Yes, I confirm that I want to approve these 1 collections._ checkbox and click **Approve collections** button.
 +
-image::21-content-build/collections-approvals-approve-collection.png[Pending Approval Collection]
+image::22-content-build/collections-approvals-approve-collection.png[Pending Approval Collection]
 +
 . Navigate to the **Collections** page in PAH to verify that your collection is published and available.
 +
 . You should see your `red_hat_one.super_lab` collection listed and available for use.
 +
-image::21-content-build/pah-collections.png[PAH Collections]
+image::22-content-build/pah-collections.png[PAH Collections]
 
 == 4: Syncing a Base EE from the Red Hat Registry
 
@@ -261,7 +261,7 @@ Before producing our own Execution Environment (EE) in subsequent steps, we'll c
 +
 . Click the **Create remote registry** button
 +
-image::21-content-build/create-remote-registry.png[Create Remote Registry]
+image::22-content-build/create-remote-registry.png[Create Remote Registry]
 +
 . Enter the following details on the _Create Remote Registry_ page:
 .. _Name_: `redhat`
@@ -270,7 +270,7 @@ image::21-content-build/create-remote-registry.png[Create Remote Registry]
 .. _Password_: #YOUR_REDHAT_PASSWORD#
 .. Click **Create remote registry** to add the new registry.
 +
-image::21-content-build/create-remote-registry-details.png[Create Remote Registry Details]
+image::22-content-build/create-remote-registry-details.png[Create Remote Registry Details]
 +
 NOTE: You can link:https://access.redhat.com/terms-based-registry[Create Service Account Credentials,window=_blank] in the Red Hat Customer Portal to simplify the management and access to the Red Hat Container Catalog instead of specifying your username and password.
 
@@ -282,7 +282,7 @@ Now that details related to the Red Hat Container Registry have been added, conf
 +
 . Click the **Create execution environment** button.
 +
-image::21-content-build/create-execution-environment.png[Create Execution Environment]
+image::22-content-build/create-execution-environment.png[Create Execution Environment]
 +
 . Enter the following details on the _Create Execution Environment_ page:
 .. Name: `ansible-automation-platform-26/ee-minimal-rhel9`
@@ -291,17 +291,17 @@ image::21-content-build/create-execution-environment.png[Create Execution Enviro
 .. To reduce the sync time and storage requirements, enter `latest` in the _Add tag(s) to include_ field and click **Add**
 .. Click the **Create execution environment** button to create the new EE.
 +
-image::21-content-build/create-execution-environment-form.png[Create Execution Environments Form]
+image::22-content-build/create-execution-environment-form.png[Create Execution Environments Form]
 +
 . Synchronize the Execution Environment into PAH from the Red Hat Container Registry.
 . Next to the `ansible-automation-platform-26/ee-minimal-rhel9` Execution Environment, click the kebab menu (three vertical dots) on the right hand side of the entry and select **Sync execution environment**.
 +
-image::21-content-build/execution-environment-sync.png[Sync Execution Environment]
+image::22-content-build/execution-environment-sync.png[Sync Execution Environment]
 +
 . Click the checkbox next to the _Yes, I confirm I want to sync these 1 execution environments_.  the box to confirm and click **Sync execution environment**.
 . Click the **Sync Execution Environments** button to start the synchronization process.
 +
-image::21-content-build/execution-environment-confirm-sync.png[Confirm Sync Execution Environment]
+image::22-content-build/execution-environment-confirm-sync.png[Confirm Sync Execution Environment]
 +
 . After the sync is complete, the `ee-minimal-rhel9` image will be available in your Private Automation Hub instance. Feel free to explore the details of the newly synchronized Execution Environment as you see fit.
 
@@ -314,7 +314,7 @@ The Ansible collection created previously includes dependencies that are sourced
 . Go to *Automation Content* -> *Remotes*
 . Click on the edit (pencil) icon next to the *rh-certified* repository
 +
-image::21-content-build/edit-certified-remote.png[Edit RH-Certified Repository]
+image::22-content-build/edit-certified-remote.png[Edit RH-Certified Repository]
 +
 . In the *Token* field, paste the upstream console token obtained in the previous lab for Automation Hub (the several hundred character long *UPSTREAM_CONSOLE_HUB_TOKEN*)
 . In the *Requirements file* field, paste the contents of `/projects/lab_playbooks/collections/requirements.yml`
@@ -330,15 +330,15 @@ collections:
 +
 . Click *Save remote*
 +
-image::21-content-build/edit-certified-details.png[Edit Details]
+image::22-content-build/edit-certified-details.png[Edit Details]
 +
 . Navigate to *Automation Content* -> *Repositories*, next to *rh-certified* click the kebob (3 dots) and select *Sync repository*
 +
-image::21-content-build/sync-certified-repository.png[Sync Repository]
+image::22-content-build/sync-certified-repository.png[Sync Repository]
 +
 . In the final dialog, leave the default values and click **Sync**.
 +
-image::21-content-build/sync-repo-confirm.png[caption="Confirm Sync", role="thumb"]
+image::22-content-build/sync-repo-confirm.png[caption="Confirm Sync", role="thumb"]
 
 == 6: Push Collection to Repository
 
@@ -350,23 +350,23 @@ Create a new repository in your Gitea instance to hold the collection code using
 
 . Navigate to your link:{gitea_console_url}[Gitea instance,window=_blank] and click the **Sign In** button on the upper right hand corner
 + 
-image::21-content-build/gitea-homepage.png[Gitea Homepages]
+image::22-content-build/gitea-homepage.png[Gitea Homepages]
 +
 . Enter the username and password using the credentials provided from the xref:environment-details.adoc[Environment Details,window=_blank] page and click the **Sign In** button
 + 
-image::21-content-build/gitea-login.png[Gitea Login Page]
+image::22-content-build/gitea-login.png[Gitea Login Page]
 +
 . Once authenticated, in the top left of the web interface, click on the **+** symbol and select **New Repository**.
 +
-image::21-content-build/gitea-navigate-new-repository.png[Navigate to new Gitea Repository]
+image::22-content-build/gitea-navigate-new-repository.png[Navigate to new Gitea Repository]
 +
 . On the *New Repository* page, enter `red_hat_one_super_lab` in the *Repository Name* field.
 + 
-image::21-content-build/gitea-new-repository-name.png[Gitea New Repository]
+image::22-content-build/gitea-new-repository-name.png[Gitea New Repository]
 +
 . Leave everything else as default and click on the button at the bottom, **Create Repository**.
 
-image::21-content-build/gitea-create-repository.png[Gitea Create Repository]
+image::22-content-build/gitea-create-repository.png[Gitea Create Repository]
 
 
 ==== 6.2: Append to the `.gitignore` file
@@ -505,7 +505,7 @@ git push origin main
 +
 NOTE: Since the repository requires authentication, you will be prompted to enter your Gitea username and password at the top of the Dev Spaces window.
 +
-image::21-content-build/devspaces-git-auth.png[Gitea Repository Containing Collection Content]
+image::22-content-build/devspaces-git-auth.png[Gitea Repository Containing Collection Content]
 +
 TIP: You may use the command `git config --global credential.helper store` to allow caching of these credentials. Only use this less secure option in a lab environment like this. You may also want to add this to `/projects/env/config.sh`
 +
@@ -527,7 +527,7 @@ branch 'main' set up to track 'origin/main'.
 +
 . Refresh the `red_hat_one_super_lab` page within the Gitea UI to confirm that the collection has been published successfully.
 +
-image::21-content-build/gitea-repository.png[Dev Spaces Git Authentication]
+image::22-content-build/gitea-repository.png[Dev Spaces Git Authentication]
 . This repository will be referenced in later labs.
 
 == 7: Building a Custom Execution Environment
@@ -705,7 +705,7 @@ Writing manifest to image destination
 +
 . Return to the AAP controller and select *Automation Content* -> *Execution Environments*. Verify your EE is present:
 +
-image::21-content-build/collection-uploaded.png[Confirm Collection Upload]
+image::22-content-build/collection-uploaded.png[Confirm Collection Upload]
 
 == 8: Adding a Custom Filter Plugin
 
@@ -828,7 +828,7 @@ Collection has been successfully published and imported to the Galaxy server cmd
 . Approve collection in the PAH web interface as described previously.
 . Verify new version in PAH:
 +
-image::21-content-build/collection-verify-new-version.png[Verify New Collection Version]
+image::22-content-build/collection-verify-new-version.png[Verify New Collection Version]
 
 === 8.4: Build and push new Execution Environment
 
@@ -927,7 +927,7 @@ Writing manifest to image destination
 +
 . Verify by navigating in AAP controller to *Automation Content* -> *Execution Environments* -> *my-pah-ee* -> *Images*
 +
-image::21-content-build/execution-environment-versions.png[View EE Versions]
+image::22-content-build/execution-environment-versions.png[View EE Versions]
 
 == Conclusion
 

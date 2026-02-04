@@ -128,7 +128,7 @@ Synchronize the `Lab Playbooks` EDA project to retrieve the new rulebook.
 . Navigate to *Automation Decisions* -> *Projects*
 . Click the Sync button next to the `Lab Playbooks` project
 +
-image::31-events-log-streaming/eda-projects-sync.png[Sync EDA Project]
+image::32-events-log-streaming/eda-projects-sync.png[Sync EDA Project]
 
 == 4: Create the Rulebook Activation
 
@@ -145,7 +145,7 @@ Create a new Rulebook Activation for the `check_kafka.yml` rulebook.
 .. *Log level*: `Info`
 . Click **Create rulebook activation** and the Rulebook will begin to activate
 +
-image::31-events-log-streaming/eda-ra-create.png[Create Rulebook Activation]
+image::32-events-log-streaming/eda-ra-create.png[Create Rulebook Activation]
 
 == 5: Simulate Failure
 
@@ -329,8 +329,7 @@ Before exiting this lab, disable the `check_kafka` Rulebook Activation created i
 . Deselect the toggle for the `check_website` Rulebook Activation to disable it
 . Select the checkbox to confirm disabling and click **Disable rulebook activations**
 +
-image::31-events-log-streaming/eda-ra-disable-check-kafka.png[Confirm Disable EDA Rulebook Activation]
-
+image::32-events-log-streaming/eda-ra-disable-check-kafka.png[Confirm Disable EDA Rulebook Activation]
 
 == Summary
 

@@ -281,7 +281,7 @@ To https://gitea.apps.cluster-866kv.dyn.redhatworkshops.io/user1/lab_playbooks.g
 +
 . Verify the files appear in Gitea
 +
-image::22-content-execute/gitea-lab-playbooks.png[Lab Playbooks]
+image::23-content-execute/gitea-lab-playbooks.png[Lab Playbooks]
 
 === 2.2: Create a Credential for Hub Container Registry
 
@@ -292,11 +292,11 @@ First, create a new credential to allow Automation Controller to pull the custom
 . Launch the link:{aap_controller_web_url}[Automation Controller,window=_blank] web interface and login using the credentials from the xref:environment-details.adoc[Environment Details,window=_blank] page.
 . From the navigation menu on the left, expand **Automation Execution** and expand **Infrastructure** and click on **Credentials**.
 +
-image::22-content-execute/automation-controller-credentials-overview.png[Navigate to Credentials]
+image::23-content-execute/automation-controller-credentials-overview.png[Navigate to Credentials]
 +
 . Click **Create credential** to add a new credential.
 +
-image::22-content-execute/automation-controller-create-credential.png[Create Credentials]
+image::23-content-execute/automation-controller-create-credential.png[Create Credentials]
 +
 . Enter the following details on the _Create Credential_ page:
 .. *Name*: `Hub`
@@ -307,7 +307,7 @@ image::22-content-execute/automation-controller-create-credential.png[Create Cre
 .. *Verify SSL*: Checked
 . Click **Create credential** to save the new credential.
 
-image::22-content-execute/automation-controller-create-credential-dialog.png[Create Credentials Dialog]
+image::23-content-execute/automation-controller-create-credential-dialog.png[Create Credentials Dialog]
 
 === 2.3: Create a Credential for the Git Repository
 
@@ -315,7 +315,7 @@ Next, create a new credential to retrieve the source code from the Gitea reposit
 
 . From the Credentials page in Automation Controller, click **Create credential** once again to add a new credential.
 +
-image::22-content-execute/automation-controller-create-credential-2.png[Create Credentials]
+image::23-content-execute/automation-controller-create-credential-2.png[Create Credentials]
 +
 . Enter the following details on the _Create Credential_ page:
 .. *Name*: `Gitea`
@@ -324,7 +324,7 @@ image::22-content-execute/automation-controller-create-credential-2.png[Create C
 .. *Password*: `{gitea_password}`
 . Click **Create credential** to save the new credential.
 +
-image::22-content-execute/automation-controller-create-credential-git-dialog.png[Create Credentials Dialog]
+image::23-content-execute/automation-controller-create-credential-git-dialog.png[Create Credentials Dialog]
 
 === 2.4: Add the Execution Environment to Controller
 
@@ -332,11 +332,11 @@ Next, add the custom Execution Environment that we published previously to Autom
 
 . From the navigation menu on the left, expand **Automation Execution** and expand **Infrastructure** and click on **Execution Environments**.
 +
-image::22-content-execute/automation-controller-ee-overview.png[Navigate to Execution Environments]
+image::23-content-execute/automation-controller-ee-overview.png[Navigate to Execution Environments]
 +
 . Click **Create execution environment** to add a new execution environment.
 +
-image::22-content-execute/automation-controller-create-ee.png[Create Execution Environment]
+image::23-content-execute/automation-controller-create-ee.png[Create Execution Environment]
 +
 . Enter the following details on the _Create Execution Environment_ page:
 .. *Name*: `My Custom PAH EE`
@@ -344,7 +344,7 @@ image::22-content-execute/automation-controller-create-ee.png[Create Execution E
 .. *Registry Credential*: Select the `Hub` credential created previously.
 . Click **Create execution environment** to create the new EE.
 
-image::22-content-execute/automation-controller-create-ee-dialog.png[Create Execution Environment Dialog]
+image::23-content-execute/automation-controller-create-ee-dialog.png[Create Execution Environment Dialog]
 
 === 2.5: Create PAH Credentials
 
@@ -352,7 +352,7 @@ In order for Automation Controller to pull collections from Private Automation H
 
 . From the Credentials page in Automation Controller, click **Create credential** once again to add a new credential.
 +
-image::22-content-execute/automation-controller-create-credential-3.png[Create Credentials]
+image::23-content-execute/automation-controller-create-credential-3.png[Create Credentials]
 +
 . Enter the following details on the _Create Credential_ page to create a credential for the _published_ repository in Private Automation Hub. Use the API token obtained in the prior lab (this is the shorter 40 character token):
 .. *Name*: `PAH - published`
@@ -361,7 +361,7 @@ image::22-content-execute/automation-controller-create-credential-3.png[Create C
 .. *API Token*: `#PAH_API_TOKEN#`
 . Click **Create credential** to save the new credential.
 +
-image::22-content-execute/automation-controller-create-credential-pah-dialog.png[Create Credentials Dialog]
+image::23-content-execute/automation-controller-create-credential-pah-dialog.png[Create Credentials Dialog]
 
 Perform the same steps to create a second credential for the _rh-certified_ repository in Private Automation Hub.
 
@@ -379,17 +379,17 @@ For the Credentials that are associated with Private Automation Hub repositories
 
 . From the navigation menu on the left, expand **Access Management** and click on **Organizations**.
 +
-image::22-content-execute/automation-controller-organizations-overview.png[Navigate to Organizations]
+image::23-content-execute/automation-controller-organizations-overview.png[Navigate to Organizations]
 +
 . Next to the _Default_ organization, click the pencil icon to edit the organization.
 +
-image::22-content-execute/automation-controller-organizations-edit.png[Edit Organization]
+image::23-content-execute/automation-controller-organizations-edit.png[Edit Organization]
 +
 . Click on the _Galaxy Credentials_ section and add both of the PAH credentials created previously by selecting the checkbox next to them.
 .. **PAH - published | Ansible Galaxy/Automation Hub API Token**
 .. **PAH - rh-certified | Ansible Galaxy/Automation Hub API Token**
 +
-image::22-content-execute/automation-controller-organizations-add-credentials.png[Add Credentials to Organization]
+image::23-content-execute/automation-controller-organizations-add-credentials.png[Add Credentials to Organization]
 +
 . Click **Next** at the bottom of the page, then **Next** and finally **Finish** to save change to the Organization.
 
@@ -399,11 +399,11 @@ Create a new link:https://docs.ansible.com/ansible-tower/latest/html/userguide/p
 
 . From the navigation menu on the left, expand **Automation Execution** and click on **Projects**.
 +
-image::22-content-execute/automation-controller-projects-overview.png[Navigate to Projects]
+image::23-content-execute/automation-controller-projects-overview.png[Navigate to Projects]
 +
 . Click **Create project** to add a new project.
 +
-image::22-content-execute/automation-controller-create-project.png[Create Project]
+image::23-content-execute/automation-controller-create-project.png[Create Project]
 +
 . Enter the following details on the _Create Project_ page:
 .. *Name*: `Lab Playbooks`
@@ -413,11 +413,11 @@ image::22-content-execute/automation-controller-create-project.png[Create Projec
 .. *Source code credential*: Select the `Gitea` credential created previously.
 . Click **Create project** to create the new Project.
 +
-image::22-content-execute/automation-controller-create-project-dialog.png[Create Project Dialog]
+image::23-content-execute/automation-controller-create-project-dialog.png[Create Project Dialog]
 +
 . Confirm that the project has been synced successfully by looking _Success_ underneath _Last job status_.
 +
-image::22-content-execute/automation-controller-sync-project.png[Project Sync Status]
+image::23-content-execute/automation-controller-sync-project.png[Project Sync Status]
 
 === 2.6: Create a Job Template
 
@@ -425,11 +425,11 @@ With the Execution Environment and Project created, the final step is to create 
 
 . From the navigation menu on the left, expand **Automation Execution** and click on **Templates**.
 +
-image::22-content-execute/automation-controller-templates-overview.png[Navigate to Templates]
+image::23-content-execute/automation-controller-templates-overview.png[Navigate to Templates]
 +
 . Click the **Create template** dropdown and select **Create job template**.
 +
-image::22-content-execute/automation-controller-create-job-template.png[Create Job Template]
+image::23-content-execute/automation-controller-create-job-template.png[Create Job Template]
 +
 . Enter the following details on the _Create job template_ page:
 .. *Name*: `Test Custom Cowsay Filter`
@@ -439,7 +439,7 @@ image::22-content-execute/automation-controller-create-job-template.png[Create J
 .. *Execution Environment*: `My Custom PAH EE`
 . Click **Create job template** to create the new Job Template.
 +
-image::22-content-execute/automation-controller-create-job-template-dialog.png[Create Job Template Dialog]
+image::23-content-execute/automation-controller-create-job-template-dialog.png[Create Job Template Dialog]
 
 === 2.7: Launch the Job Template and Verify
 
@@ -447,15 +447,15 @@ Now that the Job Template has been created, launch the _Test Custom Cowsay Filte
 
 . From the _Test Custom Cowsay Filter_ Job Template details page, click the **Launch template** button on the upper right hand side.
 +
-image::22-content-execute/automation-controller-launch-job-template.png[Launch Job Template]
+image::23-content-execute/automation-controller-launch-job-template.png[Launch Job Template]
 +
 . Monitor the status of the job until it completes successfully displaying the output of the cowsay filter similar to the following:
 +
-image::22-content-execute/automation-controller-job-template-success.png[Job Template Success]
+image::23-content-execute/automation-controller-job-template-success.png[Job Template Success]
 
 === 2.8: Add Job Template for Windows Node
 
-Repeat these steps to add a *Job Template* to execute the playbook we created in xref:20-content-develop.adoc[Module 2 Lab 1,window=_blank] page.
+Repeat these steps to add a *Job Template* to execute the playbook we created in xref:21-content-develop.adoc[Module 2 Lab 1,window=_blank] page.
 
 . From the navigation menu on the left, go to *Automation Execution* -> *Templates* -> *Create template* -> *Create job template*.
 . Enter the following details on the _Create job template_ page:
@@ -476,7 +476,7 @@ NOTE: If you have any issues with the Windows server, you may need to return to 
 ansible --module-name ansible.builtin.win_reboot windows --extra-vars @/projects/env/secrets.yml
 ----
 +
-image::22-content-execute/jt-provision-windows.png[Job Template Success]
+image::23-content-execute/jt-provision-windows.png[Job Template Success]
 
 == 3: Collections Management
 
@@ -486,11 +486,11 @@ The final exercise in this lab is to customize the content sources from link:htt
 
 . From the navigation menu on the left, expand **Automation Content** and click on **Remotes**.
 +
-image::22-content-execute/remotes-overview.png[Remotes Navigation]
+image::23-content-execute/remotes-overview.png[Remotes Navigation]
 +
 . Click the pencil icon to edit the `community` remote.
 +
-image::22-content-execute/remotes-edit-community.png[Edit Community Remote]
+image::23-content-execute/remotes-edit-community.png[Edit Community Remote]
 +
 . Paste the following into the _Requirements file_ field to specify additional collections to be synced:
 +
@@ -509,7 +509,7 @@ Create a new remote for the `validated` collections repository. The API token fo
 
 . From the Remotes page in Private Automation Hub, click **Create remote**.
 +
-image::22-content-execute/remotes-create-remote.png[Create Remote]
+image::23-content-execute/remotes-create-remote.png[Create Remote]
 +
 . Enter the following details on the _Create remote_ page:
 .. Name: `validated`
@@ -518,22 +518,22 @@ image::22-content-execute/remotes-create-remote.png[Create Remote]
 .. Token: `#UPSTREAM_CONSOLE_HUB_TOKEN#`
 . Click **Create remote** to create the new Remote.
 
-image::22-content-execute/remotes-add-remote.png[Add Remote]
+image::23-content-execute/remotes-add-remote.png[Add Remote]
 
 Now that the `validated` remote has been created, update the _validated_ repository to reference the newly created remote.
 
 . From the navigation menu on the left, expand **Automation Content** and click on **Repositories**.
 +
-image::22-content-execute/repositories-overview.png[Add Remote]
+image::23-content-execute/repositories-overview.png[Add Remote]
 +
 . Edit the _validated_ repository by selecting the pencil icon
 +
-image::22-content-execute/repositories-edit-validated.png[Edit Validated Repository]
+image::23-content-execute/repositories-edit-validated.png[Edit Validated Repository]
 +
 . Update the `Remote` field by selecting `validated` from the drop down.
 . Click **Save repository** to update the repository.
 
-image::22-content-execute/repositories-update-validated.png[Updated Validated Repository]
+image::23-content-execute/repositories-update-validated.png[Updated Validated Repository]
 
 === 3.2: Sync Repositories
 
@@ -543,7 +543,7 @@ Finally, synchronize the `validated` and `community` repositories to pull in the
 +
 . Next to the `validated` repository, click the kebab menu (three vertical dots) on the right hand side of the entry and select **Sync repository**.
 +
-image::22-content-execute/sync-repository.png[Sync Repository]
+image::23-content-execute/sync-repository.png[Sync Repository]
 +
 . In the _Sync Repository_ dialog, click **Sync** to start the synchronization.
 +

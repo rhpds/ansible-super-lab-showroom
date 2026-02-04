@@ -479,37 +479,37 @@ Now that we have covered the basics of tools available as an automation develope
 
 . Open the Ansible extension on the left hand side of the Dev Spaces window
 +
-image::11-platform-dev-tooling/ansible-extension1.png[]
+image::12-platform-dev-tooling/ansible-extension1.png[]
 +
 . Within the _Initialize_ section of the Ansible Development Tools, click on `Playbook project` to open a dialog to create a new project. 
 +
 Specify the following values within the playbook project creation dialog:
 +
-image::11-platform-dev-tooling/ansible-creator1.png[]
+image::12-platform-dev-tooling/ansible-creator1.png[]
 +
 .. *Destination directory*: `/projects/myproject`
 .. *Namespace*: `mynamespace`
 .. *Collection*: `mycollection`
 . Click **Create**
 +
-image::11-platform-dev-tooling/ansible-creator2.png[]
+image::12-platform-dev-tooling/ansible-creator2.png[]
 +
 . The logs will display in the box below that
 . Click `Open Project` to open a new VS Code window with this new project
 +
-image::11-platform-dev-tooling/ansible-creator3.png[]
+image::12-platform-dev-tooling/ansible-creator3.png[]
 +
 . Once the Dev Spaces Workspace loads with the new folder structure, select the **Yes, I trust the Authors** button again and begin to explore the directories and files created by `ansible-creator`, which was generated using industry standard good practices:
 +
-image::11-platform-dev-tooling/ansible-creator4.png[]
+image::12-platform-dev-tooling/ansible-creator4.png[]
 +
 . The `inventory` director contains a ready to use directory structure:
 +
-image::11-platform-dev-tooling/ansible-creator6.png[]
+image::12-platform-dev-tooling/ansible-creator6.png[]
 +
 . The `collections` directory contains the tree structure representing how a collection is organized, a collection called `mycollection` and a simple role called `run` with a few tasks.
 +
-image::11-platform-dev-tooling/ansible-creator5.png[]
+image::12-platform-dev-tooling/ansible-creator5.png[]
 
 === 4.3: Running playbooks in VS Code
 
@@ -522,11 +522,11 @@ While you may be familiar with `ansible-playbook` or even `ansible-navigator` on
 . Right-click on `site.yml` and choose `Run Ansible Playbook Via ...`
 . Choose `Run playbook via  'ansible-playbook'`.
 +
-image::11-platform-dev-tooling/ansible-playbook1.png[]
+image::12-platform-dev-tooling/ansible-playbook1.png[]
 +
 . A terminal opens up with the results of the `ansible-playbook` execution:
 +
-image::11-platform-dev-tooling/ansible-playbook2.png[]
+image::12-platform-dev-tooling/ansible-playbook2.png[]
 
 ==== 4.3.2:Running playbooks via ansible-navigator in VS Code
 
@@ -535,19 +535,19 @@ Alternatively, `ansible-navigator` can be used to execute the `site.yml` playboo
 . Right-click on the file at the base of the directory `site.yml` and choose `Run Ansible Playbook Via ...`
 . Choose `Run playbook via  'ansible-navigator run'`.
 +
-image::11-platform-dev-tooling/ansible-navigator1.png[]
+image::12-platform-dev-tooling/ansible-navigator1.png[]
 +
 . This will open a terminal and run `ansible-navigator run site.yml --ee false`. When the run is finished you will see a `Complete` message in `ansible-navigator`:
 +
-image::11-platform-dev-tooling/ansible-navigator2.png[]
+image::12-platform-dev-tooling/ansible-navigator2.png[]
 +
 . Click inside the terminal and enter `0` to inspect the execution of the play. You can inspect the output of any of the tasks included within this play. e.g. `3`:
 +
-image::11-platform-dev-tooling/ansible-navigator3.png[]
+image::12-platform-dev-tooling/ansible-navigator3.png[]
 +
 . Once reviewed, hit `ESC` several times until you exit `ansible-navigator` and return back to the terminal.
 +
-image::11-platform-dev-tooling/ansible-navigator4.png[]
+image::12-platform-dev-tooling/ansible-navigator4.png[]
 
 === 4.4: Using ansible-lint in VS Code
 
@@ -564,29 +564,29 @@ The VS Code Ansible extension proactively runs `ansible-lint` on any playbook yo
 +
 . As soon as you finish editing, the autosave feature will kick in and run `ansible-lint`. Notice the message and the bottom of the screen:
 +
-image::11-platform-dev-tooling/ansible-lint1.png[]
+image::12-platform-dev-tooling/ansible-lint1.png[]
 +
 . The extension should have added red squiggly lines underneath `debug`. Hover over the red squiggly lines to see the violations:
 +
-image::11-platform-dev-tooling/ansible-lint2.png[]
+image::12-platform-dev-tooling/ansible-lint2.png[]
 +
 . You can fix these manually. However, why not let automation and  `ansible-lint` do the work for you? Open the extension settings:
 +
-image::11-platform-dev-tooling/ansible-lint3.png[]
+image::12-platform-dev-tooling/ansible-lint3.png[]
 +
 . Open **Settings** for the Ansible extension:
 +
-image::11-platform-dev-tooling/ansible-lint4.png[]
+image::12-platform-dev-tooling/ansible-lint4.png[]
 +
 . Under the Ansible extension settings, click on the **Validation** subsection
 . Select the checkbox for `Auto Fix on Save`.
 +
-image::11-platform-dev-tooling/ansible-lint5.png[]
+image::12-platform-dev-tooling/ansible-lint5.png[]
 +
 . Close the settings page and save the file with either the main menu `File` -> `Save` or `CTRL/CMD + s`
 . `ansible-lint --fix` will automatically correct errors
 +
-image::11-platform-dev-tooling/ansible-lint6.png[]
+image::12-platform-dev-tooling/ansible-lint6.png[]
 +
 NOTE: If it it does not automatically fix these errors, try closing and reopening the file.
 +
