@@ -1,4 +1,4 @@
-= Lab: Ansible Test-Driven Development with Molecule
+= Module 2 Lab 4: Content - Ansible Test-Driven Development with Molecule
 
 [.sidebar]
 ****

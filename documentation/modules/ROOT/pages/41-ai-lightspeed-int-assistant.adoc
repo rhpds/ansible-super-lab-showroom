@@ -1,4 +1,4 @@
-= Lab: Ansible Lightspeed Intelligent Assistant
+= Module 4 Lab 1: AI - Ansible Lightspeed Intelligent Assistant
 
 [.sidebar]
 ****
@@ -63,7 +63,7 @@ Configure the Secret by performing the following;
 . Navigate to **Workloads** on the left hand navigation -> **Secrets**. From the project dropdown at the top, select **aap**.
 . Click on the **Create** button and select **Key/value secret**.
 +
-image::40-lightspeed-int-assistant/secrets-overview.png[Secrets Contained in the AAP Project]
+image::41-ai-lightspeed-int-assistant/secrets-overview.png[Secrets Contained in the AAP Project]
 +
 . For the _Secret name_, enter `alia-chatbot-secret`.
 . For the _Key_ enter `chatbot_model`
@@ -84,12 +84,12 @@ Ansible Automation intelligent assistant is enabled by updating the  `AnsibleAut
 . From the _Project_ dropdown, ensure `aap` is selected
 . The `Ansible Automation Platform` operator is listed and installed within this project.
 +
-image::40-lightspeed-int-assistant/installed-operators-aap.png[Installed Operators in the aap Project]
+image::41-ai-lightspeed-int-assistant/installed-operators-aap.png[Installed Operators in the aap Project]
 +
 . Click on the `Ansible Automation Platform` operator which will display all of the resources that are managed by the operator.
 . In the top tab, click on `Ansible Automation Platform` and select **aap**.
 +
-image::40-lightspeed-int-assistant/ansible-automation-platform-instances.png[Ansible Automation Platform Instances in the aap Project]
+image::41-ai-lightspeed-int-assistant/ansible-automation-platform-instances.png[Ansible Automation Platform Instances in the aap Project]
 +
 . Click on the **YAML** tab to edit the resource in YAML format.
 . Locate the `spec.lightspeed` section update the configuration to match the following:
@@ -111,7 +111,7 @@ Confirm the AAP operator detected the changes by verifying the Ansible Lightspee
 . `<instance_name>-lightspeed-api`
 . `<instance_name>-lightspeed-chatbot-api`
 
-image::40-lightspeed-int-assistant/lightspeed-deployments.png[Ansible Lightspeed intelligent assistant Deployments]
+image::41-ai-lightspeed-int-assistant/lightspeed-deployments.png[Ansible Lightspeed intelligent assistant Deployments]
 
 You can confirm that the Pods associated with these Deployments are running by selecting each Deployment and navigating to the _Pods_ tab.
 
@@ -123,13 +123,13 @@ Launch the link:{aap_controller_web_url}[Ansible Automation Platform,window=_bla
 
 When Ansible Lightspeed intelligent assistant is available, a chat icon will be present on the navigation bar at the top of the console. Click on the chat icon to launch the Ansible Lightspeed intelligent assistant interface which will appear on the right side of the screen.
 
-image::40-lightspeed-int-assistant/alia-overview.png[Accessing Ansible Lightspeed intelligent assistant in AAP]
+image::41-ai-lightspeed-int-assistant/alia-overview.png[Accessing Ansible Lightspeed intelligent assistant in AAP]
 
 You can now enter natural language prompts in the chat interface to interact with the Ansible Lightspeed intelligent assistant. For example, you can ask questions about Ansible Automation Platform features, request help with playbook development, or seek guidance on best practices.
 
 Enter a prompt in the chat interface and click the **Send** button (For example "What is a Job Template?"). The assistant will process your request and provide a response based on the information available service.
 
-image::40-lightspeed-int-assistant/alia-response.png[Chat Interaction with Ansible Lightspeed intelligent assistant]
+image::41-ai-lightspeed-int-assistant/alia-response.png[Chat Interaction with Ansible Lightspeed intelligent assistant]
 
 [NOTE]
 ====

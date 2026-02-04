@@ -1,4 +1,4 @@
-= Lab: Configuration as Code
+= Module 2 Lab 5: Content - Configuration as Code
 
 [.sidebar]
 ****
@@ -24,7 +24,7 @@ After completing this module, you will be able to:
 
 == 1: Introduction
 
-In this module, we will explore how to manage Ansible Automation Platform (AAP) configurations declaratively as code using Ansible playbooks and the `infra.aap_configuration` and `infnra.aap_utilities` collections. instead of manually configuring settings through the AAP user interface (ClickOps). This approach allows for automated, repeatable, and version-controlled management of AAP settings, ensuring consistency across environments.
+In this module, we will explore how to manage Ansible Automation Platform (AAP) configurations declaratively as code using Ansible playbooks and the `infra.aap_configuration` and `infra.aap_utilities` collections. instead of manually configuring settings through the AAP user interface (ClickOps). This approach allows for automated, repeatable, and version-controlled management of AAP settings, ensuring consistency across environments.
 
 WARNING: In prior labs, we provided many of the values that are required to simplify the experience.
 
@@ -314,7 +314,7 @@ Once the playbook completes, verify that the AAP components are running in OpenS
 . In the toolbar, click on `All instances`.
 . Verify installation was completed.
 +
-image::24-content-config-as-code/installed-operators-aap.png[Installed Operators in the AAP Project]
+image::25-content-config-as-code/installed-operators-aap.png[Installed Operators in the AAP Project]
 +
 . Navigate to *Networking* -> *Routes*
 . Open the URL under *Location* for the *lab* instance in a new window which should be link:https://lab-aap-as-code.{openshift_cluster_ingress_domain}/

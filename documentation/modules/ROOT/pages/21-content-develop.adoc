@@ -1,4 +1,4 @@
-= Lab: Creating Automation Content for Windows
+= Module 2 Lab 1: Content - Creating Automation for Windows
 
 [.sidebar]
 ****
@@ -41,28 +41,28 @@ The Windows server has been configured as a host in an inventory called **super-
 . From the navigation menu on the left, expand **Automation Execution** and click on **Infrastructure**.
 . Under **Infrastructure** select **Inventories** which should contain an inventory called **super-lab**
 +
-image::20-content-develop/aap_inventories.png[AAP Inventories]
+image::21-content-develop/aap_inventories.png[AAP Inventories]
 +
 . Select **super-lab**
 . Select **Hosts** in the top menu
 . A host called **windows** will be displayed
 . Select the checkbox in front of **windows** and choose **Run command** in the top middle of the screen
 +
-image::20-content-develop/aap_run_command.png[Run Command]
+image::21-content-develop/aap_run_command.png[Run Command]
 +
 . For **Module** choose **win_ping** from the drop-down then **Next**
 +
-image::20-content-develop/aap_win_ping.png[Module]
+image::21-content-develop/aap_win_ping.png[Module]
 +
 . For **Execution Environment**, just choose **Next** without a selection, it will use the default EE
 . For **Credential** select **Windows** then **Next**
 +
-image::20-content-develop/aap_run_command_credential.png[Credential]
+image::21-content-develop/aap_run_command_credential.png[Credential]
 +
 . Finally, choose **Finish**. The job will run and you will be taken to the **Jobs** section
 . After a few seconds a result will display which should resemble this output:
 +
-image::20-content-develop/aap_run_command_results.png[Results]
+image::21-content-develop/aap_run_command_results.png[Results]
 +
 NOTE: If you encounter any issues with your Windows server during any parts of these labs, repeat these steps and choose *win_reboot* as a *Run command* if needed.
 
@@ -73,17 +73,17 @@ In the previous section, an ad-hoc command was run to verify connectivity. Let's
 . Navigate to **Automation Execution** -> **Infrastructure** -> **Hosts**
 . Notice that unlike when selecting *Inventories* as was done in the previous section, looking directly at the **Hosts** section does *NOT* allow running ad-hoc commands
 +
-image::20-content-develop/aap_hosts.png[AAP Hosts]
+image::21-content-develop/aap_hosts.png[AAP Hosts]
 +
 . Select the **windows** host
 . Review the defined variables for connecting using `psrp`
 +
-image::20-content-develop/aap_windows_host_vars.png[Windows host variables]
+image::21-content-develop/aap_windows_host_vars.png[Windows host variables]
 +
 . Navigate to **Credentials** in this same **Infrastructure** subsection under **Automation Execution**
 . Select the **Windows** credential
 +
-image::20-content-develop/aap_windows_credential.png[Windows credential]
+image::21-content-develop/aap_windows_credential.png[Windows credential]
 +
 . These values should be pre-populated with {windows_user} and {windows_password} from the xref:environment-details.adoc[Environment Details,window=_blank] page.
 
@@ -124,7 +124,7 @@ In this section we will begin building content to setup and configure our Window
 NOTE: The remainder of this lab takes place inside link:https://devspaces.{openshift_cluster_ingress_domain}[OpenShift Dev Spaces,window=_blank]. As a quick reminder, here are the relevant steps:
 
 . Launch link:https://devspaces.{openshift_cluster_ingress_domain}[OpenShift Dev Spaces,window=_blank]
-. Return to your Workspace or see xref:10-platform-workspace.adoc[Module 1] for more details
+. Return to your Workspace or see xref:11-platform-dev-spaces.adoc[Module 1 Lab 1] for more details
 . If needed, ensure a terminal is open by selecting the hamburger (3 dashes) in the top left and choosing **Terminal** -> **New Terminal**
 . See xref:environment-details.adoc[Environment Details,window=_blank] for more information.
 
@@ -172,7 +172,7 @@ for role in web_server log_shipper
 . Open the directory at a lower level of the file structure in order to see all of these files in VSCode by selecting the hamburger (3 dashes) menu in the top left and choosing **File** -> **Open Folder**
 . The dialogue box should contain **/projects/** then hit **OK**
 +
-image::20-content-develop/dev_spaces_open_folder.png[Open Folder]
+image::21-content-develop/dev_spaces_open_folder.png[Open Folder]
 +
 . Dev Spaces will reload with the root as the **/projects/** directory
 
@@ -196,7 +196,7 @@ Use the `ansible-creator` UI to create a collection:
 . Click **Create**
 . Lastly, select **Open Collection**
 +
-image::20-content-develop/ansible_creator_collection.png[Ansible Creator - Collection]
+image::21-content-develop/ansible_creator_collection.png[Ansible Creator - Collection]
 
 ===== 2.1.2.2: Create Roles in the UI
 
@@ -209,14 +209,14 @@ Use the `ansible-creator` UI to create two new roles:
 .. _Role Name_: `web_server`
 . Click **Create**
 +
-image::20-content-develop/ansible_creator_role1.png[Ansible Creator - Collection]
+image::21-content-develop/ansible_creator_role1.png[Ansible Creator - Collection]
 +
 . Without leaving this screen, create the other role by keeping the existing values the same with the exception of the **Role Name** field. Enter a new role called `log_shipper`
 . Click **Create**
 . Close this UI window
 . Click on the _File Explorer_ icon to return to the file structure
 +
-image::20-content-develop/ansible_creator_role2.png[Ansible Creator - Collection]
+image::21-content-develop/ansible_creator_role2.png[Ansible Creator - Collection]
 
 Proceed to <<ansible-creator-content, 2.2: Add content to the collection>>.
 
@@ -225,7 +225,7 @@ Proceed to <<ansible-creator-content, 2.2: Add content to the collection>>.
 
 The following sections can be done in either the UI or CLI. Navigate in the newly created `/projects/lab_collection/roles/` directory to the newly created roles.
 
-image::20-content-develop/collection_dir_tree.png[Collection Roles]
+image::21-content-develop/collection_dir_tree.png[Collection Roles]
 
 ==== 2.2.1: Build Web Server Role
 
@@ -367,7 +367,7 @@ NOTE: The reason this is plain text and not using HTML tags is because we cannot
 +
 . The file structure should look like this:
 +
-image::20-content-develop/web_server_role.png[Web Server Role]
+image::21-content-develop/web_server_role.png[Web Server Role]
 
 ==== 2.2.2: Build Log Shipper Role
 
@@ -440,7 +440,7 @@ image::20-content-develop/web_server_role.png[Web Server Role]
 +
 . The file structure should look like this:
 +
-image::20-content-develop/log_shipper_role.png[Log Shipper Role]
+image::21-content-develop/log_shipper_role.png[Log Shipper Role]
 
 == 3: Build Playbook directory for testing content
 
@@ -468,7 +468,7 @@ ansible-creator init playbook \
 +
 NOTE: If you used the UI method earlier you may only have the collection open. Feel free to use **File** -> **Open Folder** to ensure you can access the new folder under `/projects/lab_playbooks/` in the UI if needed.
 +
-image::20-content-develop/lab_playbooks_dir.png[Lab Playbooks directory]
+image::21-content-develop/lab_playbooks_dir.png[Lab Playbooks directory]
 
 === 3.2: Populate the Inventory
 
@@ -476,7 +476,7 @@ A few steps need to be taken to modify the scaffold files to ensure they work wi
 
 . Comment or remove the two entries in `/projects/lab_playbooks/inventory/group_vars/all.yml`, specifically for `ansible_user` to ensure it doesn't interfere with our actual user, which will be provided via a secrets file later instead of announced to the world in inventory.
 +
-image::20-content-develop/group_vars_all.png[group_vars all]
+image::21-content-develop/group_vars_all.png[group_vars all]
 +
 . Modify the main inventory file and replace it with these lab details:
 +
@@ -654,7 +654,7 @@ Successfully installed pypsrp-0.8.1 pyspnego-0.12.0
 +
 NOTE: You may safely ignore the question about creating a virtual environment
 +
-image::20-content-develop/dev_spaces_venv.png[Dev Spaces Virtual Environment Question]
+image::21-content-develop/dev_spaces_venv.png[Dev Spaces Virtual Environment Question]
 
 === 3.7: Configure Collection directory
 
@@ -701,7 +701,7 @@ ln --symbolic --verbose \
 +
 . If you expand `/projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab`, it should list the two roles created in `/projects/lab_collection/`
 +
-image::20-content-develop/playbook_dir_with_collection_link.png[Linked Collection Directory]
+image::21-content-develop/playbook_dir_with_collection_link.png[Linked Collection Directory]
 +
 NOTE: This is only for our lab environment, this is not needed for AAP.
 
