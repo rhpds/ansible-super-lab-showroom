@@ -79,3 +79,17 @@ The following table contains the URL's and credentials for accessing resources c
 |Key Duration
 |{litellm_key_duration}
 |===
+
+=== LibreChat
+
+[cols="1,1"]
+|===
+|LibreChat URL
+|link:http://librechat-librechat.{openshift_cluster_ingress_domain}[http://librechat-librechat.{openshift_cluster_ingress_domain},window=_blank]
+
+|LibreChat Username
+|admin@example.com
+
+|LibreChat Password
+|{gitea_password}
+|===
