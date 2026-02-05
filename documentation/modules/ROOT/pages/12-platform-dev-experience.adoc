@@ -1,5 +1,15 @@
 = Module 1 Lab 2: Platform - Cloud-Native Automation Developer Experience
 
+[.sidebar]
+****
+* **Before you start:**
+** Access to OpenShift Dev Spaces in xref:environment-details.adoc[Environment Details]
+** Completion of xref:11-platform-dev-spaces.adoc[Lab 1.1 OpenShift Dev Spaces for Ansible Development]
+* **Prepares you for:** Using git effectively, pre-commit, gitleaks and Ansible Development Tools
+* **Lab Type:** Self-Contained (_You can skip lab this without missing steps for other labs_)
+* **Estimated Time:** 30 - 60 minutes
+****
+
 [abstract]
 We will explore essential software development practices applied to automation development, including git workflows, secret scanning with pre-commit hooks, and comprehensive testing. This lab covers treating automation as code with proper linting, testing, and CI/CD practices, culminating in an overview of the Ansible Development Tools suite.
 

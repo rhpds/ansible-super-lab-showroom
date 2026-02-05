@@ -1,5 +1,15 @@
 = Module 2 Lab 3: Content - Develop Playbook and Execute within AAP
 
+[.sidebar]
+****
+* **Before you start:**
+** Access to OpenShift Dev Spaces and AAP in xref:environment-details.adoc[Environment Details]
+** Content from xref:22-content-build.adoc[Lab 2.2 Build a custom Collection and Execution Environment]
+* **Prepares you for:** Populating AAP via ClickOps to execute automation created previously
+* **Lab Type:** Foundational (_activities in this lab prepare you for the remaining labs_)
+* **Estimated Time:** 20 - 60 minutes
+****
+
 [abstract]
 In this lab we will configure AAP to execute the automation content created in previous labs. We will also learn some additional activities around collection management.
 

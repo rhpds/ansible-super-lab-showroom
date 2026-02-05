@@ -1,5 +1,14 @@
 = Module 1 Lab 1: Platform - OpenShift Dev Spaces for Ansible Development
 
+[.sidebar]
+****
+* **Before you start:**
+** Access to OpenShift Dev Spaces in xref:environment-details.adoc[Environment Details]
+* **Prepares you for:** Launching OpenShift Dev Spaces
+* **Lab Type:** Foundational (_activities in this lab prepare you for the remaining labs_)
+* **Estimated Time:** 10 - 20 minutes
+****
+
 [abstract]
 We will explore the Red Hat OpenShift Dev Spaces environment you will be working within and learn how to launch and configure development workspaces for Ansible automation development. This includes understanding the various components available in the lab environment, authenticating with git repositories, and using the Ansible Development Tools.
 

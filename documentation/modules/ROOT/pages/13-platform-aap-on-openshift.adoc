@@ -1,5 +1,14 @@
 = Module 1 Lab 3: Platform - Ansible Automation Platform on OpenShift
 
+[.sidebar]
+****
+* **Before you start:**
+** Access to OpenShift and Dev Spaces in xref:environment-details.adoc[Environment Details]
+* **Prepares you for:** Installing AAP on OpenShift via UI actions (ClickOps)
+* **Lab Type:** Self-Contained (_You can skip this lab without missing steps for other labs_)
+* **Estimated Time:** 30 - 60 minutes
+****
+
 [abstract]
 Explore a working installation of Red Hat Ansible Automation Platform on OpenShift Container Platform using the AAP operator. Learn to navigate existing deployments, deploy your own instances, customize configurations, and troubleshoot the AAP operator in OpenShift environments.
 

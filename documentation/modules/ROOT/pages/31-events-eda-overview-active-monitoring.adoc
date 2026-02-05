@@ -1,5 +1,15 @@
 = Module 3 Lab 1: Events - Event-Driven Ansible Overview and Active Health Monitoring
 
+[.sidebar]
+****
+* **Before you start:**
+** Access to OpenShift Dev Spaces and AAP in xref:environment-details.adoc[Environment Details]
+** Content from xref:23-content-execute.adoc[Lab 2.3 Develop Playbook and Execute within AAP]
+* **Prepares you for:** Using Event-Driven Ansible for proactive monitoring
+* **Lab Type:** Foundational (_activities in this lab prepare you for the remaining labs_)
+* **Estimated Time:** 10 - 30 minutes
+****
+
 [abstract]
 This lab demonstrates an agentless, "outside-in" monitoring and remediation architecture using the Event-Driven Ansible (EDA) `url_check` source plugin to maintain the availability of a Windows IIS web server. By proactively polling the web endpoint rather than relying on internal agents, like Filebeat, the EDA Controller detects service outages in real-time and automatically triggers an Ansible Automation Controller remediation playbook to restore the IIS service. This workflow illustrates the power of self-healing infrastructure, where manual intervention is replaced by automated logic that ensures the application is not only running but actively responding to user requests.
 

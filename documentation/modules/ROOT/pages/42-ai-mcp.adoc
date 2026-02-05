@@ -1,5 +1,15 @@
 = Module 4 Lab 2: AI - Ansible Model Context Protocol (MCP) Server
 
+[.sidebar]
+****
+* **Before you start:**
+** Access to OpenShift Dev Spaces and AAP in xref:environment-details.adoc[Environment Details]
+** Completion of xref:11-platform-dev-spaces.adoc[Lab 1.1 OpenShift Dev Spaces for Ansible Development]
+* **Prepares you for:** Using Ansible MCP Server
+* **Lab Type:** Self-Contained (_You can skip lab this without missing steps for other labs_)
+* **Estimated Time:** 20 - 40 minutes
+****
+
 [abstract]
 We will explore the Ansible MCP Server and its role in integrating external AI tools with Ansible Automation Platform (AAP). This lab will guide you through how to deploy the Ansible MCP Server to your OpenShift environment and configure one or more external AI tools to interact with Ansible Automation Platform.
 

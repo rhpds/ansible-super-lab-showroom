@@ -1,5 +1,14 @@
 = Module 4 Lab 1: AI - Ansible Lightspeed Intelligent Assistant
 
+[.sidebar]
+****
+* **Before you start:**
+** Access to OpenShift Dev Spaces and AAP in xref:environment-details.adoc[Environment Details]
+* **Prepares you for:** Using Ansible Lightspeed Intelligent Assistant
+* **Lab Type:** Self-Contained (_You can skip this lab without missing steps for other labs_)
+* **Estimated Time:** 10 - 20 minutes
+****
+
 [abstract]
 We will explore how to begin to integrate generative Artificial Intelligence (AI) capabilities with Ansible Automation Platform (AAP) using the Ansible Lightspeed Intelligent Assistant. This lab will guide you through the process of deploying Ansible Lightspeed intelligent assistant and interacting with the service within the Ansible Automation Platform user interface.
 

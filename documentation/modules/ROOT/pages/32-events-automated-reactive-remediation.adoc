@@ -1,5 +1,18 @@
 = Module 3 Lab 2: Events - Automated Reactive Remediation with Filebeat and Kafka
 
+[.sidebar]
+****
+* **Before you start:**
+** Access to OpenShift Dev Spaces and AAP in xref:environment-details.adoc[Environment Details]
+** Content from xref:31-events-eda-overview-active-monitoring.adoc[Lab 3.1 Event-Driven Ansible Overview and Active Health Monitoring]
+* **Prepares you for:** Using Event-Driven Ansible for reactive monitoring using Filebeat and Kafka
+* **Lab Type:** Self-Contained (_You can skip this lab without missing steps for other labs_)
+* **Estimated Time:** 10 - 30 minutes
+****
+
+[abstract]
+This lab demonstrates a reactive monitoring solution using Filebeat to send IIS events to Kafka. Event-Driven Ansible will monitor this Kafka queue to maintain the availability of a Windows IIS web server. 
+
 == Introduction
 
 In this lab, you will implement a production-grade automation pipeline. You will use an Ansible Playbook to configure **Filebeat** (installed via Chocolatey) to monitor IIS. These events will be published to a **Kafka** broker, where **Event-Driven Ansible (EDA)** will consume them to trigger a self-healing playbook.
@@ -13,7 +26,7 @@ In this lab, you will implement a production-grade automation pipeline. You will
 
 == 1: Create the Configuration Playbook
 
-In the previous module, we built and ran a automation that installed `Chocolatey` and `Filebeat` to the Windows host. In this lab, we will add additional configurations for Filebeat.
+In a previous module, we built and ran automation that installed `Chocolatey` and `Filebeat` to the Windows host. In this lab, we will add additional configuration for Filebeat.
 
 . In your `lab_playbooks` repository, create the `setup_monitoring.yml` playbook:
 +
@@ -86,7 +99,7 @@ git push origin main
 
 The EDA Rulebook must match the structure of the Kafka event to properly trigger the remediation playbook. We are going to check for log messages that indicate the IIS service has stopped in the `condition` property of the rule:
 
-. In your `lab_playbooks_ repository, create the `check_kafka.yml` rulebook in the `rulebooks` directory:
+. In your `lab_playbooks` repository, create the `check_kafka.yml` rulebook in the `rulebooks` directory:
 +
 [source,yaml,role=execute,title="/projects/lab_playbooks/rulebooks/check_kafka.yml",subs="verbatim,attributes,callouts"]
 ----
