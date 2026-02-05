@@ -191,7 +191,7 @@ The primary logic behind Molecule execution is defined in the link:https://ansib
 dependency:
   name: galaxy
   options:
-    requirements-file: ${MOLECULE_SCENARIO_DIRECTORY}/requirements.yml
+    requirements-file: $\{MOLECULE_SCENARIO_DIRECTORY\}/requirements.yml
 driver:
   name: podman
 platforms:
