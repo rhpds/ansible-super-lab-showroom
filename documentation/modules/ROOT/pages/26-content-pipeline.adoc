@@ -4,7 +4,7 @@
 ****
 * **Before you start:**
 ** Access to OpenShift Dev Spaces and AAP in xref:environment-details.adoc[Environment Details]
-** Content from xref:22-content-execute.adoc[Lab 2-3. Develop a Playbook to execute it all]
+** Content from xref:23-content-execute.adoc[Lab 2.3 Develop Playbook and Execute within AAP]
 * **Prepares you for:** Using OpenShift Pipelines to automate the collection build and publish process
 * **Lab Type:** Self-Contained (_You can skip this lab without missing steps for other labs_)
 * **Estimated Time:** 20 - 60 minutes

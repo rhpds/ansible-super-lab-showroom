@@ -4,8 +4,8 @@
 ****
 * **Before you start:**
 ** Access to OpenShift Dev Spaces and AAP in xref:environment-details.adoc[Environment Details]
-** Content from xref:22-content-execute.adoc[Lab 2-3. Develop a Playbook to execute it all]
-* **Prepares you for:** Using Config as Code to install and configure AAP
+** Content from xref:23-content-execute.adoc[Lab 2.3 Develop Playbook and Execute within AAP]
+* **Prepares you for:** Using Configuration as Code to install and configure AAP
 * **Lab Type:** Self-Contained (_You can skip this lab without missing steps for other labs_)
 * **Estimated Time:** 30 - 90 minutes
 ****
@@ -161,11 +161,11 @@ ansible-builder build \
   --build-arg TOKEN=$\{PAH_API_TOKEN\} \
   --verbosity 2<1>
 ----
-<1> `--verbosity 3` will produce an detailed amount of debug output but is very useful for viewing all the steps involved.
+<1> `--verbosity 3` will produce an extremely detailed amount of debug output but is very useful for viewing all the steps involved.
 +
-
 NOTE: This will take roughly 7 minutes.
 +
+
 [source,output]
 ----
 Running command:

@@ -4,7 +4,7 @@
 ****
 * **Before you start:**
 ** Access to OpenShift Dev Spaces and AAP in xref:environment-details.adoc[Environment Details]
-** Content from xref:30-events-health-probe.adoc[Lab 3.1. EDA Overview and Rulebook for health monitoring]
+** Content from xref:31-events-eda-overview-active-monitoring.adoc[Lab 3.1 Event-Driven Ansible Overview and Active Health Monitoring]
 * **Prepares you for:** Using Event-Driven Ansible for reactive monitoring using Filebeat and Kafka
 * **Lab Type:** Self-Contained (_You can skip this lab without missing steps for other labs_)
 * **Estimated Time:** 10 - 30 minutes
