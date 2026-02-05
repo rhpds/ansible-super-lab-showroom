@@ -158,11 +158,12 @@ Login Succeeded!
 ----
 ansible-builder build \
   --tag config_as_code_ee:1.0 \
-  --build-arg TOKEN=${PAH_API_TOKEN} \
+  --build-arg TOKEN=$\{PAH_API_TOKEN\} \
   --verbosity 2<1>
 ----
 <1> `--verbosity 3` will produce an detailed amount of debug output but is very useful for viewing all the steps involved.
 +
+
 NOTE: This will take roughly 7 minutes.
 +
 [source,output]
@@ -348,7 +349,7 @@ Since we already have a few AAP deployments on OpenShift, we can consider these 
 
 . Create a new variable file to represent this environment. This would typically be handled by inventory `group_vars` or separate `vars_files`, but for this lab we'll simplify to a single file. Place this file in the same directory `/projects/aap-as-code/`:
 +
-[source,yaml,role=execute,subs="verbatim,attributes,callout",title="/projects/aap-as-code/lab.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/aap-as-code/lab.yml"]
 ----
 ---
 aap_hostname: 'lab-aap-as-code.{openshift_cluster_ingress_domain}'<1>

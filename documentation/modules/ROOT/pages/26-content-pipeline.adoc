@@ -633,7 +633,7 @@ provisioner:
   name: ansible
   config_options:
     defaults:
-      collections_path: ${ANSIBLE_COLLECTIONS_PATH}
+      collections_path: $\{ANSIBLE_COLLECTIONS_PATH\}
 ...
 
 ----   

@@ -225,7 +225,7 @@ Created collection for red_hat_one.super_lab at /projects/lab_collection/red_hat
 ansible-galaxy collection publish \
   --server {aap_controller_web_url}/api/galaxy/ \
   red_hat_one-super_lab-1.0.0.tar.gz \
-  --token ${PAH_API_TOKEN} \
+  --token $\{PAH_API_TOKEN\} \
   --verbose
 ----
 +
@@ -572,13 +572,13 @@ additional_build_steps:
     - ARG TOKEN
     - ENV ANSIBLE_GALAXY_SERVER_LIST='published,certified,validated,community'
     - ENV ANSIBLE_GALAXY_SERVER_CERTIFIED_URL='{aap_controller_web_url}/pulp_ansible/galaxy/rh-certified/'
-    - ENV ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=${TOKEN}
+    - ENV ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=$\{TOKEN\}
     - ENV ANSIBLE_GALAXY_SERVER_VALIDATED_URL='{aap_controller_web_url}/pulp_ansible/galaxy/validated/'
-    - ENV ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=${TOKEN}
+    - ENV ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=$\{TOKEN\}
     - ENV ANSIBLE_GALAXY_SERVER_COMMUNITY_URL='{aap_controller_web_url}/pulp_ansible/galaxy/community/'
-    - ENV ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=${TOKEN}
+    - ENV ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=$\{TOKEN\}
     - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_URL='{aap_controller_web_url}/pulp_ansible/galaxy/published/'
-    - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=${TOKEN}
+    - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=$\{TOKEN\}
 ----
 
 === 7.2: Build and Publish the Execution Environment
@@ -630,11 +630,11 @@ NOTE: You may have images from previous labs, those are not relevant.
 ----
 ansible-builder build \
   --tag my-pah-ee:1.0 \
-  --build-arg TOKEN=${PAH_API_TOKEN} \
+  --build-arg TOKEN=$\{PAH_API_TOKEN\} \
   --verbosity 1
 ----
 +
-NOTE: The `${PAH_API_TOKEN}` environment variable was set previously containing the value of the API Token from PAH. Set this variable once again if your terminal session has been restarted via the `/projects/env/set_pah_vars.env` file.
+NOTE: The `$\{PAH_API_TOKEN\}` environment variable was set previously containing the value of the API Token from PAH. Set this variable once again if your terminal session has been restarted via the `/projects/env/set_pah_vars.env` file.
 +
 [source,output,subs="verbatim,quotes,callouts"]
 ----
@@ -786,13 +786,13 @@ additional_build_steps:
     - ARG TOKEN
     - ENV ANSIBLE_GALAXY_SERVER_LIST='published,certified,validated,community'
     - ENV ANSIBLE_GALAXY_SERVER_CERTIFIED_URL='{aap_controller_web_url}/pulp_ansible/galaxy/rh-certified/'
-    - ENV ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=${TOKEN}
+    - ENV ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=$\{TOKEN\}
     - ENV ANSIBLE_GALAXY_SERVER_VALIDATED_URL='{aap_controller_web_url}/pulp_ansible/galaxy/validated/'
-    - ENV ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=${TOKEN}
+    - ENV ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=$\{TOKEN\}
     - ENV ANSIBLE_GALAXY_SERVER_COMMUNITY_URL='{aap_controller_web_url}/pulp_ansible/galaxy/community/'
-    - ENV ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=${TOKEN}
+    - ENV ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=$\{TOKEN\}
     - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_URL='{aap_controller_web_url}/pulp_ansible/galaxy/published/'
-    - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=${TOKEN}
+    - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=$\{TOKEN\}
 ----
 <1> Increment the collection version.
 <2> Add the `python` section to include the `cowsay` dependency. Ensure this lines up properly with `galaxy` and NOT `collections`.
@@ -822,7 +822,7 @@ Created collection for red_hat_one.super_lab at /projects/lab_collection/red_hat
 ansible-galaxy collection publish \
   --server {aap_controller_web_url}/api/galaxy/ \
   red_hat_one-super_lab-1.0.1.tar.gz \
-  --token ${PAH_API_TOKEN} \
+  --token $\{PAH_API_TOKEN\} \
   --verbose
 ----
 +
@@ -850,7 +850,7 @@ Finally, build and push the new EE version:
 ----
 ansible-builder build \
   --tag my-pah-ee:1.1 \
-  --build-arg TOKEN=${PAH_API_TOKEN} \
+  --build-arg TOKEN=$\{PAH_API_TOKEN\} \
   --verbosity 1
 ----
 +
@@ -984,7 +984,7 @@ These are the commands used to release a new collection.
 ----
 cd /projects/lab_collection/
 ansible-galaxy collection build --verbose
-ansible-galaxy collection publish --server {aap_controller_web_url}/api/galaxy/ red_hat_one-super_lab-1.0.0.tar.gz --token ${PAH_API_TOKEN} --verbose
+ansible-galaxy collection publish --server {aap_controller_web_url}/api/galaxy/ red_hat_one-super_lab-1.0.0.tar.gz --token $\{PAH_API_TOKEN\} --verbose
 ----
 
 === Script to release new Execution Environment
@@ -994,7 +994,7 @@ These are the commands used to release a new execution environment.
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
 podman login aap-aap.{openshift_cluster_ingress_domain}
-ansible-builder build --tag my-pah-ee:1.0 --build-arg TOKEN=${PAH_API_TOKEN} --verbosity 1
+ansible-builder build --tag my-pah-ee:1.0 --build-arg TOKEN=$\{PAH_API_TOKEN\} --verbosity 1
 podman images
 podman tag localhost/my-pah-ee:1.0 aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee:1.0
 podman images
@@ -1007,5 +1007,5 @@ Try using something like Gemini to create a better version of these scripts for 
 
 [source,gemini,role=execute,subs="verbatim,attributes"]
 ----
-Take the following bash script and add a proper shebang, pull the hard-coded filenames out and define them as variables at the top so this can be re-used. The variables should define the collection name, execution environment name and versions as separate vars. Leave ${PAH_API_TOKEN} alone.
+Take the following bash script and add a proper shebang, pull the hard-coded filenames out and define them as variables at the top so this can be re-used. The variables should define the collection name, execution environment name and versions as separate vars. Leave $\{PAH_API_TOKEN\} alone.
 ----
