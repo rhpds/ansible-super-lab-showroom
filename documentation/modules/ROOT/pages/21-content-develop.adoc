@@ -742,7 +742,7 @@ cd /projects/lab_playbooks/
 ----
 ansible \
   --module-name ansible.builtin.win_ping windows \
-  --extra-vars @/projects/env/secrets.yml
+  --extra-vars @/projects/env/secrets.yml \
   --inventory inventory/hosts.yml
 ----
 +
