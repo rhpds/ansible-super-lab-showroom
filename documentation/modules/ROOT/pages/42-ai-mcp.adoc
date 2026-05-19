@@ -95,14 +95,10 @@ spec:
   mcp:
     disabled: false
     allow_write_operations: false
-    image: registry.redhat.io/ansible-automation-platform-tech-preview/mcp-server-rhel9
-    image_version: latest
 ----
 +
 NOTE: Setting `allow_write_operations` to `false` will restrict the MCP server to read-only operations. This is the preferred option, especially in Enterprise environments, when beginning to incorporate AAP with external AI tools. The AI tool may perform unwanted actions if write operations are enabled without fully understanding the implications. For the purpose of this lab, access to write operations will be restricted.
 +
-IMPORTANT: The latest version of the AAP MCP server is being specified within the `image` and `image_version` properties above as the specific version of Ansible Automation Platform included within the environment contains a known link:https://issues.redhat.com/browse/AAP-62002[issue]. By specifying the latest version, the issue can be avoided.
-+ 
 . Click the **Save** button to apply the changes.
 
 Once the configuration has been applied, the Ansible Automation Platform operator will begin to reconcile the changes. This process can take several minutes to complete.
