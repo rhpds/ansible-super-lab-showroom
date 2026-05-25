@@ -7,11 +7,28 @@ nav:
 asciidoc:
   attributes:
     lab_name: "Ansible Automation Superlab"
-    release-version: master
     page-pagination: true
-    my_var: "foo"
-    guid: my-guid
-    ssh_user: devops
+    guid: guid
+    workshop_base_domain: dynamic.redhatworkshops.io
+    openshift_base_domain: cluster-{guid}.{workshop_base_domain}
+    openshift_cluster_ingress_domain: apps.{openshift_base_domain}
+    openshift_cluster_admin_username: admin
+    openshift_cluster_admin_password: openshiftClusterAdminPassword
+    openshift_cluster_console_url: https://console-openshift-console.{openshift_cluster_ingress_domain}
+    openshift_api_server_url: https://api.{openshift_base_domain}:6443
+    aap_controller_web_url: https://aap-aap.{openshift_cluster_ingress_domain}
+    aap_controller_admin_user: admin
+    aap_controller_admin_password: aapControllerAdminPassword
+    gitea_user: giteaUser
+    gitea_password: giteaPassword
+    gitea_console_url: https://gitea.{openshift_cluster_ingress_domain}
+    litellm_api_base_url: https://litellm-prod.apps.maas.redhatworkshops.io/v1
+    litellm_key_duration: 14d
+    litellm_available_models_list: qwen3-14b
+    litellm_virtual_key: sk-1234567890abcdef1234567890abcdef
+    windows_user: WindowsUser
+    windows_password: WindowsPassword123
+    ssh_username: lab-user
     ssh_password: devops
     ssh_command: ssh someone@example.com
     page-links:

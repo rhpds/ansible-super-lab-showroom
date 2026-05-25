@@ -523,7 +523,7 @@ controller_credentials:
 +
 . Run the playbook again:
 +
-[source,yaml,role=execute,subs="verbatim,attributes"]
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
 ansible-navigator run  
   --execution-environment-image aap-aap.{openshift_cluster_ingress_domain}/config_as_code_ee:1.0 \

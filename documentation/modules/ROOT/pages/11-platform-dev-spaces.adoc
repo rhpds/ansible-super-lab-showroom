@@ -113,7 +113,7 @@ cat /etc/redhat-release
 ----
 Red Hat Enterprise Linux release 9.7 (Plow)
 ----
-. This workspacs provides access to `ansible` and additional developer tools:
+. This workspace provides access to `ansible` and additional developer tools:
 +
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----

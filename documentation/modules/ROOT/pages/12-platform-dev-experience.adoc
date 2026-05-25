@@ -107,7 +107,7 @@ git config --global user.email "email@example.com"
 
 === 1.3: Branches
 
-link:https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell[Git branches] should be used liberally. They can be used to test ideas and have no fear trashing a branch that didn't quite work out. It's better to leave a branch as is and start a new one based on your current working branch rather than testing a few things and reverting the commits or to comment/uncomment things. Using the new `git` prompt configured previously, your prompt should update when your branch changes similar to the following:
+link:https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell[Git branches,window=_blank] should be used liberally. They can be used to test ideas and have no fear trashing a branch that didn't quite work out. It's better to leave a branch as is and start a new one based on your current working branch rather than testing a few things and reverting the commits or to comment/uncomment things. Using the new `git` prompt configured previously, your prompt should update when your branch changes similar to the following:
 
 . Execute this lab in the `/projects/devspaces-example`
 +
@@ -189,7 +189,7 @@ Deleted branch test (was 1234567).
 
 See how easy it was to create and delete branches in `git`? Be sure to use branches all the time. Also investigate `git stash` to learn how to quickly switch between branches before committing active work.
 
-=== 1.4:Pull/Merge Requests
+=== 1.4: Pull/Merge Requests
 
 Pull/Merge (PR/MR) requests are used when contributing code in a shared git server with collaboration capabilities (GitHub, GitLab, Gitea etc) and you want to merge a branch into another branch. Typically, this is a feature branch with your work that you want to merge into the `main` branch. However, it could be any other branch target. PR/MR's are an essential way to review code and allow others to comment and provide feedback or changes. PR/MRs can also be used to kick off pipelines to run further automation activities based on this branch of code.
 
@@ -538,7 +538,7 @@ image::12-platform-dev-experience/ansible-playbook1.png[]
 +
 image::12-platform-dev-experience/ansible-playbook2.png[]
 
-==== 4.3.2:Running playbooks via ansible-navigator in VS Code
+==== 4.3.2: Running playbooks via ansible-navigator in VS Code
 
 Alternatively, `ansible-navigator` can be used to execute the `site.yml` playbook.
 

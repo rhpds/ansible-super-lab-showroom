@@ -429,7 +429,7 @@ image::23-content-execute/automation-controller-create-project-dialog.png[Create
 +
 image::23-content-execute/automation-controller-sync-project.png[Project Sync Status]
 
-=== 2.6: Create a Job Template
+=== 2.8: Create a Job Template
 
 With the Execution Environment and Project created, the final step is to create a Job Template that uses both components.
 
@@ -451,7 +451,7 @@ image::23-content-execute/automation-controller-create-job-template.png[Create J
 +
 image::23-content-execute/automation-controller-create-job-template-dialog.png[Create Job Template Dialog]
 
-=== 2.7: Launch the Job Template and Verify
+=== 2.9: Launch the Job Template and Verify
 
 Now that the Job Template has been created, launch the _Test Custom Cowsay Filter_ and verify that the custom filter is working as expected.
 
@@ -463,7 +463,7 @@ image::23-content-execute/automation-controller-launch-job-template.png[Launch J
 +
 image::23-content-execute/automation-controller-job-template-success.png[Job Template Success]
 
-=== 2.8: Add Job Template for Windows Node
+=== 2.10: Add Job Template for Windows Node
 
 Repeat these steps to add a *Job Template* to execute the playbook we created in xref:21-content-develop.adoc[Module 2 Lab 1,window=_blank] page.
 

@@ -444,7 +444,7 @@ Now that the operator is showing the AAP instance as being successfully deployed
 * You're now logged into the newly deployed AAP instance!
 . Go ahead and attach a subscription to this deployment by using a service account and password and choosing any valid subscription. Your Red Hat login used for cloud.redhat.com can also be used instead of a service account and should have ample subscriptions to use.
 +
-NOTE: You may need to create a manifest using your account, refer to link:https://access.redhat.com/articles/5807761[kbase 5807761]
+NOTE: You may need to create a manifest using your account, refer to link:https://access.redhat.com/articles/5807761[kbase 5807761,window=_blank]
 +
 . Once complete, you will see the AAP dashboard.
 +
@@ -549,7 +549,7 @@ metadata:
   namespace: my-aap
   labels:
     ansible_job: ''
-    my_label: foobar<1>
+    my_label: foobar <1>
 # ... other configuration
 ----
 <1> Add this line to the metadata key.
@@ -571,6 +571,7 @@ Let's observe the created job pod in the OpenShift Web Console.
 . Navigate back to the OpenShift web console.
 . Navigate to **Workloads** on the left hand navigation -> **Pods**.
 * Next to the `Project:` dropdown in the top left, ensure `my-aap` is the project shown.
+. In the filter dropdown, select **Name**
 . In the filter text box, enter `automation-job`.
 . Click on the `automation-job-<id>-<guid>` pod.
 +

@@ -135,87 +135,14 @@ NOTE: Make sure to store the token securely, as it will not be displayed again.
 
 Now that the Ansible MCP Server is deployed and an API token has been generated, the final step is to configure external AI tools that can be used to connect to the Ansible MCP Server using the generated API token. While there are multiple external AI tools that can be used to demonstrate the integration with the Ansible MCP Server, for the purpose of this lab, the following solutions will be demonstrated:
 
-. link:https://www.librechat.ai[LibreChat,window=_blank] - Web based AI chat tool that can be accessed via a web browser.
 . link:https://opencode.ai[OpenCode,window=_blank] - Terminal based AI agent that can be executed from within the OpenShift Dev Spaces workspace.
+. link:https://www.librechat.ai[LibreChat,window=_blank] - Web based AI chat tool that can be accessed via a web browser.
 
-NOTE: While steps will be provided for both OpenCode and LibreChat, it is recommended that you utilize the _LibreChat_ given some of the limitations that have been encountered when using OpenCode in this lab environment.
-
-=== 4.1: Using LibreChat with the Ansible MCP Server
-
-link:https://www.librechat.ai[LibreChat,window=_blank] is a Open Source AI chat tool that can be integrated with various hosted and self-hosted LLM's. LibreChat can be accessed via a web browser and provides a chat-based interface for interacting with AI models. This section will illustrate how to configure LibreChat to connect to the Ansible MCP Server.
-
-==== 4.1.1: Configuring LibreChat
-
-LibreChat has been deployed within the OpenShift environment as part of the lab setup. While most of the configurations have been pre-configured for you, there is one final step that you need to complete to enable the integration with the Ansible MCP Server: Specifying the API token that was generated in the prior section.
-
-All of the resources associated with LibreChat have been deployed in the `librechat` Project. To configure the Ansible MCP API token, perform the following steps in the OpenShift web console to update the value stored in the `librechat-credentials-env` Secret resource in the `librechat` Project:
-
-. Launch the link:{openshift_cluster_console_url}[OpenShift Web Console,window=_blank]
-. Select the **htpasswd_provider** button and use the credentials provided in the xref:environment-details.adoc[Environment Details,window=_blank] page to login to the OpenShift console
-. Navigate to **Workloads** on the left hand navigation -> **Secrets**. From the project dropdown at the top, select **librechat**.
-. Locate the **librechat-credentials-env** Secret resource, click the kebab menu (three vertical dots) on the right hand side of the entry and select **Edit Secret**.
-+
-image::42-ai-mcp/librechat-edit-secret.png[Edit the librechat-credentials-env Secret]
-+
-. Locate the `ANSIBLE_MCP_TOKEN` entry. By default, the value is set as `placeholder`. Update the value of this entry by replacing `placeholder` with the API token that was generated in the prior section.
-+
-image::42-ai-mcp/librechat-edit-secret-value.png[Edit ANSIBLE_MCP_TOKEN in the librechat-credentials-env Secret]
-+
-. Scroll to the bottom of the page and click the **Save** button to apply the changes.
-
-Once the _Secret_ containing the API token has been updated, the next step is to restart the LibreChat pod so that it can load the updated value. To restart the LibreChat pod, perform the following steps:
-
-. Navigate to **Workloads** on the left hand navigation -> **Pods**. From the project dropdown at the top, ensure **librechat** is selected.
-. Locate the filter section at the top of the page and select the dropdown that has the value of `Name` present and select **Label**. Enter **app.kubernetes.io/name=librechat** in the text box and select the button provided below the textbox to apply the filter.
-+
-image::42-ai-mcp/librechat-pods-filter.png[Filter the librechat Pods by Label]
-+
-. Locate the single pod that is displayed and click the kebab menu (three vertical dots) on the right hand side of the entry and select **Delete Pod**.
-+
-image::42-ai-mcp/librechat-delete-pod.png[Delete the librechat Pod]
-+
-. Wait until the pod has been recreated, is _Running_, and displays `1/1` in the _Ready_ column.
-+
-. Launch the LibreChat web interface by navigating to: link:http://librechat-librechat.{openshift_cluster_ingress_domain}[LibreChat Web Interface,window=_blank]. You will be presented with the LibreChat login page.
-+
-image::42-ai-mcp/librechat-login-page.png[LibreChat Login Page]
-+
-. Enter the username and password using the credentials provided from the xref:environment-details.adoc[Environment Details,window=_blank] page and click the **Continue** button.
-+
-Once authenticated, you will be presented with the LibreChat main interface.
-+
-. Enable the {litellm_available_models_list} model by clicking on the **My Agents** button at the top of the page, hover over **LiteMaaS**, and then select **{litellm_available_models_list}**.
-+
-image::42-ai-mcp/librechat-enable-model.png[Enable the {litellm_available_models_list} Model in LibreChat]
-+
-. Enable the connection to the Ansible MCP Server by selecting the _MCP Servers_ dropdown within the chat window and selecting **aap**. A successful connection will display a checkmark next to the MCP server name.
-+
-image::42-ai-mcp/librechat-enable-mcp.png[Enable aap MCP Server in LibreChat]
-+
-Now, lets start a chat session using our natural language that retrieves details that originate from Ansible Automation Platform that is facilitated through the integration with the AAP MCP Server.
-+
-. Ask for information related to the _Projects_ that have been defined:
-
-[source,console,role=execute]
-----
-Display the names of aap projects
-----
-
-In a few moments, you will see LibreChat making queries to the _Tools_ exposed by the AAP MCP Server and then providing a natural language response based on the information retrieved. A successful invocation of the MCP tool will display similar to the following:
-
-image::42-ai-mcp/librechat-chat-result.png[LibreChat Chat Result]
-
-Notice how the `projects_list` tool was invoked to retrieve the list of projects from Ansible Automation Platform. The response provided by LibreChat includes the names of the projects that were retrieved. You can expand the result of the `projects_list` tool to see the raw data that was returned from Ansible Automation Platform if desired.
-
-NOTE: Due to the non-deterministic nature of LLM's, the exact response provided by LibreChat may vary between invocations and may not match exactly what is shown in the screenshot or steps above.
-
-Feel free to continue the chat session or start a new session to continuing to converse with the LLM, obtaining realtime insights from Ansible Automation Platform though the use of the Ansible MCP Server.
-
-=== 4.2: Using OpenCode with the Ansible MCP Server
+=== 4.1: Using OpenCode with the Ansible MCP Server
 
 link:https://opencode.ai[OpenCode,window=_blank] is an Open Source, terminal based AI agent. It is already installed in your Dev Spaces workspace and requires that a few steps be completed prior to its use.
 
-==== 4.2.1: Customizing a Dev Spaces Workspace
+==== 4.1.1: Customizing a Dev Spaces Workspace
 
 OpenShift Dev Spaces includes several different methods for configuring and customizing a workspace. For this section, we will create a `ConfigMap` and `Secret` resource within the `admin-devspaces` project containing your workspace to externalize and inject environment variables into your workspace. These values will be referenced by the OpenCode configuration file that you will then define to drive the functionality of the tool.
 
@@ -299,7 +226,7 @@ env | grep -E "(AAP_MCP|LITELLM)"
 
 The output should display values that correspond to the environment variables defined in the `ConfigMap` and `Secret` resources previously.
 
-==== 4.2.2: Configuring OpenCode
+==== 4.1.2: Configuring OpenCode
 
 With the necessary environment variables now mounted into your Dev Spaces workspace, the next step is to introduce the external AI tool that will interact with Ansible Automation Platform via the Ansible MCP Server. For this section, we will utilize link:https://opencode.ai[OpenCode,window=_blank], an open-source AI development platform that enables developers to build, deploy, and manage AI applications. OpenCode provides a unified interface for interacting with various AI models and services, making it easier to integrate AI capabilities into applications.
 
@@ -350,7 +277,7 @@ Create a new file named `opencode.json` at the within the `/projects/devspaces-e
 
 In this configuration file, we are specifying details related to our inference service along with the AAP MCP Server. Take note of the variables beginning with `{env:...}` which will replace the the values with the content injected from the _Secret_ or _ConfigMap_ defined previously.
 
-==== 4.2.3: Using OpenCode to Interact with the Ansible MCP Server
+==== 4.1.3: Using OpenCode to Interact with the Ansible MCP Server
 
 With all of the configuration steps complete, let's utilize OpenCode to interact with the Ansible MCP Server.
 
@@ -404,7 +331,7 @@ If an error or returned or no data is displayed, you can review the <<mcp-openco
 NOTE: Due to the non-deterministic nature of LLM's, the exact response provided by OpenCode may vary between invocations and may not match exactly what is shown in the screenshot or steps above.
 
 [#mcp-opencode-troubleshooting]
-==== 4.2.3: Troubleshooting OpenCode MCP Integration
+==== 4.1.4: Troubleshooting OpenCode MCP Integration
 
 If you encounter issues when attempting to interact with the Ansible MCP Server via OpenCode, consider the following troubleshooting steps:
 
@@ -425,6 +352,77 @@ TIP: Hitting the up arrow key will place the last request into the chat window f
 . Clear the existing context/start a new chat session
 +
 * Enter `/new` into the chat prompt to start a new session
+
+=== 4.2: Using LibreChat with the Ansible MCP Server
+
+link:https://www.librechat.ai[LibreChat,window=_blank] is a Open Source AI chat tool that can be integrated with various hosted and self-hosted LLM's. LibreChat can be accessed via a web browser and provides a chat-based interface for interacting with AI models. This section will illustrate how to configure LibreChat to connect to the Ansible MCP Server.
+
+==== 4.2.1: Configuring LibreChat
+
+LibreChat has been deployed within the OpenShift environment as part of the lab setup. While most of the configurations have been pre-configured for you, there is one final step that you need to complete to enable the integration with the Ansible MCP Server: Specifying the API token that was generated in the prior section.
+
+All of the resources associated with LibreChat have been deployed in the `librechat` Project. To configure the Ansible MCP API token, perform the following steps in the OpenShift web console to update the value stored in the `librechat-credentials-env` Secret resource in the `librechat` Project:
+
+. Launch the link:{openshift_cluster_console_url}[OpenShift Web Console,window=_blank]
+. Select the **htpasswd_provider** button and use the credentials provided in the xref:environment-details.adoc[Environment Details,window=_blank] page to login to the OpenShift console
+. Navigate to **Workloads** on the left hand navigation -> **Secrets**. From the project dropdown at the top, select **librechat**.
+. Locate the **librechat-credentials-env** Secret resource, click the kebab menu (three vertical dots) on the right hand side of the entry and select **Edit Secret**.
++
+image::42-ai-mcp/librechat-edit-secret.png[Edit the librechat-credentials-env Secret]
++
+. Locate the `ANSIBLE_MCP_TOKEN` entry. By default, the value is set as `placeholder`. Update the value of this entry by replacing `placeholder` with the API token that was generated in the prior section.
++
+image::42-ai-mcp/librechat-edit-secret-value.png[Edit ANSIBLE_MCP_TOKEN in the librechat-credentials-env Secret]
++
+. Scroll to the bottom of the page and click the **Save** button to apply the changes.
+
+Once the _Secret_ containing the API token has been updated, the next step is to restart the LibreChat pod so that it can load the updated value. To restart the LibreChat pod, perform the following steps:
+
+. Navigate to **Workloads** on the left hand navigation -> **Pods**. From the project dropdown at the top, ensure **librechat** is selected.
+. Locate the filter section at the top of the page and select the dropdown that has the value of `Name` present and select **Label**. Enter **app.kubernetes.io/name=librechat** in the text box and select the button provided below the textbox to apply the filter.
++
+image::42-ai-mcp/librechat-pods-filter.png[Filter the librechat Pods by Label]
++
+. Locate the single pod that is displayed and click the kebab menu (three vertical dots) on the right hand side of the entry and select **Delete Pod**.
++
+image::42-ai-mcp/librechat-delete-pod.png[Delete the librechat Pod]
++
+. Wait until the pod has been recreated, is _Running_, and displays `1/1` in the _Ready_ column.
++
+. Launch the LibreChat web interface by navigating to: link:http://librechat-librechat.{openshift_cluster_ingress_domain}[LibreChat Web Interface,window=_blank]. You will be presented with the LibreChat login page.
++
+image::42-ai-mcp/librechat-login-page.png[LibreChat Login Page]
++
+. Enter the username and password using the credentials provided from the xref:environment-details.adoc[Environment Details,window=_blank] page and click the **Continue** button.
++
+Once authenticated, you will be presented with the LibreChat main interface.
++
+. Enable the {litellm_available_models_list} model by clicking on the **My Agents** button at the top of the page, hover over **LiteMaaS**, and then select **{litellm_available_models_list}**.
++
+image::42-ai-mcp/librechat-enable-model.png[Enable the {litellm_available_models_list} Model in LibreChat]
++
+. Enable the connection to the Ansible MCP Server by selecting the _MCP Servers_ dropdown within the chat window and selecting **aap**. A successful connection will display a checkmark next to the MCP server name.
++
+image::42-ai-mcp/librechat-enable-mcp.png[Enable aap MCP Server in LibreChat]
++
+Now, lets start a chat session using our natural language that retrieves details that originate from Ansible Automation Platform that is facilitated through the integration with the AAP MCP Server.
++
+. Ask for information related to the _Projects_ that have been defined:
+
+[source,console,role=execute]
+----
+Display the names of aap projects
+----
+
+In a few moments, you will see LibreChat making queries to the _Tools_ exposed by the AAP MCP Server and then providing a natural language response based on the information retrieved. A successful invocation of the MCP tool will display similar to the following:
+
+image::42-ai-mcp/librechat-chat-result.png[LibreChat Chat Result]
+
+Notice how the `projects_list` tool was invoked to retrieve the list of projects from Ansible Automation Platform. The response provided by LibreChat includes the names of the projects that were retrieved. You can expand the result of the `projects_list` tool to see the raw data that was returned from Ansible Automation Platform if desired.
+
+NOTE: Due to the non-deterministic nature of LLM's, the exact response provided by LibreChat may vary between invocations and may not match exactly what is shown in the screenshot or steps above.
+
+Feel free to continue the chat session or start a new session to continuing to converse with the LLM, obtaining realtime insights from Ansible Automation Platform though the use of the Ansible MCP Server.
 
 == Conclusion
 
