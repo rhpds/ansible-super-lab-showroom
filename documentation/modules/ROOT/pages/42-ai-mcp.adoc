@@ -173,7 +173,7 @@ data:
   AAP_MCP_URL: https://aap-mcp-aap.{openshift_cluster_ingress_domain}/mcp
   LITELLM_MODEL_NAME: {litellm_available_models_list}
   LITELLM_URL: {litellm_api_base_url}
-  OPENCODE_CONFIG: /projects/devspaces-example/opencode.json
+  OPENCODE_CONFIG: /projects/ansible-devspaces/opencode.json
 ----
 +
 NOTE: Notice the value of the `controller.devfile.io/mount-as` annotation in the snippet above is set to `env`, which means the contents of the `ConfigMap` will be mounted as environment variables in the Dev Spaces workspace.
@@ -232,9 +232,9 @@ With the necessary environment variables now mounted into your Dev Spaces worksp
 
 You may have noticed earlier that one of the environment variables defined in the `ConfigMap` resource was the `OPENCODE_CONFIG` property, which specifies the location of the OpenCode configuration file (Hint: you can run the command `env | grep OPENCODE_CONFIG` to see the value). This file does not exist yet as we will need to create it as part of this exercise. An link:https://opencode.ai/docs/config[OpenCode configuration file^] contains details related to the inference service as well as any MCP servers that should be utilized. 
 
-Create a new file named `opencode.json` at the within the `/projects/devspaces-example` directory containing the following:
+Create a new file named `opencode.json` at the within the `/projects/ansible-devspaces` directory containing the following:
 
-[source,json,title="/projects/devspaces-example/opencode.json",role=execute]
+[source,json,title="/projects/ansible-devspaces/opencode.json",role=execute]
 ----
 {
     "$schema": "https://opencode.ai/config.json",
