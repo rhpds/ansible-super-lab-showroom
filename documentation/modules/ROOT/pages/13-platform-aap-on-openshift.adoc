@@ -592,6 +592,53 @@ This is a very simple example of modifying the container group specification to 
 
 This demonstrates how easy and flexible Container Groups can be to manage AAP automation workloads.
 
+== 6: Cleanup
+
+Now that you've had some experience deploying and managing AAP on OpenShift using the AAP operator, let's go ahead and uninstall the operator and the deployed instance. This process will not only enable you with the understanding of how to uninstall the operator and its managed resources, but also free up cluster resources.
+
+=== 6.1: Uninstall the AAP Instance
+
+Remove the `aap` instance of the `AnsibleAutomationPlatform` custom resource from the `my-aap` namespace.
+
+CAUTION: It is important that only the resources in the `my-aap` namespace are to be removed. Modifying the resources in the `aap` could affect te remainder of the lab.
+
+. Navigate to **Ecosystem** on the left hand navigation -> **Installed Operators**.
+. Next to the `Project:` dropdown in the top left, ensure `my-aap` is the project shown.
+. Click on the `Ansible Automation Platform` operator.
+. In the toolbar click on `All instances`.
+. Next to the `aap` instance, click on the kebab (three dots) and select  **Delete AnsibleAutomationPlatform**.
++
+image::13-platform-aap-on-openshift/delete-aap-instance1.png[Delete the AAP Instance,link=self,window=blank]
++
+. Click the **Delete** button on the confirmation dialog.
++
+image::13-platform-aap-on-openshift/delete-aap-instance2.png[Delete the AAP Instance Confirmation Dialog,link=self,window=blank]
+
+The AAP operator will now recognize that the `AnsibleAutomationPlatform` instance has been removed and will proceed to remove all the resources that were created as part of this instance. This may take several minutes to complete for the entire process to complete.
+
+=== 6.2 Uninstall the AAP Operator
+
+Now that the AAP instance is removed, uninstall the AAP operator from the `my-aap` namespace.
+
+. Navigate to **Ecosystem** on the left hand navigation -> **Installed Operators**.
+. Next to the `Project:` dropdown in the top left, ensure `my-aap` is the project shown.
+. Click on the kebab (three dots) next to the `Ansible Automation Platform` operator and select **Uninstall Operator**.
++
+image::13-platform-aap-on-openshift/uninstall-aap-operator.png[Uninstall the AAP Operator,link=self,window=blank]
++
+. Click the **Uninstall** button on the confirmation dialog to remove the AAP operator.
+
+=== 6.3 Remove the my-aap Project
+
+Finally, remove the `my-aap` project that was created for this exercise.
+
+. Navigate to **Home** on the left hand navigation -> **Projects**.
+. Click on the kebab (three dots) next to the `my-aap` project and select **Delete Project**.
++
+image::13-platform-aap-on-openshift/delete-my-aap-project.png[Delete the my-aap Project,link=self,window=blank]
++
+. Click the **Delete** button on the confirmation dialog to remove the `my-aap` project
+
 == Conclusion
 
 You have successfully explored Ansible Automation Platform deployment and management on OpenShift including:
