@@ -141,7 +141,7 @@ Synchronize the `Lab Playbooks` EDA project to retrieve the new rulebook.
 . Navigate to *Automation Decisions* -> *Projects*
 . Click the Sync button next to the `Lab Playbooks` project
 +
-image::32-events-automated-reactive-remediation/eda-projects-sync.png[Sync EDA Project]
+image::32-events-automated-reactive-remediation/eda-projects-sync.png[Sync EDA Project,link=self,window=blank]
 
 == 4: Create the Rulebook Activation
 
@@ -158,7 +158,7 @@ Create a new Rulebook Activation for the `check_kafka.yml` rulebook.
 .. *Log level*: `Info`
 . Click **Create rulebook activation** and the Rulebook will begin to activate
 +
-image::32-events-automated-reactive-remediation/eda-ra-create.png[Create Rulebook Activation]
+image::32-events-automated-reactive-remediation/eda-ra-create.png[Create Rulebook Activation,link=self,window=blank]
 
 == 5: Simulate Failure
 
@@ -342,7 +342,7 @@ Before exiting this lab, disable the `check_kafka` Rulebook Activation created i
 . Deselect the toggle for the `check_website` Rulebook Activation to disable it
 . Select the checkbox to confirm disabling and click **Disable rulebook activations**
 +
-image::32-events-automated-reactive-remediation/eda-ra-disable-check-kafka.png[Confirm Disable EDA Rulebook Activation]
+image::32-events-automated-reactive-remediation/eda-ra-disable-check-kafka.png[Confirm Disable EDA Rulebook Activation,link=self,window=blank]
 
 == Summary
 
@@ -352,9 +352,9 @@ You have learned how to configure Filebeat to send Windows IIS event logs to Kaf
 
 For additional reference and deeper learning on managing EDA Controller:
 
-. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/using_automation_decisions/index[Using Automation Decisions]
-. https://console.redhat.com/ansible/automation-hub/repo/published/ansible/eda/[ansible.eda collection]
-. https://console.redhat.com/ansible/automation-hub/repo/published/ansible/eda/content/eda%2Fplugins%2Fevent_source/kafka/[Official kafka documentation]
+. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/using_automation_decisions/index[Using Automation Decisions^]
+. https://console.redhat.com/ansible/automation-hub/repo/published/ansible/eda/[ansible.eda collection^]
+. https://console.redhat.com/ansible/automation-hub/repo/published/ansible/eda/content/eda%2Fplugins%2Fevent_source/kafka/[Official kafka documentation^]
 
 == Appendix
 

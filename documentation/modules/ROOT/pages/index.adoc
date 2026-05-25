@@ -65,7 +65,7 @@ By the end of this superlab, you will be able to:
 * Deploy and manage AAP across different platforms
 * Develop, test, and publish Ansible collections
 * Build, publish Ansible Execution Environments
-* Leverage Automation Hub for content distribution
+* Use Automation Hub for content distribution
 * Create and manage Event-Driven Ansible rulebooks and scenarios
 * Integrate AI capabilities into Ansible Automation Platform
 

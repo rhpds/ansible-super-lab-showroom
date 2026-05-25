@@ -1,6 +1,7 @@
 name: modules
 title: Ansible Automation Superlab
 version: master
+start_page: index.adoc
 nav:
   - modules/ROOT/nav.adoc
 
