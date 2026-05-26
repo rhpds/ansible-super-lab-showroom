@@ -16,12 +16,12 @@ In this lab we will develop a custom Ansible collection to manage a Windows serv
 
 After completing this module, you will be able to:
 
-. Connect and check connectivity to Windows servers from AAP
-. Use `ansible.windows` and `microsoft.iis` collections
-. Ensure prerequisites are installed
-. Install and use Chocolatey (A Windows package manager)
-. Install and configure Filebeat (a lightweight data shipper)
-. Test initial content against Windows server
+* Connect and check connectivity to Windows servers from AAP
+* Use `ansible.windows` and `microsoft.iis` collections
+* Ensure prerequisites are installed
+* Install and use Chocolatey (A Windows package manager)
+* Install and configure Filebeat (a lightweight data shipper)
+* Test initial content against Windows server
 
 == Prerequisites
 

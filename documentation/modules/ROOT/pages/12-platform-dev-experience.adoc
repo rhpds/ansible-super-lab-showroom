@@ -435,7 +435,7 @@ Untracked files:
 nothing added to commit but untracked files present (use "git add" to track)
 ----
 
-For a more comprehensive exploration of pre-commit and the pre-commit-config, see https://github.com/redhat-cop/infra.aap_configuration/blob/devel/.pre-commit-config.yaml
+For a more comprehensive exploration of pre-commit and the pre-commit-config, see link:https://github.com/redhat-cop/infra.aap_configuration/blob/devel/.pre-commit-config.yaml[infra.aap_configuration pre-commit config^]
 
 == 4: Ansible Development Tools (ADT)
 
@@ -487,7 +487,7 @@ The curated list of tools installed as part of the Ansible automation developer 
 
 === 4.1: Visual Studio Code (VS Code) Extension
 
-Ansible includes a Visual Studio Code (VS Code) extension to enhance the development experience. You can learn more about the features that are available in the extension at https://ansible.readthedocs.io/projects/vscode-ansible/
+Ansible includes a Visual Studio Code (VS Code) extension to enhance the development experience. You can learn more about the features that are available in the extension at link:https://ansible.readthedocs.io/projects/vscode-ansible/[Ansible VS Code Extension documentation^]
 
 === 4.2: Creating a Playbook Project
 

@@ -35,7 +35,7 @@ After completing this module, you will be able to:
 
 == 2: Contributing to this Lab Documentation
 
-If you see an error in this lab, fork and submit a pull request against https://github.com/rhpds/ansible-super-lab-showroom
+If you see an error in this lab, fork and submit a pull request against link:https://github.com/rhpds/ansible-super-lab-showroom[ansible-super-lab-showroom^]
 
 == 3: Dev Spaces console
 
@@ -77,7 +77,7 @@ image::11-platform-dev-spaces/intro5.png[VS Code interface in Dev Spaces showing
 
 == 5: Ansible and OpenShift Extensions
 
-For this lab, we have have provided a link:https://code.visualstudio.com/docs/editing/workspaces/workspaces[.code-workspace,window=_blank] configuration that included these extensions along with additional configurations to curate your development environment. See https://github.com/sabre1041/ansible-devspaces/blob/ansible-superlab/.code-workspace for the source of this workspace configuration.
+For this lab, we have provided a link:https://code.visualstudio.com/docs/editing/workspaces/workspaces[.code-workspace,window=_blank] configuration that included these extensions along with additional configurations to curate your development environment. See link:https://github.com/sabre1041/ansible-devspaces/blob/ansible-superlab/.code-workspace[the source of this workspace configuration^].
 
 . Click on the **Ansible** extension icon to access the Ansible Development Tools extension (covered in a subsequent lab)
 +
