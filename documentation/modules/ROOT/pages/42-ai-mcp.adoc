@@ -259,14 +259,14 @@ Create a new file named `opencode.json` at the within the `/projects/ansible-dev
             "name": "LiteLLM",
             "options": {
                 "baseURL": "{env:LITELLM_URL}",
-                "apiKey": "{env:LITELLM_API_KEY}",
+                "apiKey": "{env:LITELLM_API_KEY}"
             },
             "models": {
-                "llama-scout-17b": {
+                "qwen3-14b": {
                     "name": "{env:LITELLM_MODEL_NAME}",
                     "limit": {
-                        "context": 120000,
-                        "output": 120000
+                        "context": 35000,
+                        "output": 1000  
                     }
                 }
             }
