@@ -85,7 +85,7 @@ image::21-content-develop/aap_windows_host_vars.png[Windows host variables,link=
 +
 image::21-content-develop/aap_windows_credential.png[Windows credential,link=self,window=blank]
 +
-. These values should be pre-populated with {windows_user} and {windows_password} from the xref:environment-details.adoc[Environment Details,window=_blank] page.
+. These values should be pre-populated with `{windows_user}` and `{windows_password}` as the username/password combination from the xref:environment-details.adoc[Environment Details,window=_blank] page.
 
 === 1.3: Connectivity Options
 
