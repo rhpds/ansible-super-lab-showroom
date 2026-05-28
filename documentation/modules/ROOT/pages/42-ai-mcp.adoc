@@ -389,7 +389,7 @@ image::42-ai-mcp/librechat-delete-pod.png[Delete the librechat Pod,link=self,win
 +
 . Wait until the pod has been recreated, is _Running_, and displays `1/1` in the _Ready_ column.
 +
-. Launch the LibreChat web interface by navigating to: link:http://librechat-librechat.{openshift_cluster_ingress_domain}[LibreChat Web Interface,window=_blank]. You will be presented with the LibreChat login page.
+. Launch the LibreChat web interface by navigating to: link:https://librechat-librechat.{openshift_cluster_ingress_domain}[LibreChat Web Interface,window=_blank]. You will be presented with the LibreChat login page.
 +
 image::42-ai-mcp/librechat-login-page.png[LibreChat Login Page,link=self,window=blank]
 +

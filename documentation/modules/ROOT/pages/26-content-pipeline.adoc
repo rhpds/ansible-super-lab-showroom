@@ -509,7 +509,7 @@ image::26-content-pipeline/pipelines-webhook-url.png[Pipelines Webhook URL,link=
 
 ==== 4.4.3: Create the Webhook within the Gitea Collection Repository
 
-Once the trigger has been created, the URL will be displayed underneath the _TriggerTemplates_ section. The URL will start with `http://el-event-listener-`.
+Once the trigger has been created, the URL will be displayed underneath the _TriggerTemplates_ section. The URL will start with `\http://el-event-listener-`.
 
 Copy the URL using the copy button next to the URL as it will be used when creating the webhook in Gitea.
 
