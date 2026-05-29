@@ -61,7 +61,7 @@ Once you have launched the OpenShift Dev Spaces console, use the following steps
 
 . Login via OpenShift authentication using the same credentials as the OpenShift console
 . Select **Allow selected permissions** to authorize access and launch the console
-. Scroll down and select the workspace titled **Ansible Dev Space**
+. Scroll down and select the workspace sample titled **Ansible Dev Space**
 +
 image::11-platform-dev-spaces/intro3.png[Dev Spaces workspace selection page showing available workspaces including Ansible Dev Space,link=self,window=blank]
 +
