@@ -85,7 +85,7 @@ The following table contains the URL's and credentials for accessing resources c
 [cols="1,1"]
 |===
 |LibreChat URL
-|link:http://librechat-librechat.{openshift_cluster_ingress_domain}[http://librechat-librechat.{openshift_cluster_ingress_domain},window=_blank]
+|link:https://librechat-librechat.{openshift_cluster_ingress_domain}[https://librechat-librechat.{openshift_cluster_ingress_domain},window=_blank]
 
 |LibreChat Username
 |admin@example.com

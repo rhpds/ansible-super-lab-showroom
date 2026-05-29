@@ -61,12 +61,12 @@ Create another Gitea repository, separate from the _red_hat_one_super_lab_ repos
 . Navigate to your link:{gitea_console_url}[Gitea instance,window=_blank] and click the **Sign In** button on the upper right hand corner. Enter the username and password using the credentials provided from the xref:environment-details.adoc[Environment Details,window=_blank] page and click the **Sign In** button
 . In the top left of the web interface, click on the **+** symbol and select **New Repository**.
 +
-image::26-content-pipeline/pipelines-gitea-repo-new-select.png[Select New Gitea Repository]
+image::26-content-pipeline/pipelines-gitea-repo-new-select.png[Select New Gitea Repository,link=self,window=blank]
 +
 . On the New Repository page, enter **red_hat_one_ci_cd_pipeline** in the _Repository Name_ field.
 . Leave everything else as their default values and click on the button at the bottom, **Create Repository**.
 
-image::26-content-pipeline/pipelines-gitea-repo-new.png[New Gitea Repository]
+image::26-content-pipeline/pipelines-gitea-repo-new.png[New Gitea Repository,link=self,window=blank]
 
 ==== 4.1.1: Clone CI/CD Pipeline Repository into Dev Spaces Workspace
 
@@ -348,7 +348,7 @@ First, check that the ClusterTriggerBinding was created successfully and is avai
 . Select the *ClusterTriggerBindings* tab on the _Triggers_ page
 . Verify that `gitea-push` trigger is present
 
-image::26-content-pipeline/pipelines-clustertriggerbindings.png[Cluster Trigger Bindings]
+image::26-content-pipeline/pipelines-clustertriggerbindings.png[Cluster Trigger Bindings,link=self,window=blank]
 
 Next, check that the Pipeline was created successfully and is available within OpenShift.
 
@@ -357,7 +357,7 @@ Next, check that the Pipeline was created successfully and is available within O
 . Locate the **ansible-collection-ci** pipeline in the list of pipelines
 . Review the details of the pipeline within the _Pipeline details_ page.
 
-image::26-content-pipeline/pipelines-pipeline.png[Ansible Collection CI Pipeline]
+image::26-content-pipeline/pipelines-pipeline.png[Ansible Collection CI Pipeline,link=self,window=blank]
 
 === 4.3: Create collection-publish.yml Ansible Playbook
 
@@ -494,7 +494,7 @@ Enter the following parameters to create the link:https://tekton.dev/docs/trigge
 .. shared-workspace: `VolumeClaimTemplate`
 . Click **Add** to create the Trigger.
 
-image::26-content-pipeline/pipelines-trigger-config.png[Pipeline Trigger Config]
+image::26-content-pipeline/pipelines-trigger-config.png[Pipeline Trigger Config,link=self,window=blank]
 
 ==== 4.4.2: Copy Event Listener URL
 
@@ -505,11 +505,11 @@ With the Trigger created, copy the Event Listener URL to be used when creating t
 . Click on the link of the _ansible-collection-ci_ pipeline that is contained within the _aap_ project.
 . Under the _TriggerTemplates_ section, copy the Event Listener URL
 
-image::26-content-pipeline/pipelines-webhook-url.png[Pipelines Webhook URL]
+image::26-content-pipeline/pipelines-webhook-url.png[Pipelines Webhook URL,link=self,window=blank]
 
 ==== 4.4.3: Create the Webhook within the Gitea Collection Repository
 
-Once the trigger has been created, the URL will be displayed underneath the _TriggerTemplates_ section. The URL will start with `http://el-event-listener-`.
+Once the trigger has been created, the URL will be displayed underneath the _TriggerTemplates_ section. The URL will start with `\http://el-event-listener-`.
 
 Copy the URL using the copy button next to the URL as it will be used when creating the webhook in Gitea.
 
@@ -523,7 +523,7 @@ Navigate to the Gitea repository containing the collection and create the webhoo
 . Leave the remaining fields at their default values
 . Click on the green *Add Webhook* button at the bottom of the page to create the webhook
 
-image::26-content-pipeline/pipelines-gitea-webhook-config.png[Webhook Configuration]
+image::26-content-pipeline/pipelines-gitea-webhook-config.png[Webhook Configuration,link=self,window=blank]
 
 ==== 4.4.4: Test Webhook
 
@@ -532,7 +532,7 @@ With the webhook created, let's send a test payload to confirm that it is workin
 . From the link:{gitea_console_url}/{gitea_user}/red_hat_one_super_lab/settings/hooks[Webhooks page,window=_blank] of the red_hat_one_super_lab repository in Gitea, click on the link for the webhook you just created
 . At the bottom of the page, click the *Test Delivery* button to trigger the pipeline
 
-image::26-content-pipeline/pipelines-gitea-webhook-test.png[Test Webhook Delivery]
+image::26-content-pipeline/pipelines-gitea-webhook-test.png[Test Webhook Delivery,link=self,window=blank]
 
 A _Green_ check mark next to the delivery indicates that the webhook was successfully sent to OpenShift.
 
@@ -550,7 +550,7 @@ Add the dad_joke role to your collection
 . Name the role `dad_joke`
 . Click **Create** to create the role
 
-image::26-content-pipeline/pipelines-devspace-role-create.png[Create dad_joke Role]
+image::26-content-pipeline/pipelines-devspace-role-create.png[Create dad_joke Role,link=self,window=blank]
 
 A message indicating the role was created successfully should appear in the _Logs_ output.
 
@@ -665,7 +665,7 @@ NOTE: This step should be started only after you verify that the Tekton `Pipelin
 . From the navigation menu on the left, expand **Automation Content** and expand **Collections**
 . Verify version `2.0.0` of your collection is present
 
-image::26-content-pipeline/pipelines-pah-verify.png[Verify Collection in Automation Hub]
+image::26-content-pipeline/pipelines-pah-verify.png[Verify Collection in Automation Hub,link=self,window=blank]
 
 === 4.7: Install and Use the updated collection from PAH
 
@@ -728,7 +728,7 @@ This automated workflow ensures consistent, reliable, and secure deployment of A
 
 For additional reference and deeper learning on CI/CD pipelines:
 
-. https://docs.openshift.com/container-platform/latest/cicd/pipelines/understanding-openshift-pipelines.html[OpenShift Pipelines Documentation]
-. https://tekton.dev/docs/[Tekton Documentation]
-. https://docs.ansible.com/ansible/latest/collections_guide/index.html[Ansible Collections Guide]
-. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.5/html/using_automation_hub/index[Private Automation Hub Documentation]
+. https://docs.openshift.com/container-platform/latest/cicd/pipelines/understanding-openshift-pipelines.html[OpenShift Pipelines Documentation^]
+. https://tekton.dev/docs/[Tekton Documentation^]
+. https://docs.ansible.com/ansible/latest/collections_guide/index.html[Ansible Collections Guide^]
+. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.5/html/using_automation_hub/index[Private Automation Hub Documentation^]

@@ -315,10 +315,10 @@ Once the playbook completes, verify that the AAP components are running in OpenS
 . In the toolbar, click on `All instances`.
 . Verify installation was completed.
 +
-image::25-content-config-as-code/installed-operators-aap.png[Installed Operators in the AAP Project]
+image::25-content-config-as-code/installed-operators-aap.png[Installed Operators in the AAP Project,link=self,window=blank]
 +
 . Navigate to *Networking* -> *Routes*
-. Open the URL under *Location* for the *lab* instance in a new window which should be link:https://lab-aap-as-code.{openshift_cluster_ingress_domain}/
+. Open the URL under *Location* for the *lab* instance in a new window which should be link:https://lab-aap-as-code.{openshift_cluster_ingress_domain}/[https://lab-aap-as-code.{openshift_cluster_ingress_domain}/^]
 . Still within OpenShift, navigate to *Workloads* -> *Secrets*
 . In the search box type `admin`
 . Click on *lab-admin-password*
@@ -328,7 +328,7 @@ image::25-content-config-as-code/installed-operators-aap.png[Installed Operators
 
 == 4: Configuration As Code
 
-Config as Code leverages standard Ansible variable files containing properties that will be used to drive the configuration of AAP. These variables include all the typical objects usually configured manually via ClickOps, organizations, inventories, hosts, projects, and other items that each have a role contained within the Config as Code collection that will configure these through modules.
+Config as Code uses standard Ansible variable files containing properties that will be used to drive the configuration of AAP. These variables include all the typical objects usually configured manually via ClickOps, organizations, inventories, hosts, projects, and other items that each have a role contained within the Config as Code collection that will configure these through modules.
 
 === 4.1: Define Secrets
 
@@ -523,7 +523,7 @@ controller_credentials:
 +
 . Run the playbook again:
 +
-[source,yaml,role=execute,subs="verbatim,attributes"]
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
 ansible-navigator run  
   --execution-environment-image aap-aap.{openshift_cluster_ingress_domain}/config_as_code_ee:1.0 \
@@ -610,8 +610,8 @@ This approach enables you to manage your entire AAP infrastructure as code, ensu
 
 For additional reference and deeper learning on Configuration as Code:
 
-. https://github.com/redhat-cop/infra.aap_configuration[infra.aap_configuration Collection]
-. https://console.redhat.com/ansible/automation-hub/repo/validated/infra/aap_configuration/content/role/gateway_organizations/
-. https://console.redhat.com/ansible/automation-hub/repo/validated/infra/aap_configuration/content/role/controller_teams/
-. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/red_hat_ansible_automation_platform_installation_guide/index[Ansible Automation Platform Installation Guide]
-. https://docs.ansible.com/ansible/latest/collections_guide/index.html[Ansible Collections Guide]
+. https://github.com/redhat-cop/infra.aap_configuration[infra.aap_configuration Collection^]
+. https://console.redhat.com/ansible/automation-hub/repo/validated/infra/aap_configuration/content/role/gateway_organizations/[gateway_organizations role^]
+. https://console.redhat.com/ansible/automation-hub/repo/validated/infra/aap_configuration/content/role/controller_teams/[controller_teams role^]
+. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/red_hat_ansible_automation_platform_installation_guide/index[Ansible Automation Platform Installation Guide^]
+. https://docs.ansible.com/ansible/latest/collections_guide/index.html[Ansible Collections Guide^]

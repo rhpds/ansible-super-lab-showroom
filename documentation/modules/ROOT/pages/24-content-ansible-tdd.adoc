@@ -578,7 +578,7 @@ This TDD approach ensures your automation is reliable, maintainable, and ready f
 
 For additional reference and deeper learning on Test-Driven Development with Ansible:
 
-. https://molecule.readthedocs.io/[Molecule Documentation]
-. https://ansible.readthedocs.io/projects/creator/[Ansible Creator Documentation]
-. https://docs.ansible.com/ansible/latest/collections_guide/index.html[Ansible Collections Guide]
-. https://ansible.readthedocs.io/projects/dev-tools/[Ansible Development Tools]
+. https://molecule.readthedocs.io/[Molecule Documentation^]
+. https://ansible.readthedocs.io/projects/creator/[Ansible Creator Documentation^]
+. https://docs.ansible.com/ansible/latest/collections_guide/index.html[Ansible Collections Guide^]
+. https://ansible.readthedocs.io/projects/dev-tools/[Ansible Development Tools^]

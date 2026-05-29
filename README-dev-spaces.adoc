@@ -42,6 +42,6 @@ The Red Hat OpenShift cluster hosting Red Hat Dev Spaces must support the follow
 . UserNamespacesSupport
 . UserNamespacesPodSecurityStandards
 
-See link:https://developers.redhat.com/articles/2024/12/02/enable-nested-containers-openshift-dev-spaces-user-namespaces[Enable nested containers in OpenShift Dev Spaces with user namespaces] for more information about configuring and using nested containers in OpenShift Dev Spaces.
+See link:https://developers.redhat.com/articles/2024/12/02/enable-nested-containers-openshift-dev-spaces-user-namespaces[Enable nested containers in OpenShift Dev Spaces with user namespaces,window=_blank] for more information about configuring and using nested containers in OpenShift Dev Spaces.
 
-IMPORTANT: These features are Tech Preview as of Red Hat OpenShift 4.19. See link:https://access.redhat.com/support/offerings/techpreview[Technology Preview Features - Scope of Support]
+IMPORTANT: These features are Tech Preview as of Red Hat OpenShift 4.19. See link:https://access.redhat.com/support/offerings/techpreview[Technology Preview Features - Scope of Support,window=_blank]

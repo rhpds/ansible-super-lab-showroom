@@ -17,7 +17,7 @@ When running an agentless `url_check` lab, the most common issues arise from net
 
 If the EDA Rulebook never reports a "down" or "up" status, the EDA Controller container may be unable to reach the Windows host. Use an ad-hoc command to test connectivity from the automation environment.
 
-[source,bash]
+[source,bash,role=execute]
 ----
 ansible --module-name ansible.windows.win_shell windows \
   --args "Get-NetTCPConnection -LocalPort 80" \
@@ -48,7 +48,7 @@ TIP: Edit the Rulebook Activation and change the *Log level* to `Debug` and rest
 == 3. Validate Service State via Ad-Hoc
 If the remediation job runs but the site remains "down", use an ad-hoc command to check if the IIS service is actually in a `Running` state or if it is stuck in `StartPending`.
 
-[source,bash]
+[source,bash,role=execute]
 ----
 ansible --module-name ansible.windows.win_service windows \
   --args "name=W3SVC" \
