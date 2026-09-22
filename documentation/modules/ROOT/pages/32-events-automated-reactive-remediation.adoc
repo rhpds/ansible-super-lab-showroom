@@ -352,7 +352,7 @@ You have learned how to configure Filebeat to send Windows IIS event logs to Kaf
 
 For additional reference and deeper learning on managing EDA Controller:
 
-. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/using_automation_decisions/index[Using Automation Decisions^]
+. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.7/administer-assembly_eda_user_guide_overview[Trigger automation from events with Event-Driven Ansible^]
 . https://console.redhat.com/ansible/automation-hub/repo/published/ansible/eda/[ansible.eda collection^]
 . https://console.redhat.com/ansible/automation-hub/repo/published/ansible/eda/content/eda%2Fplugins%2Fevent_source/kafka/[Official kafka documentation^]
 

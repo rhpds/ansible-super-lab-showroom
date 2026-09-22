@@ -441,7 +441,7 @@ The MCP capabilities provided by Ansible Automation Platform are not limited to 
 For additional references, refer to the following resources:
 
 . https://modelcontextprotocol.io[Model Context Protocol (MCP),window=_blank]
-. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/installing_on_openshift_container_platform/deploy-ansible-mcp-server-operator-install[Ansible MCP Server Documentation,window=_blank].
-. link:https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/installing_on_openshift_container_platform/deploying-chatbot-operator[Ansible Lightspeed intelligent assistant Documentation,window=_blank]
+. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.7/extend-assembly_deploying_ansible_mcp_server[Deploy the MCP server on Ansible Automation Platform,window=_blank].
+. link:https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.7/extend-assembly_deploying_alia[Deploy the automation intelligent assistant Documentation,window=_blank]
 . https://opencode.ai[OpenCode,window=_blank]
 
