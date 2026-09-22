@@ -62,7 +62,7 @@ collections:
   - infra.aap_configuration
   - infra.aap_utilities
 ----
-. Go to *Automation Content* -> *Repositories* and sync both of these repositories
+. Go to *Automation Content* -> *Repositories* and sync both the *rh-certified* and *validated* repositories
 
 === 2.2: Local Environment Preparation
 
@@ -85,13 +85,16 @@ version: 3
 
 images:
   base_image:
-    name: aap-aap.{openshift_cluster_ingress_domain}/ansible-automation-platform-26/ee-minimal-rhel9:latest
+    name: aap-aap.{openshift_cluster_ingress_domain}/ansible-automation-platform-27/ee-minimal-rhel9:2.16
 
 dependencies:
+  python_interpreter:
+    package_system: python3.12
+    python_path: /usr/bin/python3.12
   system:
     - gcc [platform:rpm]
     - systemd-devel [platform:rpm]
-    - python3.11-devel [platform:rpm]
+    - python3.12-devel [platform:rpm]
   galaxy:
     collections:
       - name: ansible.platform
@@ -104,7 +107,7 @@ dependencies:
       - name: redhat.openshift
       - name: kubernetes.core
   python:
-    - requests 
+    - requests
     - requests-oauthlib
     - kubernetes
   exclude:
@@ -117,14 +120,16 @@ additional_build_steps:
   prepend_galaxy:
     - ARG TOKEN
     - ENV ANSIBLE_GALAXY_SERVER_LIST='published,certified,validated,community'
-    - ENV ANSIBLE_GALAXY_SERVER_CERTIFIED_URL='https://aap-aap.{openshift_cluster_ingress_domain}/pulp_ansible/galaxy/rh-certified/'
+    - ENV ANSIBLE_GALAXY_SERVER_CERTIFIED_URL='https://aap-aap.apps.cluster-b6g82.dyn.redhatworkshops.io/pulp_ansible/galaxy/rh-certified/'
     - ENV ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=$TOKEN
-    - ENV ANSIBLE_GALAXY_SERVER_VALIDATED_URL='https://aap-aap.{openshift_cluster_ingress_domain}/pulp_ansible/galaxy/validated/'
+    - ENV ANSIBLE_GALAXY_SERVER_VALIDATED_URL='https://aap-aap.apps.cluster-b6g82.dyn.redhatworkshops.io/pulp_ansible/galaxy/validated/'
     - ENV ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=$TOKEN
-    - ENV ANSIBLE_GALAXY_SERVER_COMMUNITY_URL='https://aap-aap.{openshift_cluster_ingress_domain}/pulp_ansible/galaxy/community/'
+    - ENV ANSIBLE_GALAXY_SERVER_COMMUNITY_URL='https://aap-aap.apps.cluster-b6g82.dyn.redhatworkshops.io/pulp_ansible/galaxy/community/'
     - ENV ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=$TOKEN
-    - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_URL='https://aap-aap.{openshift_cluster_ingress_domain}/pulp_ansible/galaxy/published/'
+    - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_URL='https://aap-aap.apps.cluster-b6g82.dyn.redhatworkshops.io/pulp_ansible/galaxy/published/'
     - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=$TOKEN
+  append_final:
+    - RUN ln -sf /usr/bin/python3.12 /usr/bin/python3
 ...
 ----
 
@@ -159,12 +164,8 @@ Login Succeeded!
 ansible-builder build \
   --tag config_as_code_ee:1.0 \
   --build-arg TOKEN=$\{PAH_API_TOKEN\} \
-  --verbosity 2<1>
+  --verbosity 3
 ----
-<1> `--verbosity 3` will produce an extremely detailed amount of debug output but is very useful for viewing all the steps involved.
-+
-NOTE: This will take roughly 7 minutes.
-+
 
 [source,output]
 ----
@@ -237,7 +238,7 @@ Create a playbook to call the `infra.aap_utilities.aap_ocp_install` role with ta
           validate_certs: false
         aap_ocp_install_namespace: aap-as-code
         aap_ocp_install_operator:
-          channel: "stable-2.6"
+          channel: "stable-2.7"
         aap_ocp_install_platform:
           instance_name: lab
         aap_ocp_install_controller:
@@ -261,7 +262,7 @@ NOTE: The more components installed at once, the longer it will take. These sett
 
 Now that the required environment is setup and Execution Environment created, we can test it locally:
 
-[source,yaml,role=execute,subs="verbatim,attributes"]
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
 ansible-navigator run \
   --execution-environment-image aap-aap.{openshift_cluster_ingress_domain}/config_as_code_ee:1.0 \
@@ -324,7 +325,7 @@ image::25-content-config-as-code/installed-operators-aap.png[Installed Operators
 . Click on *lab-admin-password*
 . Scroll to the bottom and copy the password
 . Use `admin` as the username and the secret copied to login and verify
-. Feel free as a bonus to modify your playbook and deploy additional items
+. Activate Ansible Automation Platform using the steps as defied in xref:13-platform-aap-on-openshift.adoc[1.3 Ansible Automation Platform  on OpenShift] 
 
 == 4: Configuration As Code
 
@@ -339,27 +340,26 @@ The best practice is to use `ansible-vault` to encrypt files. For this lab we wi
 [source,yaml,role=execute,subs="verbatim,attributes,callouts",title="/projects/env/secrets.yml"]
 ----
 aap_username: admin
-aap_password: PASSWORD_FROM_OPENSHIFT<1>
+aap_password: PASSWORD_FROM_OPENSHIFT <1>
 ----
-<1> Obtain this random password from *OpenShift* -> *Workloads* -> *Secrets*.
+<1> Obtain this random password from *OpenShift* -> *Workloads* -> *Secrets* -> lab-admin-password. Click the 'copy to clipboard' icon next to the `password` field and place in this property within the secrets file.
 
 === 4.2: Define Environment Variables File
 
 Since we already have a few AAP deployments on OpenShift, we can consider these different namespaces each a different AAP environment, with different URLs, secrets and resources for each deployment. For now let's create one for this environment.
 
-. Create a new variable file to represent this environment. This would typically be handled by inventory `group_vars` or separate `vars_files`, but for this lab we'll simplify to a single file. Place this file in the same directory `/projects/aap-as-code/`:
+. Create a new variable file called `lab.yml` to represent this environment. This would typically be handled by inventory `group_vars` or separate `vars_files`, but for this lab we'll simplify to a single file. Place this file in the same directory `/projects/aap-as-code/`:
 +
 [source,yaml,role=execute,subs="verbatim,attributes",title="/projects/aap-as-code/lab.yml"]
 ----
 ---
-aap_hostname: 'lab-aap-as-code.{openshift_cluster_ingress_domain}'<1>
+aap_hostname: 'lab-aap-as-code.{openshift_cluster_ingress_domain}'
 aap_validate_certs: false
 ----
-<1> Verify this is the correct hostname that was just deployed or modify as needed.
 
 === 4.3: Define some Configuration
 
-Define a few objects as specified below in the data structure. Append the following to the environment variable file:
+Define a few Ansible Automation Platform objects as specified below in the data structure to configure the platform. This will create a new organization called `config_as_code`, an inventory with our Windows host called `super-lab` and the Credentials to access the instance. Append the following to the environment variable file (`lab.yml`) created in the previous step:
 
 [source,yaml,role=execute,subs="verbatim,attributes",title="/projects/aap-as-code/lab.yml"]
 ----
@@ -392,7 +392,7 @@ controller_credentials:
 
 === 4.4: Create a playbook to apply the configuration
 
-Create a simple playbook to call the `inra.aap_configuration.dispatch` role which will evaluate the variables defined and call the appropriate roles in the proper order based on precedence.
+Create a simple playbook called `configure_aap.yml` to invoke the `inra.aap_configuration.dispatch` role which will evaluate the variables defined and call the appropriate roles in the proper order based on precedence.
 
 [source,yaml,role=execute,subs="verbatim,attributes",title="/projects/aap-as-code/configure_aap.yml"]
 ----
@@ -411,7 +411,7 @@ Create a simple playbook to call the `inra.aap_configuration.dispatch` role whic
 
 Run a similar command to what was used earlier in this lab to run the `install_aap.yml` playbook, but this time also attach the new environment file via a volume mount:
 
-[source,yaml,role=execute,subs="verbatim,attributes"]
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
 ansible-navigator run  \
   --execution-environment-image aap-aap.{openshift_cluster_ingress_domain}/config_as_code_ee:1.0 \
@@ -455,7 +455,7 @@ Check the AAP UI to see what worked and what didn't. The next section goes into 
 
 === 4.6: Verify Run
 
-Verify what did work.
+Verify what did work by launching Ansible Automation Platform in the `aap-as-code` project.
 
 . Navigate to *Access Management* -> *Organizations* you should see the *config_as_code*
 . Navigate to *Access Management* -> *Teams* you should see the *config_as_code*
@@ -505,7 +505,7 @@ Please review the log for errors.
 ----
 <1> Now we can see the actual error.
 +
-. Fix the issue by adding an `organization` definition to the credential:
+. Fix the issue by adding an `organization` definition to the credential as shown below:
 +
 [source,yaml,role=execute,subs="verbatim,attributes,callouts",title="/projects/aap-as-code/lab.yml"]
 ----
@@ -514,7 +514,7 @@ controller_credentials:
   - name: Windows
     description: Administrator user
     credential_type: Machine
-    organization: config_as_code<1>
+    organization: config_as_code <1>
     inputs:
       username: "{{ ansible_user }}"
       password: "{{ ansible_password }}"
@@ -547,23 +547,27 @@ Once the playbook has completed successfully, navigate to link:https://lab-aap-a
 * Select *Windows* and review the variables which will match what was defined in the `lab.yml`
 * Feel free to run `win_ping` module using the credential to verify
 
-== 6: Publish Artifacts
+== 6. Remove the Ansible Automation Platform Instance
+
+After you have reviewed the results in the prior section, you can remove the Ansible Automation Platform instance from OpenShift in order to conserve resources in the environment. Utilize the steps as described xref:13-platform-aap-on-openshift.adoc#uninstall-aap-instance[here] to remove the instance.
+
+== 7: Publish Artifacts
 
 With the proper configurations in place, we can save our work to our Gitea instance.
 
-=== 6.1: Create Gitea Repository
+=== 7.1: Create Gitea Repository
 
 Use the following steps to create a new repository on your Gitea instance.
 
 . Navigate to your link:{gitea_console_url}[Gitea instance,window=_blank] and click the **Sign In** button on the upper right hand corner
 . Enter the username and password using the credentials provided from the xref:environment-details.adoc[Environment Details,window=_blank] page and click the **Sign In** button
 . In the top left corner, click on the **+** symbol and select **New Repository**.
-. On the New Repository page, enter 'aap-as-code' in the Repository Name field.
+. On the New Repository page, enter `aap-as-code`` in the Repository Name field.
 . Leave everything else as default and click on the button at the bottom, **Create Repository**.
 
-=== 6.2: Create `.gitignore` file
+=== 7.2: Create `.gitignore` file
 
-Create a file named `.gitignore` in the root of your repository with the following content to exclude unnecessary files and directories from being tracked by Git.
+Create a file named `.gitignore` in the `/projects/aap-as-code` directory with the following content to exclude unnecessary files and directories from being tracked by Git.
 
 [source,bash,role=execute,subs="verbatim,attributes",title=".gitignore"]
 ----
@@ -575,7 +579,9 @@ ansible.cfg
 
 ----
 
-=== 6.3: Push code to repository
+Enter the credentials when prompted to authenticate with Gitea within your OpenShift Dev Spaces window.
+
+=== 7.3: Push code to repository
 
 After an empty repository is created on your Gitea, we need to push the collection to the repository.
 

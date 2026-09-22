@@ -37,7 +37,7 @@ Now that both the collection and Execution Environment have been created and pub
 
 Since we already have a plabyook directory at `/projects/lab_playbooks/` we will use this.
 
-. Create a new playbook in a file named `test_pah_ee.yml`. This playbook uses the `debug` module to print a message that has been formatted by our custom `cowsay` filter:
+. Create a new playbook in a file named `test_pah_ee.yml` in the `/projects/lab_playbooks` directory. This playbook uses the `debug` module to print a message that has been formatted by our custom `cowsay` filter:
 +
 [source,yaml,title="/projects/lab_playbooks/test_pah_ee.yml",role=execute,subs="verbatim,attributes"]
 ----
@@ -289,6 +289,8 @@ To https://gitea.apps.cluster-866kv.dyn.redhatworkshops.io/user1/lab_playbooks.g
  * [new branch]      main -> main
 ----
 +
+NOTE: Be sure to enter your Gitea username and password in the dialog since this is a new repository.
++
 . Verify the files appear in Gitea
 +
 image::23-content-execute/gitea-lab-playbooks.png[Lab Playbooks,link=self,window=blank]
@@ -490,7 +492,7 @@ image::23-content-execute/jt-provision-windows.png[Job Template Success,link=sel
 
 == 3: Collections Management
 
-The final exercise in this lab is to customize the content sources from link:https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.5/html-single/managing_automation_content/index#proc-create-remote_remote-management[Remote Automation Hub / Ansible Galaxy instances,window=_blank] into Private Automation Hub. To support lab exercises later in this bootcamp, we will specify additional collections to be synchronized.
+The final exercise in this lab is to customize the content sources from link:https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.7/administer-assembly_working_with_namespaces#proc-delete-namespace_results[Remote Automation Hub / Ansible Galaxy instances,window=_blank] into Private Automation Hub. To support lab exercises later in this bootcamp, we will specify additional collections to be synchronized.
 
 === 3.1: Update Community Remote
 
@@ -547,13 +549,13 @@ image::23-content-execute/repositories-update-validated.png[Updated Validated Re
 
 === 3.2: Sync Repositories
 
-Finally, synchronize the `validated` and `community` repositories to pull in the new collections within the _Repositories_ page.
+Finally, synchronize  *both* the `validated` and `community` repositories to pull in the new collections within the _Repositories_ page.
 
 . From the navigation menu on the left, expand **Automation Content** and click on **Repositories**.
 +
 . Next to the `validated` repository, click the kebab menu (three vertical dots) on the right hand side of the entry and select **Sync repository**.
 +
-image::23-content-execute/sync-repository.png[Sync Repository,link=self,window=blank]
+image::23-content-execute/sync-validated-repository.png[Sync Validated Repository,link=self,window=blank]
 +
 . In the _Sync Repository_ dialog, click **Sync** to start the synchronization.
 +
@@ -578,7 +580,7 @@ For additional reference and deeper learning on managing Ansible content:
 
 . https://docs.ansible.com/ansible/latest/galaxy/user_guide.html[Ansible Galaxy User Guide^]
 . https://docs.ansible.com/ansible/latest/collections_guide/index.html[Ansible Collections Guide^]
-. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.5/html/using_automation_hub/index[Private Automation Hub Documentation^]
+. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.7/administer-manage_your_organization_s_automation_content[Private Automation Hub Documentation^]
 
 == Appendix
 

@@ -103,7 +103,7 @@ With the repository cloned locally, proceed to the next section where you will b
 In the _red_hat_one_ci_cd_pipeline_ directory, create a new file called `collection-pipeline.yml` with the following content.
 
 .collection-pipeline.yml
-[source,yaml,role=execute,subs="verbatim,attributes",title="collection-pipeline.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/red_hat_one_ci_cd_pipeline/collection-pipeline.yml"]
 ----
 apiVersion: tekton.dev/v1
 kind: Pipeline
@@ -128,7 +128,7 @@ spec:
         spec: null
         steps:
           - computeResources: {}
-            image: 'registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest'
+            image: 'registry.redhat.io/ansible-automation-platform-27/ee-supported-rhel9:latest'
             name: playbook-install
             script: |
               git clone -vvv $(params.playbook-repo)
@@ -157,7 +157,7 @@ spec:
         spec: null
         steps:
           - computeResources: {}
-            image: 'registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest'
+            image: 'registry.redhat.io/ansible-automation-platform-27/ee-supported-rhel9:latest'
             name: collection-clone
             script: |
               cd red_hat_one_ci_cd_pipeline
@@ -176,7 +176,7 @@ spec:
         spec: null
         steps:
           - computeResources: {}
-            image: 'registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest'
+            image: 'registry.redhat.io/ansible-automation-platform-27/ee-supported-rhel9:latest'
             name: build-collection
             script: |
               cd red_hat_one_ci_cd_pipeline
@@ -239,7 +239,7 @@ spec:
         spec: null
         steps:
           - computeResources: {}
-            image: 'registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest'
+            image: 'registry.redhat.io/ansible-automation-platform-27/ee-supported-rhel9:latest'
             name: create-namespace
             script: |
               cd red_hat_one_ci_cd_pipeline
@@ -258,7 +258,7 @@ spec:
         spec: null
         steps:
           - computeResources: {}
-            image: 'registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest'
+            image: 'registry.redhat.io/ansible-automation-platform-27/ee-supported-rhel9:latest'
             name: publish-collection
             script: |
               cd red_hat_one_ci_cd_pipeline
@@ -277,7 +277,7 @@ spec:
         spec: null
         steps:
           - computeResources: {}
-            image: 'registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:latest'
+            image: 'registry.redhat.io/ansible-automation-platform-27/ee-supported-rhel9:latest'
             name: approve-collection
             script: |
               cd red_hat_one_ci_cd_pipeline
@@ -299,7 +299,7 @@ Next create a Trigger Binding that is used to extract information from the webho
 Within the _red_hat_one_ci_cd_pipeline_ directory, create a new file called `collection-cluster-trigger-binding.yml` with the following content.
 
 .collection-cluster-trigger-binding.yml
-[source,yaml,role=execute,subs="verbatim,attributes",title="collection-cluster-trigger-binding.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/red_hat_one_ci_cd_pipeline/collection-cluster-trigger-binding.yml"]
 ----
 apiVersion: triggers.tekton.dev/v1beta1
 kind: ClusterTriggerBinding
@@ -331,7 +331,7 @@ In the Dev Spaces terminal, change into the _red_hat_one_ci_cd_pipeline_ directo
 
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
-cd red_hat_one_ci_cd_pipeline
+cd /projects/red_hat_one_ci_cd_pipeline
 oc apply -f collection-pipeline.yml
 oc apply -f collection-cluster-trigger-binding.yml
 ----
@@ -367,7 +367,7 @@ The _ansible-collection-ci_ Pipeline references an Ansible Pipeline within the f
 Within the _red_hat_one_ci_cd_pipeline_ directory, create an Ansible playbook in the file `collection-publish.yml` with the following content.
 
 .collection-publish.yml
-[source,yaml,role=execute,subs="verbatim,attributes",title="collection-publish.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/red_hat_one_ci_cd_pipeline/collection-publish.yml"]
 ----
 ---
 - name: Publish collections to Hub
@@ -558,10 +558,10 @@ A message indicating the role was created successfully should appear in the _Log
 
 Update the contents of the generated `main.yml` within the `dad_joke` role to include steps that fetch a random dad joke from the API and display it.
 
-Click on the file explorer and expand the `roles/dad_joke/tasks` directory within the collection. Place the following content within the `roles/dad_joke/tasks/main.yml` file 
+Click on the file explorer and expand the `/projects/lab_collection/roles/dad_joke/tasks` directory within the collection. Place the following content within the `/projects/lab_collection/roles/dad_joke/tasks/main.yml` file 
 
 .main.yml
-[source,yaml,role=execute,subs="verbatim,attributes",title="roles/dad_joke/tasks/main.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/lab_collection/roles/dad_joke/tasks/main.yml"]
 ----
 ---
 
@@ -599,10 +599,10 @@ cd /projects/lab_collection/extensions
 molecule init scenario dad_joke
 ----
 +
-. Replace the contents of the `extensions/molecule/dad_joke/converge.yml` file with the contents below
+. Replace the contents of the `/projects/lab_collection/extensions/molecule/dad_joke/converge.yml` file with the contents below
 +
 .converge.yml
-[source,yaml,role=execute,subs="verbatim,attributes",title="converge.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/lab_collection/extensions/molecule/dad_joke/converge.yml"]
 ----
 ---
 
@@ -617,10 +617,10 @@ molecule init scenario dad_joke
 
 ----   
 +
-. Replace the contents of the `extensions/molecule/dad_joke/molecule.yml` file with the contents below
+. Replace the contents of the `/projects/lab_collection/extensions/molecule/dad_joke/molecule.yml` file with the contents below
 +
 .molecule.yml
-[source,yaml,role=execute,subs="verbatim,attributes",title="molecule.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/lab_collection/extensions/molecule/dad_joke/molecule.yml"]
 ----
 ---
 

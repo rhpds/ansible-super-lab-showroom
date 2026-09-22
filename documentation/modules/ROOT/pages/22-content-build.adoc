@@ -58,11 +58,15 @@ Instead of creating an _ansible.cfg_ configuration file with your secret token t
 Utilize the following steps to obtain your PAH API token:
 
 . Launch the link:{aap_controller_web_url}[Private Automation Hub,window=_blank] web interface and login using the credentials from the xref:environment-details.adoc[Environment Details,window=_blank] page.
-. From the navigation menu on the left, expand **Automation Content** and click on **API Token**.
+. From the navigation menu on the left, expand **Access Management** and click on **API Tokens**.
 +
-image::22-content-build/api-token-overview.png[API Token Overview,link=self,window=blank]
+image::22-content-build/api-token-overview.png[API Tokens Overview,link=self,window=blank]
 +
-. On the API Token page, click the **Generate token** button. Your API token will be displayed.
+. Click the **Create API token** button
++
+image::22-content-build/api-token-create.png[API Tokens Overview,link=self,window=blank]
++
+. On the Create API Token page, enter `automation-hub` in _description_ field, ensure the _Scope_ dropdown is set as **Write** and click the **Create token** button. Your API token will be displayed.
 +
 image::22-content-build/api-token-generate.png[Generate an API Token,link=self,window=blank]
 +
@@ -111,7 +115,7 @@ export ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=$\{PAH_API_TOKEN\}
 printenv | grep ANSIBLE
 ----
 +
-TIP: Also create a corresponding file named `unset_pah_vars.env` to clear these variables for any troubleshooting purposes:
+. Also create a corresponding file named `unset_pah_vars.env` in the `/projects/env/` directory to clear these variables for any troubleshooting purposes:
 +
 [source,bash,role=execute,title="/projects/env/unset_pah_vars.env"]
 ----
@@ -163,7 +167,7 @@ ANSIBLE_GALAXY_SERVER_CERTIFIED_URL=${AAP_CONTROLLER_WEB_URL}/pulp_ansible/galax
 
 This lab will prepare the `/projects/lab_collection/` directory to be published to Private Automation Hub.
 
-. Update the `galaxy.yml` file and remove `ansible.utils` from the list of `dependencies` to appear as follows:
+. Update the `galaxy.yml` file and modify the `dependencies` section to appear as follows (ensuring `ansible.utils` is removed):
 +
 [source,bash,role=execute,subs="verbatim,attributes",title="/projects/lab_collection/galaxy.yml"]
 ----
@@ -295,16 +299,16 @@ Now that details related to the Red Hat Container Registry have been added, conf
 image::22-content-build/create-execution-environment.png[Create Execution Environment,link=self,window=blank]
 +
 . Enter the following details on the _Create Execution Environment_ page:
-.. Name: `ansible-automation-platform-26/ee-minimal-rhel9`
-.. Upstream Name: `ansible-automation-platform-26/ee-minimal-rhel9`
+.. Name: `ansible-automation-platform-27/ee-minimal-rhel9`
+.. Upstream Name: `ansible-automation-platform-27/ee-minimal-rhel9`
 .. Remote Registry: Use the drop-down to select `redhat` that was just created.
-.. To reduce the sync time and storage requirements, enter `latest` in the _Add tag(s) to include_ field and click **Add**
+.. To reduce the sync time and storage requirements, enter `2.16` in the _Add tag(s) to include_ field and click **Add**
 .. Click the **Create execution environment** button to create the new EE.
 +
 image::22-content-build/create-execution-environment-form.png[Create Execution Environments Form,link=self,window=blank]
 +
 . Synchronize the Execution Environment into PAH from the Red Hat Container Registry.
-. Next to the `ansible-automation-platform-26/ee-minimal-rhel9` Execution Environment, click the kebab menu (three vertical dots) on the right hand side of the entry and select **Sync execution environment**.
+. Next to the `ansible-automation-platform-27/ee-minimal-rhel9` Execution Environment, click the kebab menu (three vertical dots) on the right hand side of the entry and select **Sync execution environment**.
 +
 image::22-content-build/execution-environment-sync.png[Sync Execution Environment,link=self,window=blank]
 +
@@ -314,6 +318,8 @@ image::22-content-build/execution-environment-sync.png[Sync Execution Environmen
 image::22-content-build/execution-environment-confirm-sync.png[Confirm Sync Execution Environment,link=self,window=blank]
 +
 . After the sync is complete, the `ee-minimal-rhel9` image will be available in your Private Automation Hub instance. Feel free to explore the details of the newly synchronized Execution Environment as you see fit.
++
+NOTE: The sync process may take several minutes to complete and will show a status of _Pending_ until the sync is complete.
 
 == 5: Syncing Collections from the Red Hat Automation Hub
 
@@ -499,9 +505,8 @@ TIP: Ensure the roles created earlier are included
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
 git remote add origin \
-  {gitea_console_url}/{gitea_user}/red_hat_one_super_lab.git<1>
+  {gitea_console_url}/{gitea_user}/red_hat_one_super_lab.git
 ----
-<1> This is the URL copied in step *2.* above.
 +
 . Push the files using the Gitea authentication:
 +
@@ -555,7 +560,7 @@ version: 3
 
 images:
   base_image:
-    name: aap-aap.{openshift_cluster_ingress_domain}/ansible-automation-platform-26/ee-minimal-rhel9:latest
+    name: aap-aap.{openshift_cluster_ingress_domain}/ansible-automation-platform-26/ee-minimal-rhel9:2.16
 
 dependencies:
   ansible_core:
@@ -767,7 +772,7 @@ version: 3
 
 images:
   base_image:
-    name: aap-aap.{openshift_cluster_ingress_domain}/ansible-automation-platform-26/ee-minimal-rhel9:latest
+    name: aap-aap.{openshift_cluster_ingress_domain}/ansible-automation-platform-27/ee-minimal-rhel9:2.16
 
 dependencies:
   ansible_core:
@@ -775,8 +780,8 @@ dependencies:
   galaxy:
     collections:
       - name: red_hat_one.super_lab
-        version: 1.0.1<1>
-  python:<2>
+        version: 1.0.1
+  python:
     - cowsay
 options:
   package_manager_path: /usr/bin/microdnf
@@ -794,8 +799,8 @@ additional_build_steps:
     - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_URL='{aap_controller_web_url}/pulp_ansible/galaxy/published/'
     - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=$\{TOKEN\}
 ----
-<1> Increment the collection version.
-<2> Add the `python` section to include the `cowsay` dependency. Ensure this lines up properly with `galaxy` and NOT `collections`.
+* Collection version `1.0.1` increments the collection version.
+* The `python` section is added to include the `cowsay` dependency. Ensure this lines up properly with `galaxy` and NOT `collections`.
 
 === 8.3: Increment Collection and Version and Republish
 
@@ -972,7 +977,7 @@ This script needs to be run in Dev Spaces if your workspace restarts.
 source /projects/env/unset_pah_vars.env
 cd /projects/lab_playbooks/
 ansible-galaxy collection install --requirements-file collections/requirements.yml
-pip install pypsrp
+pip3 install pypsrp
 git config --global credential.helper store
 ----
 

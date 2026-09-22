@@ -132,6 +132,8 @@ ansible [core 2.19.3]
   jinja version = 3.1.6
   pyyaml version = 6.0.3 (with libyaml v0.2.5)
 ----
++
+NOTE: The Ansible version shown above may differ from the version in your lab environment.
 
 == Conclusion
 
@@ -148,7 +150,7 @@ This foundation prepares you to start your Ansible Bootcamp Enablement journey.
 
 For additional references, refer to the following resources:
 
-. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/using_ansible_development_workspaces_for_automation_content_development/index[Using Ansible Development Workspaces for Automation Content Development^]
-. https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.27/html/user_guide/assembly_getting-started_user_guide#authenticating-to-a-git-server-from-a-workspace_user_guide[Authenticating to a Git server from a Workspace^]
+. https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.7/html/using_ansible_development_workspaces_for_automation_content_development/index[Using Ansible Development Workspaces for Automation Content Development^]
+. https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.29/get_started-assembly_authenticate_to_git_servers[Authenticating to a Git server from a Workspace^]
 . https://github.com/sabre1041/ansible-devspaces/tree/ansible-superlab[Source for the Dev Space Workspace^]
 . https://github.com/rhpds/ansible-super-lab-showroom[Source for this lab content^]

@@ -28,7 +28,7 @@ The Ansible Automation Platform Operator provides cloud-native, push-button depl
 
 Deploying Ansible Automation Platform instances with a Kubernetes native operator offers several advantages over launching instances from a playbook deployed on Red Hat OpenShift Container Platform, including upgrades and full lifecycle support for your Red Hat Ansible Automation Platform deployments.
 
-More information can be found on the official link:https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.5/html/installing_on_openshift_container_platform/index[AAP on OpenShift documentation,window=_blank].
+More information can be found on the official link:https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.7/install-assembly_operator_install_operator[AAP on OpenShift documentation,window=_blank].
 
 == 2: Viewing the AAP on OpenShift managed resources
 
@@ -36,7 +36,7 @@ The Ansible Automation Platform environment that you have been using thus far is
 
 === 2.1: The installed operator and CRDs
 
-AAP has been installed in the `aap` Namespace using an link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/operators/index[Operator,window=_blank] and the Operator Lifecycle Manager (OLM). The operator manages several Custom Resource Definitions (CRDs) that define the different components of Ansible Automation Platform.
+AAP has been installed in the `aap` Namespace using an link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.22/html-single/operators/index[Operator,window=_blank] and the Operator Lifecycle Manager (OLM). The operator manages several Custom Resource Definitions (CRDs) that define the different components of Ansible Automation Platform.
 
 . Launch the link:{openshift_cluster_console_url}[OpenShift Web Console,window=_blank]
 . Select the **htpasswd_provider** button and use the credentials provided in the xref:environment-details.adoc[Environment Details,window=_blank] page to login to the OpenShift console.
@@ -310,7 +310,7 @@ image::13-platform-aap-on-openshift/aap-operatorhub.png[AAP OperatorHub,link=sel
 +
 . Click on the `Ansible Automation Platform` box shown.
 . A dialog box with information about the operator will be shown. Feel free to read details and information about the operator.
-. Underneath _Channel_ select **stable-2.6**.
+. Underneath _Channel_ select **stable-2.7**.
 . Click the **Install** button.
 +
 image::13-platform-aap-on-openshift/aap-operator-install.png[AAP Operator Install,link=self,window=blank]
@@ -331,7 +331,7 @@ The operator will take moment to install itself into the selected namespace.
 . Navigate to **Ecosystem** on the left hand navigation -> **Installed Operators**.
 * Next to the `Project:` dropdown in the top left, ensure `my-aap` is the project shown.
 +
-Under the list of installed operators you should now see `Ansible Automation Platform` with a version of `2.6.+0.1...` and a status of `Successful`.
+Under the list of installed operators you should now see `Ansible Automation Platform` with a version of `2.7.+0.1...` and a status of `Successful`.
 
 image::13-platform-aap-on-openshift/aap-operator-install-success.png[AAP Operator Install Success,link=self,window=blank]
 
@@ -511,7 +511,7 @@ Log into the AAP instance again and see that the Automation Hub component of AAP
 
 == 5: Modify the default AAP container group
 
-The operator deployed AAP instance is pre-configured with a default link:https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.5/html/using_automation_execution/controller-instance-and-container-groups#controller-container-groups[Container Group,window=_blank]. A container group is an instance group that points to an OpenShift cluster. In this case, the OpenShift cluster that the operator was installed on.
+The operator deployed AAP instance is pre-configured with a default link:https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.7/administer-con_controller_container_groups[Container Group,window=_blank]. A container group is an instance group that points to an OpenShift cluster. In this case, the OpenShift cluster that the operator was installed on.
 
 By default, the container group is setup to deploy job pods in the same namespace that the `AnsibleAutomationPlatform` custom resource was created within.
 
@@ -616,6 +616,7 @@ image::13-platform-aap-on-openshift/delete-aap-instance2.png[Delete the AAP Inst
 
 The AAP operator will now recognize that the `AnsibleAutomationPlatform` instance has been removed and will proceed to remove all the resources that were created as part of this instance. This may take several minutes to complete for the entire process to complete.
 
+[#uninstall-aap-instance]
 === 6.2 Uninstall the AAP Operator
 
 Now that the AAP instance is removed, uninstall the AAP operator from the `my-aap` namespace.

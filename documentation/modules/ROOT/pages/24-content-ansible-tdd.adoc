@@ -54,11 +54,11 @@ ansible-creator add resource role db_server .
 
 Since the role assumes that PostgreSQL is already running, its primary task to create a database, user and assign privileges.
 
-Modify the files inside `roles/db_server/` directory to configure PostgreSQL.
+Modify the files inside `/projects/lab_collection/roles/db_server/` directory to configure PostgreSQL.
 
-First, update the `roles/db_server/defaults/main.yml` file with the following content:
+First, update the `/projects/lab_collection/roles/db_server/defaults/main.yml` file with the following content:
 
-[source,yaml,role=execute,subs="verbatim,attributes",title="roles/db_server/defaults/main.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/lab_collection/roles/db_server/defaults/main.yml"]
 ----
 ---
 # defaults file for red_hat_one.super_lab.db_server
@@ -68,9 +68,9 @@ db_server_password: "SecurePassword123"
 ...
 ----
 
-Next replace the entire contents of the main task file `roles/db_server/tasks/main.yml`. Notice there are no installation, initialization, or service management tasks specified.
+Next replace the entire contents of the main task file `/projects/lab_collection/roles/db_server/tasks/main.yml`. Notice there are no installation, initialization, or service management tasks specified.
 
-[source,yaml,role=execute,subs="verbatim,attributes",title="roles/db_server/tasks/main.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/lab_collection/roles/db_server/tasks/main.yml"]
 ----
 ---
 # tasks file for red_hat_one.super_lab.db_server
@@ -106,7 +106,7 @@ Next replace the entire contents of the main task file `roles/db_server/tasks/ma
 
 === 3.1: Add Argument Specification for Role Validation
 
-The link:https://docs.ansible.com/ansible/latest/dev_guide/developing_program_flow_modules.html#argument-spec[`argument_spec` file,window=_blank] provides a way to validate role arguments, document their purpose, and define default values. This file is placed in `roles/db_server/meta/argument_specs.yml` and helps ensure that the role receives the correct parameters.
+The link:https://docs.ansible.com/ansible/latest/dev_guide/developing_program_flow_modules.html#argument-spec[`argument_spec` file,window=_blank] provides a way to validate role arguments, document their purpose, and define default values. This file is located in `/projects/lab_collection/roles/db_server/meta/argument_specs.yml` and helps ensure that the role receives the correct parameters.
 
 ==== 3.1.1: Why Use argument_spec?
 
@@ -119,9 +119,9 @@ The following benefits are provided by using an argument specification file:
 
 === 3.1.2: Create the argument_specs.yml File
 
-Create the argument specification file for the db_server role in `roles/db_server/meta/argument_specs.yml`:
+Update the argument specification file for the db_server role in `/projects/lab_collection/roles/db_server/meta/argument_specs.yml`:
 
-[source,yaml,role=execute,subs="verbatim,attributes",title="roles/db_server/meta/argument_specs.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/lab_collection/roles/db_server/meta/argument_specs.yml"]
 ----
 ---
 # argument spec file for red_hat_one.super_lab.db_server
@@ -179,7 +179,7 @@ Initialize the new scenario using the `molecule init scenario` command:
 molecule init scenario db_server
 ----
 
-Now, move the Molecule playbooks into the `utils` directory for sharing between scenarios.
+Now, to enable reusability we can move the generated playbooks into a shared directory called `utils` which eliminates some of the boilerplate content and redundancy. Move the Molecule playbooks into the `utils` directory for sharing between scenarios.
 
 [source,bash,role=execute,subs="verbatim,attributes"]
 ----
@@ -193,9 +193,9 @@ When `ansible-creator` initializes a collection, it creates an example scenario 
 rm -rf molecule/integration_hello_world
 ----
 
-The primary logic behind Molecule execution is defined in the link:https://ansible.readthedocs.io/projects/molecule/configuration/[`molecule.yml`,window=_blank] configuration file. Replace the contents of `molecule/db_server/molecule.yml` with the following configuration:
+The primary logic behind Molecule execution is defined in the link:https://ansible.readthedocs.io/projects/molecule/configuration/[`molecule.yml`,window=_blank] configuration file. Replace the contents of `/projects/lab_collection/extensions/molecule/db_server/molecule.yml` with the following configuration:
 
-[source,yaml,role=execute,subs="verbatim,attributes",title="molecule/db_server/molecule.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/lab_collection/extensions/molecule/db_server/molecule.yml"]
 ----
 ---
 dependency:
@@ -240,9 +240,9 @@ verifier:
 
 ----
 
-Create a new `requirements.yml` file in the `molecule/db_server/` directory to specify the required Ansible collections for this scenario:
+Create a new `requirements.yml` file in the `/projects/lab_collection/extensions/molecule/db_server/` directory to specify the required Ansible collections for this scenario:
 
-[source,yaml,role=execute,subs="verbatim,attributes",title="extensions/molecule/db_server/requirements.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/lab_collection/extensions/molecule/db_server/requirements.yml"]
 ----
 ---
 collections:
@@ -252,11 +252,11 @@ collections:
 
 ----
 
-The scenario uses shared playbook files for container management and testing. Create the following files in the `molecule/utils/playbooks/` directory:
+The scenario uses shared playbook files for container management and testing. Update the following files in the `/projects/lab_collection/extensions/molecule/utils/playbooks/` directory:
 
 The `create.yml` playbook is responsible for provisioning the test infrastructure. In Molecule's testing lifecycle, this is the first phase where containers or virtual machines are created to provide isolated environments for testing.
 
-[source,yaml,role=execute,subs="verbatim,attributes",title="molecule/utils/playbooks/create.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/lab_collection/extensions/molecule/utils/playbooks/create.yml"]
 ----
 ---
 - name: Create container instances
@@ -300,7 +300,7 @@ The `create.yml` playbook is responsible for provisioning the test infrastructur
 
 ----
 
-Create a new directory called `tasks` inside `molecule/utils/playbooks/` and add the `create-fail.yml` playbook. This playbook handles failure scenarios during container creation by retrieving and displaying container logs for debugging.
+Create a new directory called `tasks` inside `/projects/lab_collection/extensions/molecule/utils/playbooks/` and create a new file called `create-fail.yml` playbook in the newly created directory. This playbook handles failure scenarios during container creation by retrieving and displaying container logs for debugging.
 
 [source,yaml,role=execute,subs="verbatim,attributes",title="molecule/utils/playbooks/tasks/create-fail.yml"]
 ----
@@ -322,9 +322,9 @@ Create a new directory called `tasks` inside `molecule/utils/playbooks/` and add
 
 ----
 
-The `prepare.yml` playbook handles any pre-testing setup tasks. This optional phase in Molecule allows you to configure the test environment before applying your Ansible role, such as installing dependencies or setting up prerequisites. Create a new file called `prepare.yml` in the `molecule/utils/playbooks/` directory with the following content:
+The `prepare.yml` playbook handles any pre-testing setup tasks. This optional phase in Molecule allows you to configure the test environment before applying your Ansible role, such as installing dependencies or setting up prerequisites. Create a new file named `prepare.yml` file in the `/projects/lab_collection/extensions/molecule/utils/playbooks/` directory with the following content:
 
-[source,yaml,role=execute,subs="verbatim,attributes",title="molecule/utils/playbooks/prepare.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/lab_collection/extensions/molecule/utils/playbooks/prepare.yml"]
 ----
 ---
 - name: Prepare play
@@ -339,7 +339,7 @@ The `prepare.yml` playbook handles any pre-testing setup tasks. This optional ph
 
 The `converge.yml` playbook is the core of Molecule testing - it executes your Ansible role against the test infrastructure. This phase applies your automation to verify that the role works correctly and achieves the desired state.
 
-[source,yaml,role=execute,subs="verbatim,attributes",title="molecule/utils/playbooks/converge.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/lab_collection/extensions/molecule/utils/playbooks/converge.yml"]
 ----
 ---
 - name: Converge
@@ -362,7 +362,7 @@ The `converge.yml` playbook is the core of Molecule testing - it executes your A
 
 The `verify.yml` playbook performs functional testing to validate that your role not only ran successfully, but actually achieved the desired results. This phase includes tests that check database connectivity, verify data persistence, and confirm your automation works end-to-end.
 
-[source,yaml,role=execute,subs="verbatim,attributes",title="molecule/utils/playbooks/verify.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/lab_collection/extensions/molecule/utils/playbooks/verify.yml"]
 ----
 ---
 - name: Verify
@@ -405,9 +405,9 @@ The `verify.yml` playbook performs functional testing to validate that your role
 
 ----
 
-The `cleanup.yml` playbook handles cleanup of temporary files and artifacts created during testing, helping maintain a clean test environment between test runs without destroying the actual test infrastructure. Create a new file called `cleanup.yml` in the `molecule/utils/playbooks/` directory with the following content:
+The `cleanup.yml` playbook handles cleanup of temporary files and artifacts created during testing, helping maintain a clean test environment between test runs without destroying the actual test infrastructure. Create a new file called `cleanup.yml` in the `/projects/lab_collection/extensions/molecule/utils/playbooks/` directory with the following content:
 
-[source,yaml,role=execute,subs="verbatim,attributes",title="molecule/utils/playbooks/cleanup.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/lab_collection/extensions/molecule/utils/playbooks/cleanup.yml"]
 ----
 ---
 - name: Cleanup container instances
@@ -434,7 +434,7 @@ The `cleanup.yml` playbook handles cleanup of temporary files and artifacts crea
 
 The `destroy.yml` playbook tears down the test infrastructure completely. This final phase in Molecule's lifecycle ensures that containers, virtual machines, and other test resources are properly cleaned up after testing is complete.
 
-[source,yaml,role=execute,subs="verbatim,attributes",title="molecule/utils/playbooks/destroy.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/lab_collection/extensions/molecule/utils/playbooks/destroy.yml"]
 ----
 ---
 - name: Destroy container instances
@@ -473,7 +473,7 @@ The `destroy.yml` playbook tears down the test infrastructure completely. This f
 
 The `noop.yml` playbook is a placeholder that performs no operations. It can be used as a template or when you need a playbook that does nothing during specific testing phases.
 
-[source,yaml,role=execute,subs="verbatim,attributes",title="molecule/utils/playbooks/noop.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="/projects/lab_collection/extensions/molecule/utils/playbooks/noop.yml"]
 ----
 ---
 - name: No-op
@@ -486,7 +486,7 @@ The `noop.yml` playbook is a placeholder that performs no operations. It can be 
 ...
 ----
 
-As you may have noticed, no changes were required in the `noop.yml` file.
+As you may have noticed, minimal changes were required in the `noop.yml` file.
 
 === Additional Molecule Playbooks
 
@@ -502,18 +502,22 @@ These additional playbooks can be configured in your `molecule.yml` file under t
 
 Before running the molecule tests, you need to build and install the collection so that the role can be found by Ansible.
 
-Update the `galaxy.yml` file to add a dependency on `"community.postgresql": "*"` and increment the version number to `1.0.2` as shown below:
+Update the `galaxy.yml` file in the collection directory (`/projects/lab_collection/`) to add a dependency on `"community.postgresql": "*"` and increment the version number to `1.0.2` as shown below:
 
 [source,yaml,role=execute,subs="verbatim,attributes",title="galaxy.yml"]
 ----
 version: 1.0.2
 ----
 
-Add the dependency under the `dependencies` section:
+Add the dependency under the `dependencies` section so the file looks like the following:
 
 [source,yaml,role=execute,subs="verbatim,attributes",title="galaxy.yml"]
 ----
 dependencies:
+  "ansible.windows": "*"
+  "chocolatey.chocolatey": "*"
+  "microsoft.iis": "*"
+  "ansible.posix": "*"
   "community.postgresql": "*"
 ----
 

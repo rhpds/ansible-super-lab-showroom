@@ -119,7 +119,7 @@ ansible_winrm_transport: basic|ntlm|credssp
 
 == 2: Build Content for Managing Windows
 
-In this section we will begin building content to setup and configure our Windows server. 
+In this section we will begin building content to setup and configure our Windows server. This involves creating a Collection, adding a few Roles in the newly created collection, and then populating the roles with automation content.
 
 NOTE: The remainder of this lab takes place inside link:https://devspaces.{openshift_cluster_ingress_domain}[OpenShift Dev Spaces,window=_blank]. As a quick reminder, here are the relevant steps:
 
@@ -169,7 +169,7 @@ for role in web_server log_shipper
     Note: Resource added to /projects/lab_collection
 ----
 +
-. Open the directory at a lower level of the file structure in order to see all of these files in VSCode by selecting the hamburger (3 dashes) menu in the top left and choosing **File** -> **Open Folder**
+. Now that `ansible-creator` has created and populated the based content for the newly created `lab_collection` Collection, open the directory at a lower level of the file structure in order to see all of these files in VSCode. Changing the directory is required since the Collection was created outside of the location that you were presented with at the start of this section. Select the hamburger (3 dashes) menu in the top left and choosing **File** -> **Open Folder**
 . The dialogue box should contain **/projects/** then hit **OK**
 +
 image::21-content-develop/dev_spaces_open_folder.png[Open Folder,link=self,window=blank]
@@ -230,7 +230,7 @@ image::21-content-develop/collection_dir_tree.png[Collection Roles,link=self,win
 ==== 2.2.1: Build Web Server Role
 
 . Expand the directory for the `web_server` role. 
-. Create a new task file in the `tasks` directory for the tasks to setup IIS:
+. Create a new task file in the `tasks` directory called `setup.yml` for the tasks to setup IIS:
 +
 [source,yaml,role=execute,title="/projects/lab_collection/roles/web_server/tasks/setup.yml"]
 ----
@@ -251,7 +251,7 @@ image::21-content-develop/collection_dir_tree.png[Collection Roles,link=self,win
 +
 TIP: `ansible-lint` will complain unless each file ends with and empty newline, so keep that in mind as you paste.
 +
-. Create another new task file in that same `tasks` directory to configure the site:
+. Create another new task file in that same `tasks` directory called `website.yml` to configure the site:
 +
 [source,yaml,role=execute,title="/projects/lab_collection/roles/web_server/tasks/website.yml"]
 ----
@@ -288,7 +288,7 @@ TIP: `ansible-lint` will complain unless each file ends with and empty newline, 
 ...
 ----
 +
-. Create another new task file in that same `tasks` directory for validation tasks:
+. Create another new task file in that same `tasks` directory called `service.yml` to start the _W3SVC_ service and validate that it has been started by calling a separate task file (to be created next):
 +
 [source,yaml,role=execute,title="/projects/lab_collection/roles/web_server/tasks/service.yml"]
 ----
@@ -304,7 +304,7 @@ TIP: `ansible-lint` will complain unless each file ends with and empty newline, 
 ...
 ----
 +
-. Create another new task file in that same `tasks` directory for validation tasks:
+. Create another new task file in that same `tasks` directory called `validate.yml` for validation tasks:
 +
 [source,yaml,role=execute,title="/projects/lab_collection/roles/web_server/tasks/validate.yml"]
 ----
@@ -343,7 +343,7 @@ Deployed on {{ ansible_facts['date_time']['date'] }} at {{ ansible_facts['date_t
 +
 NOTE: The reason this is plain text and not using HTML tags is because we cannot get directly to the webserver in a browser without some hoops. This is good enough for testing.
 +
-. Next, edit the main task file and replace the contents with the following:
+. Next, edit the main task file (`main.yml`) and replace the contents with the following:
 +
 [source,yaml,role=execute,title="/projects/lab_collection/roles/web_server/tasks/main.yml"]
 ----
@@ -372,7 +372,7 @@ image::21-content-develop/web_server_role.png[Web Server Role,link=self,window=b
 ==== 2.2.2: Build Log Shipper Role
 
 . Expand the `/projects/lab_collection/roles/log_shipper/` directory
-. Create a new task file in the `tasks` directory to handle setup requirements:
+. Create a new task file in the `tasks` directory called `prerequisites.yml` to handle setup requirements:
 +
 [source,yaml,role=execute,title="/projects/lab_collection/roles/log_shipper/tasks/prerequisites.yml"]
 ----
@@ -395,7 +395,7 @@ image::21-content-develop/web_server_role.png[Web Server Role,link=self,window=b
 ...
 ----
 +
-. Create a new task file in the `tasks` directory to handle setup requirements:
+. Create a new task file in the `tasks` directory called `chocolatey.yml` to install the required packages using the link:https://chocolatey.org[Chocolatey] tool:
 +
 [source,yaml,role=execute,title="/projects/lab_collection/roles/log_shipper/tasks/chocolatey.yml"]
 ----
@@ -411,7 +411,7 @@ image::21-content-develop/web_server_role.png[Web Server Role,link=self,window=b
 ...
 ----
 +
-. Create another new task file in the `tasks` directory to install our log shipper, Filebeat:
+. Create another new task file in the `tasks` directory called `filebeat.yml` to install our log shipper, Filebeat:
 +
 [source,yaml,role=execute,title="/projects/lab_collection/roles/log_shipper/tasks/filebeat.yml"]
 ----
@@ -423,7 +423,7 @@ image::21-content-develop/web_server_role.png[Web Server Role,link=self,window=b
 ...
 ----
 +
-. Lastly, replace main task file with the following:
+. Lastly, replace main task (`main.yml`) file with the following:
 +
 [source,yaml,role=execute,title="/projects/lab_collection/roles/log_shipper/tasks/main.yml"]
 ----
@@ -452,7 +452,7 @@ NOTE: If needed, ensure a terminal is open by selecting the hamburger (3 dashes)
 
 For the remainder of this lab the `ansible-creator` CLI will be used for simplicity and speed. It is of course possible to create this same playbook directory from the extension UI.
 
-. From Dev Spaces create a playbook directory:
+. From Dev Spaces create a playbook directory by creating a new playbook project:
 +
 [source,bash,role=execute]
 ----
@@ -536,7 +536,7 @@ IMPORTANT: This is your personal token for *console.redhat.com* used to communic
 +
 NOTE: For additional information see https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/managing_automation_content/managing-cert-valid-content#token-management-hub_cloud-sync[Managing Automation Content Documentation,window=_blank]
 +
-. Add the following to the end of the provided `ansible.cfg`:
+. Add the following to the end of the provided `ansible.cfg` inside the `/projects/lab_playbooks/` directory:
 +
 WARNING: Be careful NOT to overwrite the existing content, just append to it!
 +
@@ -567,7 +567,7 @@ IMPORTANT: Be sure to replace #YOUR_UPSTREAM_CONSOLE_HUB_TOKEN# with the token o
 
 This `lab_playbooks` directory will call the roles we created. We need to install these collections in Dev Spaces:
 
-. Modify the provided `requirements.yml` file and replace its contents:
+. Modify the provided `requirements.yml` file in the `/projects/lab_playbooks/collections/` directory sand replace its contents:
 +
 [source,yaml,role=execute,title="/projects/lab_playbooks/collections/requirements.yml"]
 ----
@@ -579,7 +579,7 @@ collections:
 ...
 ----
 +
-. Install the collections from the base of the `lab_playbooks` directory so it can read the `ansible.cfg` file:
+. Install the collections from the base of the `lab_playbooks` directory so it can read the `ansible.cfg` file. This will also confirm that your Automation Hub token has been configured properly:
 +
 [source,bash,role=execute]
 ----
@@ -587,8 +587,6 @@ cd /projects/lab_playbooks/
 ansible-galaxy collection install \
   --requirements-file collections/requirements.yml
 ----
-+
-TIP: Add these commands to `/projects/env/config.sh`
 +
 [source,output]
 ----
@@ -615,6 +613,8 @@ chocolatey.chocolatey:1.5.3 was installed successfully
 Installing 'ansible.windows:3.3.0' to '/home/user/.ansible/collections/ansible_collections/ansible/windows'
 ansible.windows:3.3.0 was installed successfully
 ----
++
+TIP: The commands above can be added to the `/projects/env/config.sh` file to ensure that dependencies are kept up to date.
 
 === 3.6: Install python libraries
 
@@ -624,10 +624,8 @@ Install the required library for either WinRM or PSRP:
 +
 [source,bash,role=execute]
 ----
-pip install pypsrp
+pip3 install pypsrp
 ----
-+
-TIP: Add this command to `/projects/env/config.sh`
 +
 [source,output]
 ----
@@ -652,13 +650,11 @@ Installing collected packages: pyspnego, pypsrp
 Successfully installed pypsrp-0.8.1 pyspnego-0.12.0
 ----
 +
-NOTE: You may safely ignore the question about creating a virtual environment
-+
-image::21-content-develop/dev_spaces_venv.png[Dev Spaces Virtual Environment Question,link=self,window=blank]
+TIP: This command can also be added to `/projects/env/config.sh`
 
 === 3.7: Configure Collection directory
 
-This `ansible-creator` command required a collection name when executing. The reason is it creates a sample collection and single role embedded for use by this playbook. Since we already have our own separate collection, we will remove the provided collection and link it to `/projects/lab_collection/`.
+This `ansible-creator init playbook` command created a sample collection and single role embedded for use by this playbook. Since we already have our own separate collection that we created initially (`/projects/lab_collection/`), we will remove the provided collection and instead replace it with our collection (`/projects/lab_collection/`) by linking the contents using a symbolic link.
 
 . Remove the provided collection directory:
 +
@@ -668,7 +664,7 @@ rm --force --recursive --verbose \
   /projects/lab_playbooks/collections/ansible_collections/red_hat_one/super_lab/
 ----
 +
-WARNING: Do not run this command again AFTER you complete the next step `ln` or it WILL delete EVERYTHING in your `/projects/lab_collection/` directory and you will have to perform all the tasks again!
+WARNING: Do not run this command again AFTER you complete the next step (`ln`) or it WILL delete EVERYTHING in your `/projects/lab_collection/` directory and you will have to perform all the tasks again!
 +
 [source,output]
 ----
@@ -707,7 +703,7 @@ NOTE: This is only for our lab environment, this is not needed for AAP.
 
 === 3.8: Setup Playbook
 
-. Next, replace the contents of `site.yml` with the following:
+. Next, replace the contents of `site.yml` in the `/projects/lab_playbooks` directory with the following:
 +
 [source,yaml,role=execute,title="/projects/lab_playbooks/site.yml"]
 ----
@@ -959,7 +955,7 @@ In case your workspace restarts, all files and directories will be preserved but
 ----
 cd /projects/lab_playbooks/
 ansible-galaxy collection install --requirements-file collections/requirements.yml
-pip install pypsrp
+pip3 install pypsrp
 ----
 
 [source,yaml,role=execute,title="/projects/env/secrets.yml",subs="verbatim,attributes"]

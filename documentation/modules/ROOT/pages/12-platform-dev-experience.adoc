@@ -50,7 +50,7 @@ PS1='[\u \W$(__git_ps1 " (%s)")]\$ '
 +
 [source,output]
 ----
-[user ansible-devspaces (main)]$
+[user ansible-devspaces (ansible-superlab)]$
 ----
 +
 . Notice your prompt will now display which branch you are currently operating against. Also, `git` sub commands now auto-complete with the TAB key. Feel free to customize this prompt as desired.
