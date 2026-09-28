@@ -157,4 +157,4 @@ In this lab, you have successfully learned how to deploy and configure Ansible L
 == Helpful Links
 
 . link:https://www.redhat.com/en/technologies/management/ansible/ansible-lightspeed[Ansible Lightspeed Website,window=_blank]
-. link:https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html/installing_on_openshift_container_platform/deploying-chatbot-operator[Ansible Lightspeed intelligent assistant Documentation,window=_blank]
+. link:https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.7/extend-assembly_deploying_alia[Ansible Lightspeed intelligent assistant Documentation,window=_blank]
