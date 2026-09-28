@@ -120,13 +120,13 @@ additional_build_steps:
   prepend_galaxy:
     - ARG TOKEN
     - ENV ANSIBLE_GALAXY_SERVER_LIST='published,certified,validated,community'
-    - ENV ANSIBLE_GALAXY_SERVER_CERTIFIED_URL='https://aap-aap.apps.cluster-b6g82.dyn.redhatworkshops.io/pulp_ansible/galaxy/rh-certified/'
+    - ENV ANSIBLE_GALAXY_SERVER_CERTIFIED_URL='https://aap-aap.{openshift_cluster_ingress_domain}/pulp_ansible/galaxy/rh-certified/'
     - ENV ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN=$TOKEN
-    - ENV ANSIBLE_GALAXY_SERVER_VALIDATED_URL='https://aap-aap.apps.cluster-b6g82.dyn.redhatworkshops.io/pulp_ansible/galaxy/validated/'
+    - ENV ANSIBLE_GALAXY_SERVER_VALIDATED_URL='https://aap-aap.{openshift_cluster_ingress_domain}/pulp_ansible/galaxy/validated/'
     - ENV ANSIBLE_GALAXY_SERVER_VALIDATED_TOKEN=$TOKEN
-    - ENV ANSIBLE_GALAXY_SERVER_COMMUNITY_URL='https://aap-aap.apps.cluster-b6g82.dyn.redhatworkshops.io/pulp_ansible/galaxy/community/'
+    - ENV ANSIBLE_GALAXY_SERVER_COMMUNITY_URL='https://aap-aap.{openshift_cluster_ingress_domain}/pulp_ansible/galaxy/community/'
     - ENV ANSIBLE_GALAXY_SERVER_COMMUNITY_TOKEN=$TOKEN
-    - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_URL='https://aap-aap.apps.cluster-b6g82.dyn.redhatworkshops.io/pulp_ansible/galaxy/published/'
+    - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_URL='https://aap-aap.{openshift_cluster_ingress_domain}/pulp_ansible/galaxy/published/'
     - ENV ANSIBLE_GALAXY_SERVER_PUBLISHED_TOKEN=$TOKEN
   append_final:
     - RUN ln -sf /usr/bin/python3.12 /usr/bin/python3
@@ -325,7 +325,7 @@ image::25-content-config-as-code/installed-operators-aap.png[Installed Operators
 . Click on *lab-admin-password*
 . Scroll to the bottom and copy the password
 . Use `admin` as the username and the secret copied to login and verify
-. Activate Ansible Automation Platform using the steps as defied in xref:13-platform-aap-on-openshift.adoc[1.3 Ansible Automation Platform  on OpenShift] 
+. Activate Ansible Automation Platform using the steps as defined in xref:13-platform-aap-on-openshift.adoc[1.3 Ansible Automation Platform  on OpenShift] 
 
 == 4: Configuration As Code
 
