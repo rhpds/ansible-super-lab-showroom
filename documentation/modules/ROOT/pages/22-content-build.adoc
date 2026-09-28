@@ -236,10 +236,10 @@ ansible-galaxy collection publish \
 [source,output]
 ----
 No config file found; using defaults
-Publishing collection artifact '/projects/lab_collection/red_hat_one-super_lab-1.0.0.tar.gz' to cmd_arg https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/api/galaxy/
-Collection has been published to the Galaxy server cmd_arg https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/api/galaxy/
-Waiting until Galaxy import task https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/api/galaxy/v3/imports/collections/019bc27e-b50e-70f8-bbc8-6b2590228801/ has completed
-Collection has been successfully published and imported to the Galaxy server cmd_arg https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/api/galaxy/
+Publishing collection artifact '/projects/lab_collection/red_hat_one-super_lab-1.0.0.tar.gz' to cmd_arg {aap_controller_web_url}/api/galaxy/
+Collection has been published to the Galaxy server cmd_arg {aap_controller_web_url}/api/galaxy/
+Waiting until Galaxy import task {aap_controller_web_url}/api/galaxy/v3/imports/collections/019bc27e-b50e-70f8-bbc8-6b2590228801/ has completed
+Collection has been successfully published and imported to the Galaxy server cmd_arg {aap_controller_web_url}/api/galaxy/
 ----
 +
 NOTE: You can safely ignore any warnings that may be emitted during the publishing process, but as a bonus feel free to fix them.
@@ -560,7 +560,7 @@ version: 3
 
 images:
   base_image:
-    name: aap-aap.{openshift_cluster_ingress_domain}/ansible-automation-platform-26/ee-minimal-rhel9:2.16
+    name: aap-aap.{openshift_cluster_ingress_domain}/ansible-automation-platform-27/ee-minimal-rhel9:2.16
 
 dependencies:
   ansible_core:
@@ -662,7 +662,7 @@ REPOSITORY                                                                      
 localhost/my-pah-ee                                                                                    1.0         d6720adf6297  24 seconds ago  365 MB
 <none>                                                                                                 <none>      83b83a0538e8  2 minutes ago   367 MB
 <none>                                                                                                 <none>      d512d1529417  2 minutes ago   365 MB
-aap-aap.apps.cluster-bhmvb.dynamic.redhatworkshops.io/ansible-automation-platform-26/ee-minimal-rhel9  latest      9d130a29338c  5 weeks ago     341 MB
+aap-aap.{openshift_cluster_ingress_domain}/ansible-automation-platform-27/ee-minimal-rhel9  2.16        9d130a29338c  5 weeks ago     341 MB
 ----
 +
 . Tag the image:
@@ -683,11 +683,11 @@ podman images
 [source,output]
 ----
 REPOSITORY                                                                                             TAG         IMAGE ID      CREATED             SIZE
-aap-aap.apps.cluster-bhmvb.dynamic.redhatworkshops.io/my-pah-ee                                        1.0         d6720adf6297  About a minute ago  365 MB
+aap-aap.{openshift_cluster_ingress_domain}/my-pah-ee                                                                     1.0         d6720adf6297  About a minute ago  365 MB
 localhost/my-pah-ee                                                                                    1.0         d6720adf6297  About a minute ago  365 MB
 <none>                                                                                                 <none>      83b83a0538e8  3 minutes ago       367 MB
 <none>                                                                                                 <none>      d512d1529417  3 minutes ago       365 MB
-aap-aap.apps.cluster-bhmvb.dynamic.redhatworkshops.io/ansible-automation-platform-26/ee-minimal-rhel9  latest      9d130a29338c  5 weeks ago         341 MB
+aap-aap.{openshift_cluster_ingress_domain}/ansible-automation-platform-27/ee-minimal-rhel9  2.16        9d130a29338c  5 weeks ago         341 MB
 ----
 +
 . Push the newly built Execution Environment image to PAH:
@@ -834,10 +834,10 @@ ansible-galaxy collection publish \
 [source,output]
 ----
 No config file found; using defaults
-Publishing collection artifact '/projects/lab_collection/red_hat_one-super_lab-1.0.1.tar.gz' to cmd_arg https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/api/galaxy/
-Collection has been published to the Galaxy server cmd_arg https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/api/galaxy/
-Waiting until Galaxy import task https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/api/galaxy/v3/imports/collections/019bc7a3-5699-720a-b074-40f6be11761e/ has completed
-Collection has been successfully published and imported to the Galaxy server cmd_arg https://aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/api/galaxy/
+Publishing collection artifact '/projects/lab_collection/red_hat_one-super_lab-1.0.1.tar.gz' to cmd_arg {aap_controller_web_url}/api/galaxy/
+Collection has been published to the Galaxy server cmd_arg {aap_controller_web_url}/api/galaxy/
+Waiting until Galaxy import task {aap_controller_web_url}/api/galaxy/v3/imports/collections/019bc7a3-5699-720a-b074-40f6be11761e/ has completed
+Collection has been successfully published and imported to the Galaxy server cmd_arg {aap_controller_web_url}/api/galaxy/
 ----
 +
 . Approve collection in the PAH web interface as described previously.
@@ -881,7 +881,7 @@ localhost/my-pah-ee                                                             
 localhost/my-pah-ee                                                                                    1.0         40aee109e507  46 minutes ago  365 MB
 <none>                                                                                                 <none>      0cd7b6b90811  47 minutes ago  367 MB
 <none>                                                                                                 <none>      749921c9ce7b  48 minutes ago  365 MB
-aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/ansible-automation-platform-26/ee-minimal-rhel9  latest      9d130a29338c  4 weeks ago     341 MB
+aap-aap.{openshift_cluster_ingress_domain}/ansible-automation-platform-27/ee-minimal-rhel9  2.16        9d130a29338c  4 weeks ago     341 MB
 ----
 +
 . Tag the new EE:
@@ -902,14 +902,13 @@ podman images
 [source,output,subs="quotes"]
 ----
 REPOSITORY                                                                                             TAG         IMAGE ID      CREATED         SIZE
-#aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/my-pah-ee                                        1.1         81a91a3d03da  22 minutes ago  365 MB#
 localhost/my-pah-ee                                                                                    1.1         81a91a3d03da  22 minutes ago  365 MB
 <none>                                                                                                 <none>      88d70b0fdb27  24 minutes ago  367 MB
 <none>                                                                                                 <none>      162996cdd48c  25 minutes ago  365 MB
 localhost/my-pah-ee                                                                                    1.0         40aee109e507  50 minutes ago  365 MB
 <none>                                                                                                 <none>      0cd7b6b90811  52 minutes ago  367 MB
 <none>                                                                                                 <none>      749921c9ce7b  52 minutes ago  365 MB
-aap-aap.apps.cluster-gtjkm.dynamic.redhatworkshops.io/ansible-automation-platform-26/ee-minimal-rhel9  latest      9d130a29338c  4 weeks ago     341 MB
+aap-aap.{openshift_cluster_ingress_domain}/ansible-automation-platform-27/ee-minimal-rhel9  2.16        9d130a29338c  4 weeks ago     341 MB
 ----
 +
 . Publish the new EE version:

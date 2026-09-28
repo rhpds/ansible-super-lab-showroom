@@ -567,7 +567,7 @@ IMPORTANT: Be sure to replace #YOUR_UPSTREAM_CONSOLE_HUB_TOKEN# with the token o
 
 This `lab_playbooks` directory will call the roles we created. We need to install these collections in Dev Spaces:
 
-. Modify the provided `requirements.yml` file in the `/projects/lab_playbooks/collections/` directory sand replace its contents:
+. Modify the provided `requirements.yml` file in the `/projects/lab_playbooks/collections/` directory and replace its contents:
 +
 [source,yaml,role=execute,title="/projects/lab_playbooks/collections/requirements.yml"]
 ----

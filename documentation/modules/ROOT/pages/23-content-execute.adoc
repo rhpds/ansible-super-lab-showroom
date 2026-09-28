@@ -285,7 +285,7 @@ Writing objects: 100% (6/6), 779 bytes | 779.00 KiB/s, done.
 Total 6 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
 remote: . Processing 1 references
 remote: Processed 1 references in total
-To https://gitea.apps.cluster-866kv.dyn.redhatworkshops.io/user1/lab_playbooks.git
+To {gitea_console_url}/user1/lab_playbooks.git
  * [new branch]      main -> main
 ----
 +
@@ -492,7 +492,7 @@ image::23-content-execute/jt-provision-windows.png[Job Template Success,link=sel
 
 == 3: Collections Management
 
-The final exercise in this lab is to customize the content sources from link:https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.7/administer-assembly_working_with_namespaces#proc-delete-namespace_results[Remote Automation Hub / Ansible Galaxy instances,window=_blank] into Private Automation Hub. To support lab exercises later in this bootcamp, we will specify additional collections to be synchronized.
+The final exercise in this lab is to customize the content sources from link:https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.7/administer-configure_remote_repositories_to_sync_automation_content_[Remote Automation Hub / Ansible Galaxy instances,window=_blank] into Private Automation Hub. To support lab exercises later in this bootcamp, we will specify additional collections to be synchronized.
 
 === 3.1: Update Community Remote
 
